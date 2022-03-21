@@ -17,3 +17,7 @@ Follow the following steps to set-up a virtual environment and install the requi
 
 3. Now, use pip to install the dependencies:
 `pip install -r requirements.txt`
+
+4. To test if you have successfully installed the project dependencies, run the django development server and verify it works.
+First `cd` into the `django-site` directory, and then run:
+`python manage.py runserver`
