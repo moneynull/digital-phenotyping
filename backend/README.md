@@ -9,15 +9,24 @@ I recommend using a [virtual environment](https://docs.python.org/3/library/venv
 
 Follow the following steps to set-up a virtual environment and install the required python modules:
 
-1. From this directory, run the following command to create a virtual environment named **venv**:
-`python3 -m venv venv`
+1. From this directory, run the following command to create a virtual environment named **venv**. This will create a folder named **venv** which will contain your virtual environment.
+```
+python3 -m venv venv
+```
 
-2. There should now be a folder named **venv** in thie directory if step 1 was done correctly. Now, activate the virtual environment by running the following command in this directory:
-`source venv/bin/activate`
+2. Now, activate the virtual environment by running the following command in this directory:
+```
+source venv/bin/activate
+```
 
 3. Now, use pip to install the dependencies:
-`pip install -r requirements.txt`
+```
+pip install -r requirements.txt
+```
 
 4. To test if you have successfully installed the project dependencies, run the django development server and verify it works.
-First `cd` into the `django-site` directory, and then run:
-`python manage.py runserver`
+First `cd` into the `django-site` directory, and then attempt to start the django development server.
+```
+cd django-site
+python manage.py runserver
+```
