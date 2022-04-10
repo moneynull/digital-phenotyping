@@ -5,12 +5,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Homepage from './pages/Homepage/Homepage';
+import Loginpage from './pages/Login/Loginpage';
 
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path='/' element={<App />} />
       <Route path='homepage' element={<Homepage />} />
+    </Routes>
+    <Routes>
+      <Route path='/' element={<App />} />
+      <Route path='loginpage' element={<Loginpage />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')

@@ -13,7 +13,9 @@ function App() {
             paddingBottom: '1rem',
           }}
         >
-          <Link to='/homepage'>Invoices</Link>
+          <Link to='/homepage'>Homepage</Link>
+          <div></div>
+          <Link to='/loginpage'>Login</Link>
         </nav>
         <p>
           Edit <code>src/App.js</code> and save to reload.
