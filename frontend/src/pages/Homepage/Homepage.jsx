@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import logo from './asset/senpsi_logo.png'
+import logo from '../../../src/asset/senpsi_logo.png'
 import {Link } from "react-router-dom";
 
 export default function Homepage() {
