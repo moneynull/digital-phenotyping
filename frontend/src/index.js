@@ -6,16 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Homepage from './pages/Homepage/Homepage';
 import Loginpage from './pages/Login/Loginpage';
+import InfoDetailsPage from './pages/InfoDetailsPage/InfoDetailsPage';
 
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path='/' element={<App />} />
       <Route path='homepage' element={<Homepage />} />
-    </Routes>
-    <Routes>
-      <Route path='/' element={<App />} />
       <Route path='loginpage' element={<Loginpage />} />
+      <Route path='infodetailspage' element={<InfoDetailsPage />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')

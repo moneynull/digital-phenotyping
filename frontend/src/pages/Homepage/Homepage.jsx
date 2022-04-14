@@ -15,6 +15,9 @@ export default function Homepage() {
           <Button variant='contained'>Go to Login Page</Button>
         </Link>
       </div>
+      <Link to='/infodetailspage'>
+        <Button variant='contained'>Go to Info Details Page</Button>
+      </Link>
     </MainContainer>
   );
 }
