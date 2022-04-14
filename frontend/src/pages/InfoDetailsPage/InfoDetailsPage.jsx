@@ -1,71 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import logo from '../../../src/asset/senpsi_logo.png';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-
 import Chart from 'react-apexcharts';
-export default function InfoDetailsPage() {
+import NavTitle from '../../components/NavTitle';
+import SearchBar from '../../components/SearchBar';
+import NameAvatar from '../../components/NameAvatar';
+const dummyChartData = {
+  options: {
+    title: {
+      text: 'App Times Used',
+      align: 'center',
+      margin: 10,
+      offsetX: 0,
+      offsetY: 0,
+      floating: false,
+      style: {
+        fontSize: '14px',
+        fontWeight: 'bold',
+        color: '#263238',
+      },
+    },
+    chart: {
+      id: 'basic-bar',
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 4,
+        horizontal: true,
+      },
+    },
+    xaxis: {
+      categories: [
+        'Twitter',
+        'Google Map',
+        'Facebook',
+        'ESPN',
+        'Domain Real Estate',
+        'Champions League Official',
+        'ASUS Weather',
+      ],
+    },
+  },
+  series: [
+    {
+      name: 'Times Used',
+      data: [100, 78, 78, 43, 10, 22, 56],
+    },
+  ],
+};
+function InfoDetailsPage() {
+  const [patientId, setPatientId] = useState('123');
   const [barState, setBarState] = useState({
     options: {},
     series: [],
   });
   useEffect(() => {
-    setBarState({
-      options: {
-        title: {
-          text: 'App Times Used',
-          align: 'center',
-          margin: 10,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: '14px',
-            fontWeight: 'bold',
-            color: '#263238',
-          },
-        },
-        chart: {
-          id: 'basic-bar',
-        },
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
-          },
-        },
-        xaxis: {
-          categories: [
-            'Twitter',
-            'Google Map',
-            'Facebook',
-            'ESPN',
-            'Domain Real Estate',
-            'Champions League Official',
-            'ASUS Weather',
-          ],
-        },
-      },
-      series: [
-        {
-          name: 'Times Used',
-          data: [100, 78, 78, 43, 10, 22, 56],
-        },
-      ],
-    });
+    setBarState(dummyChartData);
   }, []);
   return (
     <MainContainer>
       <Header>
-        <NavTitle>
-          <ArrowBackRoundedIcon fontSize='large' />
-          <NavTitleText>Info Details</NavTitleText>
-        </NavTitle>
+        <NavTitle title='Client Details' showArrowBack={true} />
+        <SearchBar />
+        <Spacer />
+        <NameAvatar />
       </Header>
-      <div></div>
-      <img src={logo} alt='logo' />
       <div>
         <Link to='/loginpage'>
           <Button variant='contained'>Go to Login Page</Button>
@@ -83,18 +83,12 @@ const MainContainer = styled.div`
 const Header = styled.div`
   width: 100vw;
   height: 100px;
-  border: 1px solid red;
   display: flex;
   flex-direction: row;
   align-items: center;
 `;
-const NavTitle = styled.div`
-  margin-left: 10vw;
-  align-items: center;
-  display: flex;
-  color: #3e3e3e;
-  flex-direction: row;
+const Spacer = styled.div`
+  height: 20px;
+  width: 30%;
 `;
-const NavTitleText = styled.text`
-  font-size: 30px;
-`;
+export default InfoDetailsPage;
