@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import COLORS from '../constant/Colors';
 
 function NameAvatar() {
   return (
@@ -17,8 +18,9 @@ const Container = styled.div`
 `;
 const Name = styled.text`
   font-size: 30px;
-  font-weight: 800;
-  color: #3e3e3e;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  color: ${COLORS.text};
 `;
 const Avatar = styled.img`
   height: 60px;

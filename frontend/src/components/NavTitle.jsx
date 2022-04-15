@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import COLORS from '../constant/Colors';
 
 function NavTitle(props) {
   return (
@@ -12,14 +13,15 @@ function NavTitle(props) {
 }
 
 const NavTitleContainer = styled.div`
-  margin-left: 10vw;
   align-items: center;
   display: flex;
-  color: #3e3e3e;
+  color: ${COLORS.text};
   flex-direction: row;
 `;
 const NavTitleText = styled.text`
   font-size: 30px;
+  width: 350px;
+  font-family: 'Open Sans', sans-serif;
   margin-left: 20px;
   font-weight: bold;
 `;
