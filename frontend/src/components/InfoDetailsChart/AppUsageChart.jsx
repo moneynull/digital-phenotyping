@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import COLORS from '../constant/Colors';
+import COLORS from '../../constant/Colors';
 
 // dummy data for app time usage
 const dummyChartData = {
@@ -58,6 +58,7 @@ function AppUsageChart() {
     useEffect(() => {
       setBarState(dummyChartData);
     }, []);
+    
     return(
         <Chart options={barState.options} series={barState.series} type='bar' width='500' />
     )

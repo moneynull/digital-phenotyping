@@ -13,7 +13,9 @@ import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import AccessTimeFilledRoundedIcon from '@mui/icons-material/AccessTimeFilledRounded';
 import { Log } from '../../components/Logger';
-import AppUsageChart from '../../components/AppUsageChart';
+import AppUsageChart from '../../components/InfoDetailsChart/AppUsageChart';
+import { Divider } from '@mui/material';
+import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
 
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
@@ -36,6 +38,10 @@ function InfoDetailsPage() {
       <SubContainer>
         <CardContainer>
           <AppUsageChart />
+          <Spacer />
+          <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
+          <Spacer />
+          <SmsUsageChart />
         </CardContainer>
         <AwareAppsContainer>
           <SectionTitle title={'AWARE Information'} />
