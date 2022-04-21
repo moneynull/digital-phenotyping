@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
-import Chart from 'react-apexcharts';
 import NavTitle from '../../components/NavTitle';
 import SearchBar from '../../components/SearchBar';
 import NameAvatar from '../../components/NameAvatar';
@@ -14,63 +13,11 @@ import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import AccessTimeFilledRoundedIcon from '@mui/icons-material/AccessTimeFilledRounded';
 import { Log } from '../../components/Logger';
-const dummyChartData = {
-  options: {
-    title: {
-      text: 'App Times Used',
-      align: 'center',
-      margin: 10,
-      offsetX: 0,
-      offsetY: 0,
-      floating: false,
-      style: {
-        fontSize: '14px',
-        fontWeight: 'bold',
-        color: `${COLORS.text_2}`,
-      },
-    },
-    fill: {
-      colors: [`${COLORS.primary}`],
-    },
-    chart: {
-      id: 'basic-bar',
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 4,
-        horizontal: true,
-      },
-    },
-    xaxis: {
-      categories: [
-        'Twitter',
-        'Google Map',
-        'Facebook',
-        'ESPN',
-        'Domain Real Estate',
-        'Champions League Official',
-        'ASUS Weather',
-      ],
-    },
-  },
-  series: [
-    {
-      name: 'Times Used',
-      data: [100, 78, 78, 43, 10, 22, 56],
-    },
-  ],
-};
+import AppUsageChart from '../../components/AppUsageChart';
 
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
-  const [barState, setBarState] = useState({
-    options: {},
-    series: [],
-  });
   const [curSelected, setCurSelected] = useState('');
-  useEffect(() => {
-    setBarState(dummyChartData);
-  }, []);
   const selected = (name) => {
     Log(name);
     setCurSelected(name);
@@ -88,7 +35,7 @@ function InfoDetailsPage() {
       </Header>
       <SubContainer>
         <CardContainer>
-          <Chart options={barState.options} series={barState.series} type='bar' width='500' />
+          <AppUsageChart />
         </CardContainer>
         <AwareAppsContainer>
           <SectionTitle title={'AWARE Information'} />
