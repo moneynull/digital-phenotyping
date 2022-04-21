@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
+import ReactApexChart from 'react-apexcharts';
 import Chart from 'react-apexcharts';
 import NavTitle from '../../components/NavTitle';
 import SearchBar from '../../components/SearchBar';
@@ -14,6 +15,8 @@ import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import AccessTimeFilledRoundedIcon from '@mui/icons-material/AccessTimeFilledRounded';
 import { Log } from '../../components/Logger';
+import { Divider } from '@mui/material';
+
 const dummyChartData = {
   options: {
     title: {
@@ -61,6 +64,66 @@ const dummyChartData = {
   ],
 };
 
+      
+const dummySMSData = {
+    
+      series: [{
+        name: 'Incoming',
+        data: [10,9,8,7,6]
+      },
+      {
+        name: 'Outgoing',
+        data: [1, 2, 3, 4, 5]
+      }
+      ],
+      options: {
+        chart: {
+          type: 'bar',
+          height: 440,
+          stacked: true
+        },
+        colors: ['#008FFB', '#FF4560'],
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            barHeight: '80%',
+          },
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          width: 1,
+          colors: ["#fff"]
+        },
+        dataLabels: {
+          enabled: true
+        },              
+
+        title: {
+          text: 'SMSs',
+          align: 'center',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: '14px',
+            fontWeight: 'bold',
+            color: `${COLORS.text_2}`,
+          }
+        },
+        xaxis: {
+          categories: ["May 1","May 2","May 3","May 4","May 5"],
+
+
+        },
+      },
+    
+    
+    };
+
+
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
   const [barState, setBarState] = useState({
@@ -71,6 +134,16 @@ function InfoDetailsPage() {
   useEffect(() => {
     setBarState(dummyChartData);
   }, []);
+
+  const [smsState, setSMSState] = useState({
+    options: {},
+    series: [],
+  });
+  const [curSelected1, setCurSelected1] = useState('');
+  useEffect(() => {
+    setSMSState(dummySMSData);
+  }, []);
+
   const selected = (name) => {
     Log(name);
     setCurSelected(name);
@@ -86,10 +159,16 @@ function InfoDetailsPage() {
         <Spacer />
         <NameAvatar />
       </Header>
+
       <SubContainer>
         <CardContainer>
           <Chart options={barState.options} series={barState.series} type='bar' width='500' />
+          <Spacer />
+          <Divider style={{ background: 'black' }} sx={{ borderBottomWidth: 1.5 }} />
+          <Spacer />
+          <Chart options={smsState.options} series={smsState.series} type='bar' width='500' />
         </CardContainer>
+
         <AwareAppsContainer>
           <SectionTitle title={'AWARE Information'} />
           <Grid columnSpacing={{ xs: 1, sm: 2, md: 3 }} container rowSpacing={3}>
@@ -119,11 +198,11 @@ function InfoDetailsPage() {
             </Grid>
           </Grid>
         </AwareAppsContainer>
+        
       </SubContainer>
     </MainContainer>
   );
 }
-
 const MainContainer = styled.div`
   font-size: 32px;
   padding-left: 13vw;
