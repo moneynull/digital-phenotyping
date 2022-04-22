@@ -24,7 +24,7 @@ const colors = [
   ];
 
 let dataSeries = []
-for (let i = 0; i < 6; i++) {
+for (let i = 0; i < categories.length; i++) {
     let element = {
         x: categories[i],
         y: usage[i],
