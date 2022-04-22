@@ -20,12 +20,63 @@ import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
 
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
-  const [curSelected, setCurSelected] = useState('');
+  const [curSelected, setCurSelected] = useState('Application');
   const selected = (name) => {
     Log(name);
     setCurSelected(name);
   };
+
+  // chart to show when clicking application button
+  const appChart =     
+    <CardContainer>
+      <AppUsageChart />
+      <Spacer />
+      <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
+      <Spacer />
+      <CategoryChart />
+    </CardContainer>;
+
+  // chart to show when clicking communication button
+  const comChart = 
+    <CardContainer>
+      <SmsUsageChart />
+    </CardContainer>
+
+  // chart to show when clicking locations button
+  const locChart =
+    <CardContainer>
+      <Reminder>Location chart on development</Reminder>
+    </CardContainer>
+
+  // chart to show when clicking screen button
+  const screenChart = 
+    <CardContainer>
+      <Reminder>Screen chart on development</Reminder>
+    </CardContainer>
+
+  const defaultGreeting = 
+    <CardContainer>
+      <Reminder>Select any type of aware information to see detail chart</Reminder>
+    </CardContainer>
+
+  // define the acutal chart that need to show
+  let show = (type) => {
+    switch(type) {
+      case 'Applications':
+        return appChart;
+      case 'Communication':
+        return comChart;
+      case 'Locations':
+        return locChart;
+      case 'Screen':
+        return screenChart;
+      default:
+        return defaultGreeting;
+    }
+  }
+  const chartToShow = show(curSelected);
   const navBack = () => {};
+
   return (
     <MainContainer>
       <Header onClick={navBack}>
@@ -37,17 +88,7 @@ function InfoDetailsPage() {
         <NameAvatar />
       </Header>
       <SubContainer>
-        <CardContainer>
-          <AppUsageChart />
-          <Spacer />
-          <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
-          <Spacer />
-          <SmsUsageChart />
-          <Spacer />
-          <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
-          <Spacer />
-          <CategoryChart />
-        </CardContainer>
+        {chartToShow}
 
         {/* AWARE Icon on the right */}
         <AwareAppsContainer>
@@ -131,6 +172,12 @@ const Header = styled.div`
 const Spacer = styled.div`
   height: 20px;
   width: 30%;
+`;
+const Reminder = styled.text`
+  margin: 10px;
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+  align-self: center;
 `;
 
 export default InfoDetailsPage;
