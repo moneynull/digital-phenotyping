@@ -2,11 +2,42 @@ import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import COLORS from '../../constant/Colors';
 
-// dummy data for app time usage
-const dummyChartData = {
+
+const categories = [
+    'Art and Design',
+    'Business',
+    'Communications',
+    'Education',
+    'Entertainment',
+    'Health and Fitness',
+  ];
+
+const usage = [33, 99, 18, 50, 75, 44];
+
+const colors = [
+    "#008FFB",
+    "#00E396",
+    "#FEB019",
+    "#FF4560",
+    "#775DD0",
+    "#00D9E9",
+  ];
+
+let dataSeries = []
+for (let i = 0; i < 6; i++) {
+    let element = {
+        x: categories[i],
+        y: usage[i],
+        color: colors[i]
+    };
+
+    dataSeries.push(element);
+}
+
+const dummyCategoryData = {
     options: {
       title: {
-        text: 'App Times Used',
+        text: 'Categories of Apps Usage',
         align: 'center',
         margin: 10,
         offsetX: 0,
@@ -19,44 +50,34 @@ const dummyChartData = {
         },
       },
       fill: {
-        colors: [`${COLORS.primary}`],
+        colors: colors,
       },
       chart: {
-        id: 'basic-bar',
+        id: 'categoryBar',
       },
       plotOptions: {
         bar: {
           borderRadius: 4,
           horizontal: true,
+          distributed: true
         },
-      },
-      xaxis: {
-        categories: [
-          'Twitter',
-          'Google Map',
-          'Facebook',
-          'ESPN',
-          'Domain Real Estate',
-          'Champions League Official',
-          'ASUS Weather',
-        ],
       },
     },
     series: [
       {
         name: 'Times Used',
-        data: [100, 78, 78, 43, 10, 22, 56],
+        data: dataSeries,
       },
     ],
   };
 
-function AppUsageChart() {
+function CategoryChart() {
     const [barState, setBarState] = useState({
       options: {},
       series: [],
     });
     useEffect(() => {
-      setBarState(dummyChartData);
+      setBarState(dummyCategoryData);
     }, []);
     
     return(
@@ -64,4 +85,4 @@ function AppUsageChart() {
     )
 }
 
-export default AppUsageChart;
+export default CategoryChart;

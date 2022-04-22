@@ -65,7 +65,7 @@ function SmsUsageChart() {
       }, []);
 
       return(
-        <Chart options={smsState.options} series={smsState.series} type='bar' width='500' />
+        <Chart options={smsState.options} series={smsState.series} type='bar' width='500' height='350' />
       )
 }
 

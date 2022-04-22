@@ -16,6 +16,7 @@ import { Log } from '../../components/Logger';
 import AppUsageChart from '../../components/InfoDetailsChart/AppUsageChart';
 import { Divider } from '@mui/material';
 import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
+import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
 
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
@@ -42,7 +43,13 @@ function InfoDetailsPage() {
           <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
           <Spacer />
           <SmsUsageChart />
+          <Spacer />
+          <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
+          <Spacer />
+          <CategoryChart />
         </CardContainer>
+
+        {/* AWARE Icon on the right */}
         <AwareAppsContainer>
           <SectionTitle title={'AWARE Information'} />
           <Grid columnSpacing={{ xs: 1, sm: 2, md: 3 }} container rowSpacing={3}>
@@ -72,6 +79,7 @@ function InfoDetailsPage() {
             </Grid>
           </Grid>
         </AwareAppsContainer>
+
       </SubContainer>
     </MainContainer>
   );
@@ -124,4 +132,5 @@ const Spacer = styled.div`
   height: 20px;
   width: 30%;
 `;
+
 export default InfoDetailsPage;
