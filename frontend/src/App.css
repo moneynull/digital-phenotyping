@@ -1,6 +1,9 @@
 .App {
   text-align: center;
 }
+body {
+  background-color: #eff3f9;
+}
 a:link {
   text-decoration: none;
 }
