@@ -17,6 +17,7 @@ import AppUsageChart from '../../components/InfoDetailsChart/AppUsageChart';
 import { Divider } from '@mui/material';
 import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
 import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
+import CallsUsageChart from '../../components/InfoDetailsChart/CallsUsageChart';
 
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
@@ -40,6 +41,10 @@ function InfoDetailsPage() {
   const comChart = 
     <CardContainer>
       <SmsUsageChart />
+      <Spacer />
+      <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
+      <Spacer />
+      <CallsUsageChart />
     </CardContainer>
 
   // chart to show when clicking locations button
