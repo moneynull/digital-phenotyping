@@ -45,16 +45,11 @@ def extract_message(request):
     date_interval = end_date - start_date
 
     start_date_timestamp = int(time.mktime(start_date.timetuple()) * 1000)
-    print(start_date_timestamp)
     end_date_timestamp = int(time.mktime(end_date.timetuple()) * 1000)
-    print(end_date_timestamp)
 
     calls_result = models.Calls.objects \
         .filter(device_id=device_id, timestamp__lte=end_date_timestamp, timestamp__gte=start_date_timestamp) \
         .values("timestamp", "call_type", "call_duration", "field_id").order_by("timestamp")
-
-    print(len(calls_result))
-    print(calls_result[0]["call_type"], calls_result[0]["call_duration"])
 
     data = calls_process(calls_result, start_date_timestamp, date_interval)
 
@@ -77,16 +72,16 @@ def calls_process(calls_result, start_date_stmp, date_interval):
     i = 0  # represent the data type as index
     j = 0  # represent the days index
     res_day = []
-    count = 0
     print('start_date_stmp: %s', start_date_stmp)
     for r in calls_result:
         if start_date_stmp + j * one_day <= r["timestamp"] < start_date_stmp + (j + 1) * one_day:
             i = r["call_type"] - 1
             res_array[i][j] += 1
         else:
-            if j <= date_interval.days:
-                res_day.append(datetime.datetime.fromtimestamp(int(start_date_stmp + j * one_day) / 1000))
-                j = j + 1
+            print(j)
+            res_day.append(datetime.datetime.fromtimestamp(int(start_date_stmp + j * one_day) / 1000))
+            j = j + 1
 
+    res_day.append(datetime.datetime.fromtimestamp(int(start_date_stmp + j * one_day) / 1000))
     res_array.append(res_day)
     return res_array
