@@ -11,22 +11,7 @@ from django.db import connection, connections
 # Create your views here.
 from dataServer import models
 
-
-def toLogin_view(request):
-    return render(request, 'testDemo.html')
-
-
-def read_user(request):
-    data = serializers.serialize('python', models.TbClient.objects.filter(uid=1))
-    res = {
-        'success': True,
-        'data': data
-    }
-    return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
-
-
 one_day = 86400000
-
 
 def extract_message(request):
     if request.method == 'POST':
@@ -73,14 +58,13 @@ def calls_process(calls_result, start_date_stmp, date_interval):
     i = 0  # represent the data type as index
     j = 0  # represent the days index
     res_day = []
-    for r in calls_result:
-        if start_date_stmp + j * one_day <= r["timestamp"] < start_date_stmp + (j + 1) * one_day:
-            i = r["call_type"] - 1
-            res_array[i][j] += 1
-        else:
-            res_day.append(datetime.datetime.fromtimestamp(int(start_date_stmp + j * one_day) / 1000))
-            j = j + 1
+    for j in range(date_interval.days):
+        for r in calls_result:
+            if start_date_stmp + j * one_day <= r["timestamp"] < start_date_stmp + (j + 1) * one_day:
+                res_array[r["call_type"]-1][j] += 1
+            else:
+                continue
+        res_day.append(datetime.datetime.fromtimestamp(int(start_date_stmp + j * one_day) / 1000))
 
-    res_day.append(datetime.datetime.fromtimestamp(int(start_date_stmp + j * one_day) / 1000))
     res_array.append(res_day)
     return res_array
