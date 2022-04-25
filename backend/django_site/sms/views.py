@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from sms.models import Messages
-from sms.models import TbClient
+from sms import models
 import datetime
 import time
 from django.http import HttpResponse
@@ -23,7 +22,7 @@ class QuerySMS(APIView):
             start_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
             end_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
         
-        device_result = TbClient.objects.filter(uid=uid).values("awaredeviceid")
+        device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
         device_id = device_result[0]["awaredeviceid"]
 
         # today_timestamp = "1642056676314"
@@ -47,7 +46,7 @@ class QuerySMS(APIView):
         # print(start_date_timestamp)
         # print(end_date_timestamp)
 
-        sms_results = Messages.objects.filter(device_id=device_id)\
+        sms_results = models.Messages.objects.filter(device_id=device_id)\
             .exclude(timestamp__gte = end_date_timestamp)\
                 .filter(timestamp__gte = start_date_timestamp)\
                     .values("field_id","timestamp","device_id","message_type","trace")\
