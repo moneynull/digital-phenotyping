@@ -14,14 +14,14 @@ class QuerySMS(APIView):
         device_result = TbClient.objects.filter(uid=uid).values("awaredeviceid")
         device_id = device_result[0]["awaredeviceid"]
 
-        today_timestamp = "1646898913000"
+        today_timestamp = "1642056676314"
         today = datetime.datetime.fromtimestamp(int(today_timestamp)/1000)
 
         # today = datetime.datetime.now()
 
         zero_today = today - datetime.timedelta(hours=today.hour, minutes=today.minute, seconds=today.second,microseconds=today.microsecond)
         
-        start_date = zero_today - datetime.timedelta(days=20)
+        start_date = zero_today - datetime.timedelta(days=5)
         end_date = zero_today
 
         date_interval = end_date - start_date
