@@ -5,23 +5,21 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from appForeground.models import ApplicationsForeground, TbClient
-from appForeground.serializers import appForegroundSerializer
-
 
 class AppForeground(APIView):
 
     @staticmethod
-    def calculatePercentage(appUsage_d):
-        appUsagePER_d = []
+    def calculatePercentage(array):
+        per_arr = []
         total = 0
-        for name, time in appUsage_d.items():
-            total += time
-            appUsagePER_d[name] = 0
+        for value in array:
+            total += value
+            per_arr.append(0)
 
-        for name, time in appUsage_d.items():
-            appUsagePER_d[name] = round(100 * time / total, 4)
+        for i in range(0, len(per_arr)):
+            per_arr[i] = round(100 * array[i] / total, 4)
 
-        return appUsagePER_d
+        return per_arr
 
     @staticmethod
     def get(self, request, format=None):
@@ -51,54 +49,54 @@ class AppForeground(APIView):
         timestamp_l = appForeground.values('timestamp')
         app_name_l = appForeground.values('application_name')
 
+        # convert app name from [dict] to set
         temp_name_l = []
         for q in app_name_l:
             if q['application_name'] != 'System UI':
                 temp_name_l.append(q['application_name'])
 
-        # list->set
         app_name_set = set(temp_name_l)
+
+        # index and usage of applications
         index_arr = []
-        appUsage_arr = []
+        appTime_arr = []
 
-        for i in range(len(app_name_set)):
+        # distinct index, usage initialization
+        for i in range(0, len(app_name_set)):
             index_arr.append(i)
-            appUsage_arr.append(0)
+            appTime_arr.append(0)
 
-        index_dic = dict((name, value) for name, value in zip(app_name_set, index_arr))
-        # sort
+        # store the app name and its index mapping in a dict 
+        index_dic = dict((name, index) for name, index in zip(app_name_set, index_arr))
 
+        # convert app timestamp from [dict] to []
         timestamp_string=[]
         for l in timestamp_l:
             timestamp_string.append(l['timestamp'])
 
         i = 0
-        time1 = time.time()
         # we can't know the usage of the last application
+        # iterate on all records 
         while (i < len(app_name_l) - 1):
             name = app_name_l[i]['application_name']
             if name != 'System UI':
                 startTime = timestamp_string[i]
                 endTime = timestamp_string[i+1]
-            # if name not in appUsage_d:
-            #     appUsage_d[name] = 0
-
-                appUsage_arr[index_dic[name]] += (endTime- startTime)
+                appTime_arr[index_dic[name]] += (endTime- startTime)
             i += 1
 
-        print(appUsage_arr)
-        # appUsagePER_d = AppForeground.calculatePercentage(appUsage_d)
+        appUsage_arr = AppForeground.calculatePercentage(appTime_arr)
 
-        # conver to list
-        usage2d_l = []
-        name_l = []
-        per_l = []
+        # conver app name and usage to a 2d array to return
+        usage2d_arr = []
+        name_arr = []
+        per_arr = []
 
-        # for name, per in appUsagePER_d.items():
-        #     name_l.append(name)
-        #     per_l.append(per)
+        for name, index in index_dic.items():
+            name_arr.append(name)
+            per_arr.append(appUsage_arr[index])
 
-        usage2d_l.append(name_l)
-        usage2d_l.append(per_l)
+        usage2d_arr.append(name_arr)
+        usage2d_arr.append(per_arr)
 
-        return Response(usage2d_l)
+        return Response(usage2d_arr)
