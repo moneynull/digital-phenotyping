@@ -23,8 +23,6 @@ class QuerySMS(APIView):
             start_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
             end_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
         
-        #uid = req["uid"]
-        print(uid)
         device_result = TbClient.objects.filter(uid=uid).values("awaredeviceid")
         device_id = device_result[0]["awaredeviceid"]
 
@@ -42,8 +40,6 @@ class QuerySMS(APIView):
         end_date = datetime.datetime.fromtimestamp(int(end_date_timestamp)/1000)
 
         date_interval = end_date - start_date
-
-        print(start_date,end_date,date_interval)
 
         # start_date_timestamp = int(time.mktime(start_date.timetuple() )* 1000)
         # end_date_timestamp = int(time.mktime(end_date.timetuple() )* 1000)
@@ -87,7 +83,5 @@ class QuerySMS(APIView):
             if j >= date_interval.days:
                     break
             result_array[r["message_type"] - 1][j] = result_array[r["message_type"] - 1][j] + 1
-
-        print(result_array)
 
         return Response(result_array)
