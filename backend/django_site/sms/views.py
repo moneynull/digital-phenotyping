@@ -52,6 +52,12 @@ class QuerySMS(APIView):
                     .values("field_id","timestamp","device_id","message_type","trace")\
                         .order_by("timestamp")
 
+        timestamp_list=[]
+        message_type_list=[]
+        for l in sms_results:
+            timestamp_list.append(l['timestamp'])
+            message_type_list.append(l['message_type'])
+
         # initial list
         result_array = [[] for i in range(3)]
         date_array = []
@@ -68,19 +74,18 @@ class QuerySMS(APIView):
 
         start_date_end_timestamp = int(time.mktime((start_date + datetime.timedelta(days=1)).timetuple() )* 1000)
 
-        for r in sms_results:
+        for n in range(len(sms_results)):
             
-            while start_date_timestamp > r["timestamp"] or r["timestamp"] >= start_date_end_timestamp:
+            while start_date_timestamp > timestamp_list[n] or timestamp_list[n] >= start_date_end_timestamp:
                 
                 j += 1
+                if j >= date_interval.days:
+                    break
                 start_date_timestamp = int(time.mktime(date_array[j].timetuple()) * 1000)
                 start_date_end_timestamp = int(time.mktime((date_array[j] + datetime.timedelta(days=1)).timetuple()) * 1000)
                 
-                if j > date_interval.days:
-                    break
-                
             if j >= date_interval.days:
                     break
-            result_array[r["message_type"] - 1][j] = result_array[r["message_type"] - 1][j] + 1
+            result_array[message_type_list[n] - 1][j] = result_array[message_type_list[n] - 1][j] + 1
 
         return Response(result_array)
