@@ -35,23 +35,28 @@ class QuerySMS(APIView):
         # start_date = zero_today - datetime.timedelta(days=5)
         # end_date = zero_today
 
+        # date and timestamp
         start_date = datetime.datetime.fromtimestamp(int(start_date_timestamp)/1000)
         end_date = datetime.datetime.fromtimestamp(int(end_date_timestamp)/1000)
 
-        date_interval = end_date - start_date
+        zero_start_date = start_date - datetime.timedelta(hours=start_date.hour, minutes=start_date.minute, seconds=start_date.second,microseconds=start_date.microsecond)
+        zero_end_date = end_date - \
+            datetime.timedelta(hours=end_date.hour, minutes=end_date.minute, seconds=end_date.second,microseconds=end_date.microsecond)\
+                + datetime.timedelta(days=1)
 
-        # start_date_timestamp = int(time.mktime(start_date.timetuple() )* 1000)
-        # end_date_timestamp = int(time.mktime(end_date.timetuple() )* 1000)
+        date_interval = zero_end_date - zero_start_date
 
-        # print(start_date_timestamp)
-        # print(end_date_timestamp)
+        zero_start_date_timestamp = int(time.mktime(zero_start_date.timetuple() )* 1000)
+        zero_end_date_timestamp = int(time.mktime(zero_end_date.timetuple() )* 1000)
 
+        # get sms data
         sms_results = models.Messages.objects.filter(device_id=device_id)\
-            .exclude(timestamp__gte = end_date_timestamp)\
-                .filter(timestamp__gte = start_date_timestamp)\
+            .exclude(timestamp__gte = zero_end_date_timestamp)\
+                .filter(timestamp__gte = zero_start_date_timestamp)\
                     .values("field_id","timestamp","device_id","message_type","trace")\
                         .order_by("timestamp")
 
+        # store data into list, optimize performance
         timestamp_list=[]
         message_type_list=[]
         for l in sms_results:
@@ -74,8 +79,9 @@ class QuerySMS(APIView):
 
         start_date_end_timestamp = int(time.mktime((start_date + datetime.timedelta(days=1)).timetuple() )* 1000)
 
+        # operate and calculate sms per day
         for n in range(len(sms_results)):
-            
+            # jump days without sms
             while start_date_timestamp > timestamp_list[n] or timestamp_list[n] >= start_date_end_timestamp:
                 
                 j += 1
@@ -88,4 +94,10 @@ class QuerySMS(APIView):
                     break
             result_array[message_type_list[n] - 1][j] = result_array[message_type_list[n] - 1][j] + 1
 
+        # print(len(sms_results))
+        # total = 0
+        # for i in range(len(result_array[0])):
+        #     total += result_array[0][i] + result_array[1][i]
+
+        # print(total)
         return Response(result_array)
