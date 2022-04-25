@@ -72,13 +72,11 @@ def calls_process(calls_result, start_date_stmp, date_interval):
     i = 0  # represent the data type as index
     j = 0  # represent the days index
     res_day = []
-    print('start_date_stmp: %s', start_date_stmp)
     for r in calls_result:
         if start_date_stmp + j * one_day <= r["timestamp"] < start_date_stmp + (j + 1) * one_day:
             i = r["call_type"] - 1
             res_array[i][j] += 1
         else:
-            print(j)
             res_day.append(datetime.datetime.fromtimestamp(int(start_date_stmp + j * one_day) / 1000))
             j = j + 1
 
