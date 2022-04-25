@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
   
     'appForeground',
-    'rest_framework',
     'corsheaders',
     'dataServer',
     'sms',

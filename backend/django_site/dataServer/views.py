@@ -30,9 +30,10 @@ one_day = 86400000
 
 def extract_message(request):
     if request.method == 'POST':
-        uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
-        start_date_stamp = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
-        end_date_stamp = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
+        req=json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        start_date_stamp = req.get('startDate')
+        end_date_stamp = req.get('endDate')
     else:
         uid = 0
 
