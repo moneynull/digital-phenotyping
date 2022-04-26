@@ -28,45 +28,50 @@ function InfoDetailsPage() {
   };
 
   // chart to show when clicking application button
-  const appChart =     
+  const appChart = (
     <CardContainer>
       <AppUsageChart />
       <Spacer />
-      <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
+      <Divider style={{ background: 'black' }} sx={{ borderBottomWidth: 1.5 }} />
       <Spacer />
       <CategoryChart />
-    </CardContainer>;
+    </CardContainer>
+  );
 
   // chart to show when clicking communication button
-  const comChart = 
+  const comChart = (
     <CardContainer>
       <SmsUsageChart />
       <Spacer />
-      <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
+      <Divider style={{ background: 'black' }} sx={{ borderBottomWidth: 1.5 }} />
       <Spacer />
       <CallsUsageChart />
     </CardContainer>
+  );
 
   // chart to show when clicking locations button
-  const locChart =
+  const locChart = (
     <CardContainer>
       <Reminder>Location chart on development</Reminder>
     </CardContainer>
+  );
 
   // chart to show when clicking screen button
-  const screenChart = 
+  const screenChart = (
     <CardContainer>
       <Reminder>Screen chart on development</Reminder>
     </CardContainer>
+  );
 
-  const defaultGreeting = 
+  const defaultGreeting = (
     <CardContainer>
       <Reminder>Select any type of aware information to see detail chart</Reminder>
     </CardContainer>
+  );
 
   // define the acutal chart that need to show
   let show = (type) => {
-    switch(type) {
+    switch (type) {
       case 'Applications':
         return appChart;
       case 'Communication':
@@ -78,7 +83,7 @@ function InfoDetailsPage() {
       default:
         return defaultGreeting;
     }
-  }
+  };
   const chartToShow = show(curSelected);
   const navBack = () => {};
 
@@ -125,7 +130,6 @@ function InfoDetailsPage() {
             </Grid>
           </Grid>
         </AwareAppsContainer>
-
       </SubContainer>
     </MainContainer>
   );
@@ -168,7 +172,7 @@ const AppName = styled.text`
   font-family: 'Open Sans', sans-serif;
 `;
 const Header = styled.div`
-  width: 100vw;
+  width: 80vw;
   height: 100px;
   display: flex;
   flex-direction: row;
