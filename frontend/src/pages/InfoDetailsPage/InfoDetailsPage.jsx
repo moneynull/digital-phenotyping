@@ -29,24 +29,26 @@ function InfoDetailsPage() {
 
   // chart to show when clicking application button
   const appChart = (
+    <ChartContainer>
     <CardContainer>
       <AppUsageChart />
-      <Spacer />
-      <Divider style={{ background: 'black' }} sx={{ borderBottomWidth: 1.5 }} />
-      <Spacer />
+    </CardContainer>
+    <CardContainer>
       <CategoryChart />
     </CardContainer>
+    </ChartContainer>
   );
 
   // chart to show when clicking communication button
   const comChart = (
-    <CardContainer>
-      <SmsUsageChart />
-      <Spacer />
-      <Divider style={{ background: 'black' }} sx={{ borderBottomWidth: 1.5 }} />
-      <Spacer />
-      <CallsUsageChart />
-    </CardContainer>
+    <ChartContainer>
+      <CardContainer>
+        <SmsUsageChart />
+      </CardContainer>
+      <CardContainer>
+        <CallsUsageChart />
+      </CardContainer>
+    </ChartContainer>
   );
 
   // chart to show when clicking locations button
@@ -98,31 +100,29 @@ function InfoDetailsPage() {
         <NameAvatar />
       </Header>
       <SubContainer>
-        {chartToShow}
-
         {/* AWARE Icon on the right */}
         <AwareAppsContainer>
           <SectionTitle title={'AWARE Information'} />
-          <Grid columnSpacing={{ xs: 1, sm: 2, md: 3 }} container rowSpacing={3}>
-            <Grid onClick={() => selected('Applications')} item xs={6}>
+          <Grid columnSpacing={{ xs: 1, sm: 2, md: 3 }} container rowSpacing={3} direction="row" justifyContent="flex-start" alignItems="baseline">
+            <Grid onClick={() => selected('Applications')} item xs={2}>
               <IconText curSelected={curSelected} name='Applications'>
                 <PhonelinkIcon sx={{ fontSize: 80 }} />
                 <AppName>Applications</AppName>
               </IconText>
             </Grid>
-            <Grid item onClick={() => selected('Communication')} xs={6}>
+            <Grid item onClick={() => selected('Communication')} xs={2}>
               <IconText curSelected={curSelected} name='Communication'>
                 <ChatRoundedIcon sx={{ fontSize: 80 }} />
                 <AppName>Communication</AppName>
               </IconText>
             </Grid>
-            <Grid item onClick={() => selected('Locations')} xs={6}>
+            <Grid item onClick={() => selected('Locations')} xs={2}>
               <IconText curSelected={curSelected} name='Locations'>
                 <LocationOnRoundedIcon sx={{ fontSize: 80 }} />
                 <AppName>Locations</AppName>
               </IconText>
             </Grid>
-            <Grid item onClick={() => selected('Screen')} xs={6}>
+            <Grid item onClick={() => selected('Screen')} xs={2}>
               <IconText curSelected={curSelected} name='Screen'>
                 <AccessTimeFilledRoundedIcon sx={{ fontSize: 80 }} />
                 <AppName>Screen</AppName>
@@ -130,6 +130,8 @@ function InfoDetailsPage() {
             </Grid>
           </Grid>
         </AwareAppsContainer>
+
+        {chartToShow}
       </SubContainer>
     </MainContainer>
   );
@@ -143,14 +145,19 @@ const MainContainer = styled.div`
 `;
 const SubContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;
 const AwareAppsContainer = styled.div`
   display: flex;
   margin-left: 100px;
-  width: 480px;
+  margin-bottom: 50px;
+  width: 100%;
   flex-direction: column;
 `;
+const ChartContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
 const IconText = styled.div`
   padding: 10px;
   &:hover {

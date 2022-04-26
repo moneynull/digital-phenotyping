@@ -93,8 +93,8 @@ function SmsUsageChart() {
       options={smsState.options}
       series={smsState.series}
       type='bar'
-      width='500'
-      height='350'
+      width='600'
+      height='400'
     />
   );
 }

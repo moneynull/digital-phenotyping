@@ -81,7 +81,7 @@ function CategoryChart() {
     }, []);
     
     return(
-        <Chart options={barState.options} series={barState.series} type='bar' width='500' height='350' />
+        <Chart options={barState.options} series={barState.series} type='bar' width='650' height='400' />
     )
 }
 

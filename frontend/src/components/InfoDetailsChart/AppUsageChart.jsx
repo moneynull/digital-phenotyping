@@ -87,8 +87,8 @@ function AppUsageChart() {
       options={barState.options}
       series={barState.series}
       type='bar'
-      width='500'
-      height='350'
+      width='600'
+      height='400'
     />
   );
 }
