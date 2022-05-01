@@ -49,12 +49,15 @@ const dummyCategoryData = {
           color: `${COLORS.text_2}`,
         },
       },
+
       fill: {
         colors: colors,
       },
+
       chart: {
         id: 'categoryBar',
       },
+
       plotOptions: {
         bar: {
           borderRadius: 4,
@@ -62,7 +65,20 @@ const dummyCategoryData = {
           distributed: true
         },
       },
+
+      xaxis: {
+        title: {
+          text: 'Hours of usage',
+          style: {
+            fontSize: '13px',
+            fontWeight: 200,
+            color: `${COLORS.text_2}`,
+            cssClass: 'apexcharts-xaxis-label'
+          }
+        }
+      }
     },
+
     series: [
       {
         name: 'Times Used',

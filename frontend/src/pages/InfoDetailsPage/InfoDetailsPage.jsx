@@ -18,6 +18,7 @@ import { Divider } from '@mui/material';
 import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
 import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
 import CallsUsageChart from '../../components/InfoDetailsChart/CallsUsageChart';
+import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDurationChart';
 
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
@@ -60,9 +61,11 @@ function InfoDetailsPage() {
 
   // chart to show when clicking screen button
   const screenChart = (
-    <CardContainer>
-      <Reminder>Screen chart on development</Reminder>
-    </CardContainer>
+    <ChartContainer>
+      <CardContainer>
+        <UnlockDurationChart />
+      </CardContainer>
+    </ChartContainer>
   );
 
   const defaultGreeting = (
