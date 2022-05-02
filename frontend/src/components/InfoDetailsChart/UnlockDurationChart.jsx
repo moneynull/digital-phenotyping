@@ -1,89 +1,38 @@
-import { duration } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import COLORS from '../../constant/Colors';
 
-// function that auto generate some random number
-function generateData(){
-    let arr = [];
-    for(let i=0; i<32; ++i){
-      arr.push({x: i, y: Math.floor((Math.random() * 12 * 60) + 1)});
-    }
-    return arr;
-}
-
 // TODO!!!!   apply backend api
 // auto generated fake data for a year
-const durationSeries = [{
-    name: 'January',
-    data: generateData()
-    },
-    {
-      name: 'February',
-      data: generateData()
-    },
-    {
-      name: 'March',
-      data: generateData()
-    },
-    {
-      name: 'April',
-      data: generateData()
-    },
-    {
-      name: 'May',
-      data: generateData()
-    },
-    {
-      name: 'June',
-      data: generateData()
-    },
-    {
-      name: 'July',
-      data: generateData() 
-    },
-    {
-      name: 'August',
-      data: generateData() 
-    },
-    {
-      name: 'September',
-      data: generateData() 
-    },
-    {
-      name: 'October',
-      data: generateData() 
-    },
-    {
-      name: 'November',
-      data: generateData() 
-    },
-    {
-      name: 'December',
-      data: generateData() 
-    }
+const xaxisCategory = [
+  '2022/5/1',
+  '2022/5/2',
+  '2022/5/3',
+  '2022/5/4',
+  '2022/5/5',
+  '2022/5/6',
+  '2022/5/7',
+  '2022/5/8',
+  '2022/5/9',
+  '2022/5/10'
+]
+
+const durationSeries = [
+  {
+    name: 'device id: 123',
+    data: [30, 155, 18, 217, 166, 248, 159, 131, 7, 188]
+  },
+  {
+    name: 'device id: 666',
+    data: [187, 256, 3, 76, 199, 55, 185, 111, 48, 92]
+  }
 ]
 
 const durationData = {
     data: {},
     series: durationSeries,
     options: {
-      colors: [COLORS.primary],
-
-      plotOptions: {
-        heatmap: {
-          radius: 3,
-          distributed: true,
-        }
-      },
-
-      dataLabels: {
-        enabled: false
-      },
-
-      stroke: {
-        width: 2
-      },
+      colors: [COLORS.primary, "#FEB019", "#775DD0"],
 
       title: {
         text: 'Screen Unlocked Duration (in minutes)',
@@ -99,6 +48,30 @@ const durationData = {
         }
       },
 
+      plotOptions: {
+        heatmap: {
+          radius: 3,
+          distributed: true,
+        }
+      },
+
+      dataLabels: {
+        enabled: false
+      },
+
+      stroke: {
+        width: 2,
+        curve: 'smooth'
+      },
+
+      grid: {
+        xaxis: {
+          lines: {
+            show: true
+          }
+        }
+      },
+
       tooltip: {
           enabled: true,
           x: {
@@ -107,9 +80,7 @@ const durationData = {
       },
 
       xaxis: {
-          type: 'numberic',
-          min: 0,
-          max: 31
+        categories: xaxisCategory
       }
     },
 
@@ -126,7 +97,7 @@ function UnlockDurationChart() {
     }, []);
     
     return(
-        <Chart options={barState.options} series={barState.series} type='heatmap' width='650' height='400' />
+        <Chart options={barState.options} series={barState.series} type='line' width='650' height='400' />
     )
 }
 
