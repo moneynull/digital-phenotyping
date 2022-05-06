@@ -6,11 +6,53 @@ import time
 from django.http import HttpResponse
 from django.shortcuts import render
 import json
+from geopy.geocoders import GoogleV3
 
 
 class QuerySMS(APIView):
     @staticmethod
     def get(request):
+        # geolocator = GoogleV3(api_key='AIzaSyCF-I4LgabjEwFFjMqHSuMNdX1_MTa6P6A')
+        # point = (-37.78015147, 144.96134667 )
+        # point1 = (-37.801088970154524, 144.96465174481273)
+        # point2 = (-37.76197880040854, 144.96164850890636 )
+        # #point3 = (31.9735115, 118.7764705 )
+        # address = geolocator.reverse(point,sensor=False)
+        # address1 = geolocator.reverse(point1,sensor=False)
+        # address2 = geolocator.reverse(point2,sensor=False)
+        # #address3 = geolocator.reverse(point3,sensor=False)
+        # # g = geocoder.google([51.523910, -0.158578], method='reverse')
+        # print(address , " ---- ", address1, " ---- " ,address2)
+        time1 = time.time()
+        # # if request.method == 'POST':
+        uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
+            #start_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
+            #end_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
+
+        device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
+        device_id = device_result[0]["awaredeviceid"]
+        time2 = time.time()
+        location_results_all = models.Locations.objects.filter(device_id=device_id)\
+            .values("double_latitude","double_longitude")\
+                .order_by("timestamp")
+        location_results = location_results_all[50:]
+        
+        print(len(location_results_all))
+        time3 = time.time()
+        
+        latitude_list=[]
+        longitude_list=[]
+        for l in location_results:
+            latitude_list.append(l['double_latitude'])
+            longitude_list.append(l['double_longitude'])
+        time4 = time.time()
+        result_array = [[] for i in range(len(latitude_list))]
+        for i in range(len(latitude_list)):
+            result_array[i].append(latitude_list[i])
+            result_array[i].append(longitude_list[i])
+        time5 = time.time()
+        print(time2 - time1, " -- ", time3 - time2, " -- ", time4 - time3, " -- ", time5 - time4)
+        print(result_array)
 
         return Response()
 
@@ -24,6 +66,12 @@ class QuerySMS(APIView):
         
         device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
         device_id = device_result[0]["awaredeviceid"]
+
+        location_result = models.Messages.objects.filter(device_id=device_id)\
+            .exclude(timestamp__gte = zero_end_date_timestamp)\
+                .filter(timestamp__gte = zero_start_date_timestamp)\
+                    .values("field_id","timestamp","device_id","message_type","trace")\
+                        .order_by("timestamp")
 
         # today_timestamp = "1642056676314"
         # today = datetime.datetime.fromtimestamp(int(today_timestamp)/1000)
@@ -100,4 +148,5 @@ class QuerySMS(APIView):
         #     total += result_array[0][i] + result_array[1][i]
 
         # print(total)
+        
         return Response(result_array)
