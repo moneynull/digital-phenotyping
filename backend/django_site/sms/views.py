@@ -7,53 +7,64 @@ from django.http import HttpResponse
 from django.shortcuts import render
 import json
 from geopy.geocoders import GoogleV3
+import googlemaps
 
 
 class QuerySMS(APIView):
     @staticmethod
     def get(request):
-        # geolocator = GoogleV3(api_key='GOOGLE_API_KEY')
-        # point = (-37.77460172, 144.96007035 )
-        # point1 = (-37.77834912, 144.96414229)
-        # point2 = (-37.79897665, 144.9651844 )
-        # #point3 = (31.9735115, 118.7764705 )
-        # address = geolocator.reverse(point,sensor=False)
-        # address1 = geolocator.reverse(point1,sensor=False)
-        # address2 = geolocator.reverse(point2,sensor=False)
-        # #address3 = geolocator.reverse(point3,sensor=False)
-        # # g = geocoder.google([51.523910, -0.158578], method='reverse')
-        # print(address , " ---- ", address1, " ---- " ,address2)
-        
-        time1 = time.time()
-        # # if request.method == 'POST':
-        uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
-            #start_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
-            #end_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
+        gmaps = googlemaps.Client(key='Your-API-Key')
+        point = (-37.77964745, 144.96107302 )
+        place = gmaps.reverse_geocode(point)[0]
 
-        device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
-        device_id = device_result[0]["awaredeviceid"]
-        time2 = time.time()
-        location_results = models.Locations.objects.filter(device_id=device_id)\
-            .values("double_latitude","double_longitude")\
-                .order_by("timestamp")[50:]
-        # location_results = location_results_all[50:]
+        address = place['formatted_address']
+        types = place['types'][0]
+        print(address)
+        print(types)
+
+        # geolocator = GoogleV3(api_key='AIzaSyCF-I4LgabjEwFFjMqHSuMNdX1_MTa6P6A')
+        # # point1 = (-37.70115008, 145.01651553)
+        # # point2 = (-37.7218922, 144.95870016 )
+        # # point3 = (-37.70063093, 144.96420647 )
+        # # point4 = (-37.73546247, 144.96287202 )
+        # address1 = geolocator.reverse(point,sensor=False)
+        # # address1 = geolocator.reverse(point1,sensor=False)
+        # # address2 = geolocator.reverse(point2,sensor=False)
+        # # address3 = geolocator.reverse(point3,sensor=False)
+        # # address4 = geolocator.reverse(point4,sensor=False)
+        # # # g = geocoder.google([51.523910, -0.158578], method='reverse')
+        # # print(address , " ---- ", address1, " ---- " ,address2 , " ---- ", address3, " ---- " ,address4)
         
-        #print(len(location_results_all))
-        time3 = time.time()
+        # time1 = time.time()
+        # # # if request.method == 'POST':
+        # uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
+        #     #start_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
+        #     #end_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
+
+        # device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
+        # device_id = device_result[0]["awaredeviceid"]
+        # time2 = time.time()
+        # location_results = models.Locations.objects.filter(device_id=device_id)\
+        #     .values("double_latitude","double_longitude")\
+        #         .order_by("timestamp")[50:]
+        # # location_results = location_results_all[50:]
         
-        latitude_list=[]
-        longitude_list=[]
-        for l in location_results:
-            latitude_list.append(l['double_latitude'])
-            longitude_list.append(l['double_longitude'])
-        time4 = time.time()
-        result_array = [[] for i in range(len(latitude_list))]
-        for i in range(len(latitude_list)):
-            result_array[i].append(latitude_list[i])
-            result_array[i].append(longitude_list[i])
-        time5 = time.time()
-        print(time2 - time1, " -- ", time3 - time2, " -- ", time4 - time3, " -- ", time5 - time4)
-        print(result_array)
+        # #print(len(location_results_all))
+        # time3 = time.time()
+        
+        # latitude_list=[]
+        # longitude_list=[]
+        # for l in location_results:
+        #     latitude_list.append(l['double_latitude'])
+        #     longitude_list.append(l['double_longitude'])
+        # time4 = time.time()
+        # result_array = [[] for i in range(len(latitude_list))]
+        # for i in range(len(latitude_list)):
+        #     result_array[i].append(latitude_list[i])
+        #     result_array[i].append(longitude_list[i])
+        # time5 = time.time()
+        # print(time2 - time1, " -- ", time3 - time2, " -- ", time4 - time3, " -- ", time5 - time4)
+        # print(result_array)
 
         return Response()
 
