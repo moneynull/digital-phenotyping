@@ -12,10 +12,10 @@ from geopy.geocoders import GoogleV3
 class QuerySMS(APIView):
     @staticmethod
     def get(request):
-        # geolocator = GoogleV3(api_key='AIzaSyCF-I4LgabjEwFFjMqHSuMNdX1_MTa6P6A')
-        # point = (-37.78015147, 144.96134667 )
-        # point1 = (-37.801088970154524, 144.96465174481273)
-        # point2 = (-37.76197880040854, 144.96164850890636 )
+        # geolocator = GoogleV3(api_key='GOOGLE_API_KEY')
+        # point = (-37.77460172, 144.96007035 )
+        # point1 = (-37.77834912, 144.96414229)
+        # point2 = (-37.79897665, 144.9651844 )
         # #point3 = (31.9735115, 118.7764705 )
         # address = geolocator.reverse(point,sensor=False)
         # address1 = geolocator.reverse(point1,sensor=False)
@@ -23,6 +23,7 @@ class QuerySMS(APIView):
         # #address3 = geolocator.reverse(point3,sensor=False)
         # # g = geocoder.google([51.523910, -0.158578], method='reverse')
         # print(address , " ---- ", address1, " ---- " ,address2)
+        
         time1 = time.time()
         # # if request.method == 'POST':
         uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
