@@ -65,6 +65,10 @@ class QuerySMS(APIView):
             end_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
         
         device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
+        print(device_result)
+        print(len(device_result))
+        if len(device_result) == 0:
+            return Response(device_result)
         device_id = device_result[0]["awaredeviceid"]
 
         location_result = models.Messages.objects.filter(device_id=device_id)\
