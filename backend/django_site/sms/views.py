@@ -32,12 +32,12 @@ class QuerySMS(APIView):
         device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
         device_id = device_result[0]["awaredeviceid"]
         time2 = time.time()
-        location_results_all = models.Locations.objects.filter(device_id=device_id)\
+        location_results = models.Locations.objects.filter(device_id=device_id)\
             .values("double_latitude","double_longitude")\
-                .order_by("timestamp")
-        location_results = location_results_all[50:]
+                .order_by("timestamp")[50:]
+        # location_results = location_results_all[50:]
         
-        print(len(location_results_all))
+        #print(len(location_results_all))
         time3 = time.time()
         
         latitude_list=[]
