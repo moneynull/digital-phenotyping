@@ -32,15 +32,7 @@ const dummyChartData = {
       },
     },
     xaxis: {
-      categories: [
-        'Twitter',
-        'Google Map',
-        'Facebook',
-        'ESPN',
-        'Domain Real Estate',
-        'Champions League Official',
-        'ASUS Weather',
-      ],
+      categories: [],
     },
   },
   series: [
@@ -73,6 +65,7 @@ function AppUsageChart() {
 
         response.data[1].splice(3, 1);
         res.series[0].data = response.data[1];
+        // @ts-ignore
         setBarState(res);
       });
   };

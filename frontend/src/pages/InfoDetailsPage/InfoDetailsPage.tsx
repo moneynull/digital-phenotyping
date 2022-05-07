@@ -23,7 +23,7 @@ import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDuratio
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
   const [curSelected, setCurSelected] = useState('Application');
-  const selected = (name) => {
+  const selected = (name: string) => {
     Log(name);
     setCurSelected(name);
   };
@@ -31,12 +31,12 @@ function InfoDetailsPage() {
   // chart to show when clicking application button
   const appChart = (
     <ChartContainer>
-    <CardContainer>
-      <AppUsageChart />
-    </CardContainer>
-    <CardContainer>
-      <CategoryChart />
-    </CardContainer>
+      <CardContainer>
+        <AppUsageChart />
+      </CardContainer>
+      <CardContainer>
+        <CategoryChart />
+      </CardContainer>
     </ChartContainer>
   );
 
@@ -75,7 +75,7 @@ function InfoDetailsPage() {
   );
 
   // define the acutal chart that need to show
-  let show = (type) => {
+  let show = (type: string) => {
     switch (type) {
       case 'Applications':
         return appChart;
@@ -106,7 +106,14 @@ function InfoDetailsPage() {
         {/* AWARE Icon on the right */}
         <AwareAppsContainer>
           <SectionTitle title={'AWARE Information'} />
-          <Grid columnSpacing={{ xs: 1, sm: 2, md: 3 }} container rowSpacing={3} direction="row" justifyContent="flex-start" alignItems="baseline">
+          <Grid
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            container
+            rowSpacing={3}
+            direction='row'
+            justifyContent='flex-start'
+            alignItems='baseline'
+          >
             <Grid onClick={() => selected('Applications')} item xs={2}>
               <IconText curSelected={curSelected} name='Applications'>
                 <PhonelinkIcon sx={{ fontSize: 80 }} />
@@ -140,6 +147,10 @@ function InfoDetailsPage() {
   );
 }
 
+interface Props {
+  curSelected: string;
+  name: string;
+}
 const MainContainer = styled.div`
   font-size: 32px;
   padding-left: 13vw;
@@ -160,14 +171,14 @@ const AwareAppsContainer = styled.div`
 const ChartContainer = styled.div`
   display: flex;
   flex-direction: row;
-`
-const IconText = styled.div`
+`;
+const IconText = styled.div<Props>`
   padding: 10px;
   &:hover {
     cursor: pointer;
   }
-  color: ${(props) => (props.name === props.curSelected ? COLORS.white : COLORS.text)};
-  background-color: ${(props) =>
+  color: ${(props: Props) => (props.name === props.curSelected ? COLORS.white : COLORS.text)};
+  background-color: ${(props: Props) =>
     props.name === props.curSelected ? COLORS.primary : COLORS.white};
   border-radius: 10px;
   display: flex;

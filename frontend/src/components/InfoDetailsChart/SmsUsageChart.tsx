@@ -28,9 +28,6 @@ const dummySMSData = {
         barHeight: '80%',
       },
     },
-    dataLabels: {
-      enabled: false,
-    },
     stroke: {
       width: 1,
       colors: ['#fff'],
@@ -85,6 +82,7 @@ function SmsUsageChart() {
   };
   useEffect(() => {
     fetchData();
+    //@ts-ignore
     setSMSState(dummySMSData);
   }, []);
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import COLORS from '../constant/Colors';
 
-function NavTitle(props) {
+function NavTitle(props: any) {
   return (
     <NavTitleContainer>
       {props.showArrowBack && <ArrowBackRoundedIcon fontSize='large' />}
