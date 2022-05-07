@@ -6,22 +6,18 @@ import time
 from django.http import HttpResponse
 from django.shortcuts import render
 import json
-from geopy.geocoders import GoogleV3
-import googlemaps
+from sms import getAddress
 
 
 class QuerySMS(APIView):
     @staticmethod
     def get(request):
-        gmaps = googlemaps.Client(key='Your-API-Key')
-        point = (-37.77964745, 144.96107302 )
-        place = gmaps.reverse_geocode(point)[0]
-
-        address = place['formatted_address']
-        types = place['types'][0]
-        print(address)
-        print(types)
-
+        # point = (-37.77964745, 144.96107302 ) -37.7903962,144.9530216 -37.7941334,144.9653626
+        # lat_list = [-37.77964745, -37.7743305, -37.7743265 , -37.8002523, -37.79599386267364]
+        # lon_list = [144.96107302, 144.9598333, 144.9598262 , 144.9645091, 144.96454194188118]
+        # address_list, type_list = getAddress.GetAddress.getAddressAndType(lat_list, lon_list)
+        # print(address_list)
+        # print(type_list)
         return Response()
 
     
@@ -38,12 +34,6 @@ class QuerySMS(APIView):
         if len(device_result) == 0:
             return Response(device_result)
         device_id = device_result[0]["awaredeviceid"]
-
-        location_result = models.Messages.objects.filter(device_id=device_id)\
-            .exclude(timestamp__gte = zero_end_date_timestamp)\
-                .filter(timestamp__gte = zero_start_date_timestamp)\
-                    .values("field_id","timestamp","device_id","message_type","trace")\
-                        .order_by("timestamp")
 
         # today_timestamp = "1642056676314"
         # today = datetime.datetime.fromtimestamp(int(today_timestamp)/1000)
@@ -113,12 +103,5 @@ class QuerySMS(APIView):
             if j >= date_interval.days:
                     break
             result_array[message_type_list[n] - 1][j] = result_array[message_type_list[n] - 1][j] + 1
-
-        # print(len(sms_results))
-        # total = 0
-        # for i in range(len(result_array[0])):
-        #     total += result_array[0][i] + result_array[1][i]
-
-        # print(total)
         
         return Response(result_array)
