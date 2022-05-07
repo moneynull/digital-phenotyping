@@ -101,7 +101,6 @@ def cal_cen_loc(request):
 
     location_results = models.Locations.objects.filter(device_id=device_id)\
         .exclude(double_latitude=0).exclude(double_longitude=0).values("double_latitude", "double_longitude")
-    print(len(location_results))
 
     latitude_list = []
     longitude_list = []
