@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import logo from '../../../src/asset/senpsi_logo.png';
+import logo from '../../../src/assets/senpsi_logo.png';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 

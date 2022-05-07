@@ -18,55 +18,65 @@ import { Divider } from '@mui/material';
 import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
 import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
 import CallsUsageChart from '../../components/InfoDetailsChart/CallsUsageChart';
+import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDurationChart';
 
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
   const [curSelected, setCurSelected] = useState('Application');
-  const selected = (name) => {
+  const selected = (name: string) => {
     Log(name);
     setCurSelected(name);
   };
 
   // chart to show when clicking application button
-  const appChart =     
-    <CardContainer>
-      <AppUsageChart />
-      <Spacer />
-      <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
-      <Spacer />
-      <CategoryChart />
-    </CardContainer>;
+  const appChart = (
+    <ChartContainer>
+      <CardContainer>
+        <AppUsageChart />
+      </CardContainer>
+      <CardContainer>
+        <CategoryChart />
+      </CardContainer>
+    </ChartContainer>
+  );
 
   // chart to show when clicking communication button
-  const comChart = 
-    <CardContainer>
-      <SmsUsageChart />
-      <Spacer />
-      <Divider style={{background: 'black'}} sx={{borderBottomWidth: 1.5}} />
-      <Spacer />
-      <CallsUsageChart />
-    </CardContainer>
+  const comChart = (
+    <ChartContainer>
+      <CardContainer>
+        <SmsUsageChart />
+      </CardContainer>
+      <CardContainer>
+        <CallsUsageChart />
+      </CardContainer>
+    </ChartContainer>
+  );
 
   // chart to show when clicking locations button
-  const locChart =
+  const locChart = (
     <CardContainer>
       <Reminder>Location chart on development</Reminder>
     </CardContainer>
+  );
 
   // chart to show when clicking screen button
-  const screenChart = 
-    <CardContainer>
-      <Reminder>Screen chart on development</Reminder>
-    </CardContainer>
+  const screenChart = (
+    <ChartContainer>
+      <CardContainer>
+        <UnlockDurationChart />
+      </CardContainer>
+    </ChartContainer>
+  );
 
-  const defaultGreeting = 
+  const defaultGreeting = (
     <CardContainer>
       <Reminder>Select any type of aware information to see detail chart</Reminder>
     </CardContainer>
+  );
 
   // define the acutal chart that need to show
-  let show = (type) => {
-    switch(type) {
+  let show = (type: string) => {
+    switch (type) {
       case 'Applications':
         return appChart;
       case 'Communication':
@@ -78,7 +88,7 @@ function InfoDetailsPage() {
       default:
         return defaultGreeting;
     }
-  }
+  };
   const chartToShow = show(curSelected);
   const navBack = () => {};
 
@@ -93,31 +103,36 @@ function InfoDetailsPage() {
         <NameAvatar />
       </Header>
       <SubContainer>
-        {chartToShow}
-
         {/* AWARE Icon on the right */}
         <AwareAppsContainer>
           <SectionTitle title={'AWARE Information'} />
-          <Grid columnSpacing={{ xs: 1, sm: 2, md: 3 }} container rowSpacing={3}>
-            <Grid onClick={() => selected('Applications')} item xs={6}>
+          <Grid
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            container
+            rowSpacing={3}
+            direction='row'
+            justifyContent='flex-start'
+            alignItems='baseline'
+          >
+            <Grid onClick={() => selected('Applications')} item xs={2}>
               <IconText curSelected={curSelected} name='Applications'>
                 <PhonelinkIcon sx={{ fontSize: 80 }} />
                 <AppName>Applications</AppName>
               </IconText>
             </Grid>
-            <Grid item onClick={() => selected('Communication')} xs={6}>
+            <Grid item onClick={() => selected('Communication')} xs={2}>
               <IconText curSelected={curSelected} name='Communication'>
                 <ChatRoundedIcon sx={{ fontSize: 80 }} />
                 <AppName>Communication</AppName>
               </IconText>
             </Grid>
-            <Grid item onClick={() => selected('Locations')} xs={6}>
+            <Grid item onClick={() => selected('Locations')} xs={2}>
               <IconText curSelected={curSelected} name='Locations'>
                 <LocationOnRoundedIcon sx={{ fontSize: 80 }} />
                 <AppName>Locations</AppName>
               </IconText>
             </Grid>
-            <Grid item onClick={() => selected('Screen')} xs={6}>
+            <Grid item onClick={() => selected('Screen')} xs={2}>
               <IconText curSelected={curSelected} name='Screen'>
                 <AccessTimeFilledRoundedIcon sx={{ fontSize: 80 }} />
                 <AppName>Screen</AppName>
@@ -126,11 +141,16 @@ function InfoDetailsPage() {
           </Grid>
         </AwareAppsContainer>
 
+        {chartToShow}
       </SubContainer>
     </MainContainer>
   );
 }
 
+interface Props {
+  curSelected: string;
+  name: string;
+}
 const MainContainer = styled.div`
   font-size: 32px;
   padding-left: 13vw;
@@ -139,21 +159,26 @@ const MainContainer = styled.div`
 `;
 const SubContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;
 const AwareAppsContainer = styled.div`
   display: flex;
   margin-left: 100px;
-  width: 480px;
+  margin-bottom: 50px;
+  width: 100%;
   flex-direction: column;
 `;
-const IconText = styled.div`
+const ChartContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+const IconText = styled.div<Props>`
   padding: 10px;
   &:hover {
     cursor: pointer;
   }
-  color: ${(props) => (props.name === props.curSelected ? COLORS.white : COLORS.text)};
-  background-color: ${(props) =>
+  color: ${(props: Props) => (props.name === props.curSelected ? COLORS.white : COLORS.text)};
+  background-color: ${(props: Props) =>
     props.name === props.curSelected ? COLORS.primary : COLORS.white};
   border-radius: 10px;
   display: flex;
@@ -168,7 +193,7 @@ const AppName = styled.text`
   font-family: 'Open Sans', sans-serif;
 `;
 const Header = styled.div`
-  width: 100vw;
+  width: 80vw;
   height: 100px;
   display: flex;
   flex-direction: row;
