@@ -45,7 +45,7 @@ const locationNumberData = {
 
 }
 
-function UnlockLocationNumberTreemapChart() {
+function LocationNumberTreemapChart() {
   const [barState, setBarState] = useState({
     options: {},
     series: [],
@@ -66,4 +66,4 @@ function UnlockLocationNumberTreemapChart() {
   );
 }
 
-export default UnlockLocationNumberTreemapChart;
+export default LocationNumberTreemapChart;

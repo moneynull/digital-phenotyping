@@ -104,7 +104,7 @@ const locationNumberData = {
 
 };
 
-function UnlockLocationNumberChart() {
+function LocationNumberHeatMapChart() {
   const [barState, setBarState] = useState({
     options: {},
     series: [],
@@ -125,4 +125,4 @@ function UnlockLocationNumberChart() {
   );
 }
 
-export default UnlockLocationNumberChart;
+export default LocationNumberHeatMapChart;

@@ -17,23 +17,17 @@ const xaxisCategory = [
 
 const loacationNumberSeries = [
   {
-    name: 'device: phone',
+    name: 'times visited',
     data: [0, 2, 3, 5, 1, 2, 4, 2, 7, 1],
-  },
-  {
-    name: 'device: laptop',
-    data: [7, 5, 0, 1, 4, 3, 4, 9, 2, 3],
-  },
+  }
 ];
 
 const locationNumberData = {
   series: loacationNumberSeries,
   options: {
     chart: {
-      id: 'fb',
-      group: 'social',
-      type: 'line',
-      height: 160
+      height: 350,
+      type: 'bar',
     },
     colors: ['#008FFB', '#00E396'],
 
@@ -45,9 +39,6 @@ const locationNumberData = {
       },
     },
 
-    dataLabels: {
-      enabled: true,
-    },
 
     title: {
       text: 'Number of locations visited',
@@ -62,9 +53,17 @@ const locationNumberData = {
         color: `${COLORS.text_2}`,
       },
     },
-
     xaxis: {
       categories: xaxisCategory,
+    
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 10,
+        dataLabels: {
+          position: 'top', // top, center, bottom
+        },
+      }
     },
   },
 
@@ -84,7 +83,7 @@ function LocationNumberChart() {
     <Chart
       options={barState.options}
       series={barState.series}
-      type='line'
+      type='bar'
       width='650'
       height='400'
     />
