@@ -47,6 +47,7 @@ class PreProcessLocation(APIView):
                 target_day_end_date = PreProcessLocation.getFutureDate(start_zero_date, j + 1)
                 target_day_end_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_end_date)
                 
+                # i is device_id
                 ## call method(i, target_day_start_timestamp, target_day_end_timestamp)
 
                 # print(target_day_start_date, " -- ", target_day_start_timestamp , " -- ", target_day_end_date , " -- ", target_day_end_timestamp)
