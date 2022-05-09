@@ -21,9 +21,7 @@ import CallsUsageChart from '../../components/InfoDetailsChart/CallsUsageChart';
 import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDurationChart';
 import LocationNumberChart from '../../components/InfoDetailsChart/locationNumberChart';
 import LocationNumberHeatMapChart from '../../components/InfoDetailsChart/locationNumberChartHeatmap';
-import LocationNumberTreemapChart from '../../components/InfoDetailsChart/locationNumberChartTreemapChart';
 import LocationNumberColumnChart from '../../components/InfoDetailsChart/locationNumberColumnChart';
-import LocationTypesColumnChart from '../../components/InfoDetailsChart/locationTypesColumnChart';
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
   const [curSelected, setCurSelected] = useState('Application');
@@ -60,19 +58,10 @@ function InfoDetailsPage() {
   const locChart = (
     <ChartContainer>
       <CardContainer>
-        <LocationNumberChart />
-      </CardContainer>
-      <CardContainer>
         <LocationNumberHeatMapChart />
       </CardContainer>
       <CardContainer>
-        <LocationNumberTreemapChart />
-      </CardContainer>
-      <CardContainer>
         <LocationNumberColumnChart />
-      </CardContainer>
-      <CardContainer>
-        <LocationTypesColumnChart />
       </CardContainer>
     </ChartContainer>
   );

@@ -18,7 +18,7 @@ const xaxisCategory = [
 const loacationNumberSeries = [
   {
     name: 'times visited',
-    data: [0, 2, 3, 5, 1, 2, 4, 2, 7, 1],
+    data: [14, 15, 15, 20, 4, 12, 22, 28, 17, 7],
   }
 ];
 

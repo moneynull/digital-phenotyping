@@ -10,49 +10,50 @@ const xaxisCategory = [
   //'Brunswick',
   //'Sunshine',
   'Brooklyn',
+  'Total'
   //'Footscray',
 ];
 
 const loacationNumberSeries = [
   {
   name: "May 1",
-  data: [{x: 'Essendon',y: 2}, {x: 'Brooklyn',y: 9}, {x: 'Fitzroy',y: 1}, {x: 'Boxhill',y: 2}]
+  data: [{x: 'Essendon',y: 2}, {x: 'Brooklyn',y: 9}, {x: 'Fitzroy',y: 1}, {x: 'Boxhill',y: 2},{x: 'Total',y: 14}]
   },
 
   {name: "May 2",
-  data: [{x: 'Essendon',y: 4}, {x: 'Brooklyn',y: 4}, {x: 'Fitzroy',y: 3}, {x: 'Boxhill',y: 4}]
+  data: [{x: 'Essendon',y: 4}, {x: 'Brooklyn',y: 4}, {x: 'Fitzroy',y: 3}, {x: 'Boxhill',y: 4},{x: 'Total',y: 15}]
   },
 
   {name: "May 3",
-  data: [{x: 'Essendon',y: 9}, {x: 'Brooklyn',y: 2}, {x: 'Fitzroy',y: 4}, {x: 'Boxhill',y: 0}]
+  data: [{x: 'Essendon',y: 9}, {x: 'Brooklyn',y: 2}, {x: 'Fitzroy',y: 4}, {x: 'Boxhill',y: 0},{x: 'Total',y: 15}]
   },
 
   {name: "May 4",
-  data: [{x: 'Essendon',y: 0}, {x: 'Brooklyn',y: 3}, {x: 'Fitzroy',y: 9}, {x: 'Boxhill',y: 8}]
+  data: [{x: 'Essendon',y: 0}, {x: 'Brooklyn',y: 3}, {x: 'Fitzroy',y: 9}, {x: 'Boxhill',y: 8},{x: 'Total',y: 20}]
   },
 
   {name: "May 5",
-  data: [{x: 'Essendon',y: 1}, {x: 'Brooklyn',y: 1}, {x: 'Fitzroy',y: 0}, {x: 'Boxhill',y: 2}]
+  data: [{x: 'Essendon',y: 1}, {x: 'Brooklyn',y: 1}, {x: 'Fitzroy',y: 0}, {x: 'Boxhill',y: 2},{x: 'Total',y: 4}]
   },
 
   {name: "May 6",
-    data: [{x: 'Essendon',y: 2}, {x: 'Brooklyn',y: 7}, {x: 'Fitzroy',y: 1}, {x: 'Boxhill',y: 2}]
+    data: [{x: 'Essendon',y: 2}, {x: 'Brooklyn',y: 7}, {x: 'Fitzroy',y: 1}, {x: 'Boxhill',y: 2},{x: 'Total',y: 12}]
     },
   
     {name: "May 7",
-    data: [{x: 'Essendon',y: 9}, {x: 'Brooklyn',y: 9}, {x: 'Fitzroy',y: 3}, {x: 'Boxhill',y: 1}]
+    data: [{x: 'Essendon',y: 9}, {x: 'Brooklyn',y: 9}, {x: 'Fitzroy',y: 3}, {x: 'Boxhill',y: 1},{x: 'Total',y: 22}]
     },
   
     {name: "May 8",
-    data: [{x: 'Essendon',y: 9}, {x: 'Brooklyn',y: 8}, {x: 'Fitzroy',y: 4}, {x: 'Boxhill',y: 7}]
+    data: [{x: 'Essendon',y: 9}, {x: 'Brooklyn',y: 8}, {x: 'Fitzroy',y: 4}, {x: 'Boxhill',y: 7},{x: 'Total',y: 28}]
     },
   
     {name: "May 9",
-    data: [{x: 'Essendon',y: 3}, {x: 'Brooklyn',y: 3}, {x: 'Fitzroy',y: 9}, {x: 'Boxhill',y: 2}]
+    data: [{x: 'Essendon',y: 3}, {x: 'Brooklyn',y: 3}, {x: 'Fitzroy',y: 9}, {x: 'Boxhill',y: 2},{x: 'Total',y: 17}]
     },
   
     {name: "May 10",
-    data: [{x: 'Essendon',y: 1}, {x: 'Brooklyn',y: 1}, {x: 'Fitzroy',y: 0}, {x: 'Boxhill',y: 5}]
+    data: [{x: 'Essendon',y: 1}, {x: 'Brooklyn',y: 1}, {x: 'Fitzroy',y: 0}, {x: 'Boxhill',y: 5},{x: 'Total',y: 7}]
     }
 
 ];
