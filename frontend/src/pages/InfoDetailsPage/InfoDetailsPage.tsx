@@ -22,6 +22,7 @@ import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDuratio
 import LocationNumberChart from '../../components/InfoDetailsChart/locationNumberChart';
 import LocationNumberHeatMapChart from '../../components/InfoDetailsChart/locationNumberChartHeatmap';
 import LocationNumberColumnChart from '../../components/InfoDetailsChart/locationNumberColumnChart';
+import UnlockTimesChart from '../../components/InfoDetailsChart/UnlockTimesChart';
 function InfoDetailsPage() {
   const [patientId, setPatientId] = useState('123');
   const [curSelected, setCurSelected] = useState('Application');
@@ -71,6 +72,9 @@ function InfoDetailsPage() {
     <ChartContainer>
       <CardContainer>
         <UnlockDurationChart />
+      </CardContainer>
+      <CardContainer>
+        <UnlockTimesChart />
       </CardContainer>
     </ChartContainer>
   );
@@ -160,7 +164,7 @@ interface Props {
 }
 const MainContainer = styled.div`
   font-size: 32px;
-  padding-left: 13vw;
+  padding-left: 5vw;
   display: flex;
   flex-direction: column;
 `;
