@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'dataServer',
     'sms',
-    'rest_framework'
+    'rest_framework',
+    'preProcessLocation'
 ]
 
 MIDDLEWARE = [
