@@ -4,17 +4,30 @@ from sms import models
 import datetime
 import time
 import json
+import googlemaps  
+import pandas as pd
 
 
 class QuerySMS(APIView):
     @staticmethod
     def get(request):
+
         # point = (-37.77964745, 144.96107302 ) -37.7903962,144.9530216 -37.7941334,144.9653626
         # lat_list = [-37.77964745, -37.7743305, -37.7743265 , -37.8002523, -37.79599386267364]
         # lon_list = [144.96107302, 144.9598333, 144.9598262 , 144.9645091, 144.96454194188118]
         # address_list, type_list = getAddress.GetAddress.getAddressAndType(lat_list, lon_list)
         # print(address_list)
         # print(type_list)
+        # 
+        # point = (-37.77433551264112, 144.95981690785675 )
+        # place = gmaps.places_nearby(point,25)
+        # print(place)
+        # place1 = gmaps.find_place("7 Union St, Brunswick", input_type = "textquery")
+        # print(place1)
+        # place_id = place1['candidates'][0]['place_id']
+        # place2 = gmaps.geocode(place_id)
+        # print(place_id)
+        # print(place2)
         return Response()
 
     
