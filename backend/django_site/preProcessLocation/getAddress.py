@@ -1,9 +1,7 @@
 import googlemaps   
           
 def getAddressAndType(locations_arr):
-    gmaps = googlemaps.Client(key='Your-API-Key')
-    address_list = []
-    type_list = []
+    gmaps = googlemaps.Client(key='AIzaSyCF-I4LgabjEwFFjMqHSuMNdX1_MTa6P6A')
 
     locations = locations_arr
 
@@ -16,8 +14,8 @@ def getAddressAndType(locations_arr):
 
         address = place['formatted_address']
         itstype = place['types']
-        
-        address_list.append(address)
-        type_list.append(itstype)
 
-    return address_list, type_list
+        latLng.append(address)
+        latLng.append(itstype)
+
+    return locations

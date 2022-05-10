@@ -55,19 +55,20 @@ class PreProcessLocation(APIView):
                 # i is device_id
                 try:
                     centroids = cluster(PreProcessLocation.getUserLatlng(i, target_day_start_timestamp, target_day_end_timestamp))
-                    # place, type = getAddressAndType(centroids)
+                    locations = getAddressAndType(centroids)
+
                 except:
                     raise Http404
                 
                 try:
-                    for latLng in centroids:
+                    for loc in locations:
                         models.TbLocCluster.objects.create(
                             timestamp = target_day_start_timestamp,
                             device_id = i,
-                            double_latitude = latLng[0],
-                            double_longitude = latLng[1],
-                            address = '',
-                            loc_type = ''
+                            double_latitude = loc[0],
+                            double_longitude = loc[1],
+                            address = loc[2],
+                            loc_type = loc[3]
                         )
                 except:
                     raise Http404
