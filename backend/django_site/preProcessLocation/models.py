@@ -18,3 +18,33 @@ class TbClient(models.Model):
     class Meta:
         managed = False
         db_table = 'tb_client'
+
+class Locations(models.Model):
+    field_id = models.AutoField(db_column='_id', primary_key=True)  # Field renamed because it started with '_'.
+    timestamp = models.FloatField(blank=True, null=True)
+    device_id = models.CharField(max_length=150, blank=True, null=True)
+    double_latitude = models.FloatField(blank=True, null=True)
+    double_longitude = models.FloatField(blank=True, null=True)
+    double_bearing = models.FloatField(blank=True, null=True)
+    double_speed = models.FloatField(blank=True, null=True)
+    double_altitude = models.FloatField(blank=True, null=True)
+    provider = models.TextField(blank=True, null=True)
+    accuracy = models.FloatField(blank=True, null=True)
+    label = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'locations'
+
+class TbLocCluster(models.Model):
+    uid = models.AutoField(primary_key=True)
+    timestamp = models.FloatField(blank=True, null=True)
+    device_id = models.CharField(max_length=150, blank=True, null=True)
+    double_latitude = models.FloatField(blank=True, null=True)
+    double_longitude = models.FloatField(blank=True, null=True)
+    address = models.CharField(db_column='address', max_length=255, blank=True, null=True)
+    loc_type = models.CharField(db_column='loc_type', max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tb_loc_cluster'

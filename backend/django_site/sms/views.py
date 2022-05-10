@@ -3,10 +3,7 @@ from rest_framework.response import Response
 from sms import models
 import datetime
 import time
-from django.http import HttpResponse
-from django.shortcuts import render
 import json
-from sms import getAddress
 
 
 class QuerySMS(APIView):

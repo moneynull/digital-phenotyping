@@ -1,12 +1,11 @@
+from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from sms import models
+from preProcessLocation.getAddress import getAddressAndType
+from preProcessLocation.location_cluster import cluster
+from preProcessLocation import models
 import datetime
 import time
-from django.http import HttpResponse
-from django.shortcuts import render
-import json
-from sms import getAddress
 
 
 class PreProcessLocation(APIView):
@@ -16,17 +15,22 @@ class PreProcessLocation(APIView):
         PreProcessLocation.initialProcessLocation()
         return Response()
 
+    def getUserLatlng(device_id, startDate, endDate):
+        location_results = models.Locations.objects.filter(device_id=device_id)\
+            .exclude(timestamp__gte = endDate).filter(timestamp__gte = startDate)\
+                .exclude(double_latitude=0).exclude(double_longitude=0)\
+                    .values("double_latitude", "double_longitude")
+
+        latitude_list = []
+        longitude_list = []
+        for l in location_results:
+            latitude_list.append(l['double_latitude'])
+            longitude_list.append(l['double_longitude'])
+        result_dic={"double_latitude":latitude_list,"double_longitude":longitude_list}
+
+        return result_dic
+
     def initialProcessLocation():
-        # today = datetime.datetime.now()
-
-        # zero_today = today - datetime.timedelta(hours=today.hour, minutes=today.minute, seconds=today.second,microseconds=today.microsecond)
-
-        # target_day = zero_today - datetime.timedelta(days=5)
-
-        # interval = target_day - zero_today
-        # print(zero_today)
-        # print(target_day)
-        # print(interval.days)
 
         all_devices = models.TbClient.objects\
             .values("awaredeviceid")\
@@ -46,18 +50,27 @@ class PreProcessLocation(APIView):
                 target_day_start_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_start_date)
                 target_day_end_date = PreProcessLocation.getFutureDate(start_zero_date, j + 1)
                 target_day_end_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_end_date)
-                
-                # i is device_id
-                ## call method(i, target_day_start_timestamp, target_day_end_timestamp)
+                print(target_day_start_date, ' - ', target_day_end_date)
 
-                # print(target_day_start_date, " -- ", target_day_start_timestamp , " -- ", target_day_end_date , " -- ", target_day_end_timestamp)
-                # print(target_day_start_timestamp)
-                # print(target_day_end_date)
-                # print(target_day_end_timestamp)
-        
-        
-        # print(all_devices)
-        # print(device_id_list)
+                # i is device_id
+                try:
+                    centroids = cluster(PreProcessLocation.getUserLatlng(i, target_day_start_timestamp, target_day_end_timestamp))
+                    # place, type = getAddressAndType(centroids)
+                except:
+                    raise Http404
+                
+                try:
+                    for latLng in centroids:
+                        models.TbLocCluster.objects.create(
+                            timestamp = target_day_start_timestamp,
+                            device_id = i,
+                            double_latitude = latLng[0],
+                            double_longitude = latLng[1],
+                            address = '',
+                            loc_type = ''
+                        )
+                except:
+                    raise Http404
 
     def getDatePremeters(start_timestamp,end_timestamp):
         start_zero_date = PreProcessLocation.getZeroDate(\
@@ -75,7 +88,7 @@ class PreProcessLocation(APIView):
         timestamp_list = models.Locations.objects.filter(device_id=device_id)\
             .values("timestamp")\
                 .order_by("timestamp")
-        # print(timestamp_list)
+                
         start_timestamp = timestamp_list[0]["timestamp"]
         end_timestamp = timestamp_list[len(timestamp_list)-1]["timestamp"]
         return start_timestamp, end_timestamp
