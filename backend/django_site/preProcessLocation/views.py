@@ -10,33 +10,34 @@ import time
 
 one_day = 86400000
 
+
 class PreProcessLocation(APIView):
-    
+
     @staticmethod
     def get(request):
         PreProcessLocation.initialProcessLocation()
         return Response()
 
     def getUserLatlng(device_id, startDate, endDate):
-        location_results = models.Locations.objects.filter(device_id=device_id)\
-            .exclude(timestamp__gte = endDate).filter(timestamp__gte = startDate)\
-                .exclude(double_latitude=0).exclude(double_longitude=0)\
-                    .values("double_latitude", "double_longitude")
+        location_results = models.Locations.objects.filter(device_id=device_id) \
+            .exclude(timestamp__gte=endDate).filter(timestamp__gte=startDate) \
+            .exclude(double_latitude=0).exclude(double_longitude=0) \
+            .values("double_latitude", "double_longitude")
 
         latitude_list = []
         longitude_list = []
         for l in location_results:
             latitude_list.append(l['double_latitude'])
             longitude_list.append(l['double_longitude'])
-        result_dic={"double_latitude":latitude_list,"double_longitude":longitude_list}
+        result_dic = {"double_latitude": latitude_list, "double_longitude": longitude_list}
 
         return result_dic
 
     def initialProcessLocation():
 
-        all_devices = models.TbClient.objects\
-            .values("awaredeviceid")\
-                .distinct()
+        all_devices = models.TbClient.objects \
+            .values("awaredeviceid") \
+            .distinct()
 
         device_id_list = []
         for i in all_devices:
@@ -44,9 +45,13 @@ class PreProcessLocation(APIView):
 
         for i in device_id_list:
             start_timestamp, end_timestamp = PreProcessLocation.getStartAndEndTimestamp(i)
-            start_zero_date, end_zero_date, interval, start_zero_timestamp, end_zero_timestamp\
+            start_zero_date, end_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
                 = PreProcessLocation.getDatePremeters(start_timestamp, end_timestamp)
-            print(start_timestamp, " -- ", end_timestamp, " ++++++++++++++++ " )
+            print(start_timestamp, " -- ", end_timestamp, " ++++++++++++++++ ")
+
+            # check duplicate timestamp
+            check_time_list=PreProcessLocation.getCheckTime(i)
+
             for j in range(interval):
                 target_day_start_date = PreProcessLocation.getFutureDate(start_zero_date, j)
                 target_day_start_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_start_date)
@@ -54,32 +59,37 @@ class PreProcessLocation(APIView):
                 target_day_end_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_end_date)
                 print(target_day_start_date, ' - ', target_day_end_date)
 
+                # If timestamp exist, pass
+                if target_day_start_timestamp in check_time_list:
+                    continue
+
                 # i is device_id
                 try:
-                    centroids = cluster(PreProcessLocation.getUserLatlng(i, target_day_start_timestamp, target_day_end_timestamp))
+                    centroids = cluster(
+                        PreProcessLocation.getUserLatlng(i, target_day_start_timestamp, target_day_end_timestamp))
                     locations = getAddressAndType(centroids)
 
                 except:
                     raise Http404
-                
+
                 try:
                     for loc in locations:
                         models.TbLocCluster.objects.create(
-                            timestamp = target_day_start_timestamp,
-                            device_id = i,
-                            double_latitude = loc[0],
-                            double_longitude = loc[1],
-                            address = loc[2],
-                            loc_type = loc[3]
+                            timestamp=target_day_start_timestamp,
+                            device_id=i,
+                            double_latitude=loc[0],
+                            double_longitude=loc[1],
+                            address=loc[2],
+                            loc_type=loc[3]
                         )
                 except:
                     raise Http404
 
-    def getDatePremeters(start_timestamp,end_timestamp):
-        start_zero_date = PreProcessLocation.getZeroDate(\
+    def getDatePremeters(start_timestamp, end_timestamp):
+        start_zero_date = PreProcessLocation.getZeroDate( \
             PreProcessLocation.getDateFromTimestamp(start_timestamp))
-        end_zero_date = PreProcessLocation.getZeroDate(\
-            PreProcessLocation.getNextDate(\
+        end_zero_date = PreProcessLocation.getZeroDate( \
+            PreProcessLocation.getNextDate( \
                 PreProcessLocation.getDateFromTimestamp(end_timestamp)))
         interval = end_zero_date - start_zero_date
         start_zero_timestamp = PreProcessLocation.getTimeStampFromDate(start_zero_date)
@@ -88,30 +98,41 @@ class PreProcessLocation(APIView):
         return start_zero_date, end_zero_date, interval.days, start_zero_timestamp, end_zero_timestamp
 
     def getStartAndEndTimestamp(device_id):
-        timestamp_list = models.Locations.objects.filter(device_id=device_id)\
-            .values("timestamp")\
-                .order_by("timestamp")
-                
+        timestamp_list = models.Locations.objects.filter(device_id=device_id) \
+            .values("timestamp") \
+            .order_by("timestamp")
+
         start_timestamp = timestamp_list[0]["timestamp"]
-        end_timestamp = timestamp_list[len(timestamp_list)-1]["timestamp"]
+        end_timestamp = timestamp_list[len(timestamp_list) - 1]["timestamp"]
         return start_timestamp, end_timestamp
 
+    def getCheckTime(device_id):
+        start_timestamp_list=[]
+        timestamp_list = models.TbLocCluster.objects.filter(device_id=device_id) \
+            .values("timestamp").distinct().order_by("timestamp")
+
+        for t in timestamp_list:
+            start_timestamp_list.append(int(t["timestamp"]))
+
+        print(start_timestamp_list)
+        return start_timestamp_list
+
     def getZeroDate(date):
-        zero_date = date\
-            - datetime.timedelta(\
-                hours=date.hour, \
-                    minutes=date.minute, \
-                        seconds=date.second, \
-                            microseconds=date.microsecond)
-        
+        zero_date = date \
+                    - datetime.timedelta( \
+            hours=date.hour, \
+            minutes=date.minute, \
+            seconds=date.second, \
+            microseconds=date.microsecond)
+
         return zero_date
 
     def getDateFromTimestamp(timestamp):
-        target_date = datetime.datetime.fromtimestamp(int(timestamp)/1000)
+        target_date = datetime.datetime.fromtimestamp(int(timestamp) / 1000)
         return target_date
-    
+
     def getTimeStampFromDate(date):
-        target_timestamp = int(time.mktime(date.timetuple() )* 1000)
+        target_timestamp = int(time.mktime(date.timetuple()) * 1000)
         return target_timestamp
 
     def getNextDate(date):
@@ -121,6 +142,7 @@ class PreProcessLocation(APIView):
     def getFutureDate(date, value):
         target_date = date + datetime.timedelta(days=value)
         return target_date
+
 
 class NumbersLocation(APIView):
     @staticmethod
