@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'dataServer',
     'sms',
     'rest_framework',
-    'preProcessLocation'
+    'locationServer'
 ]
 
 MIDDLEWARE = [

@@ -2,9 +2,9 @@ import json
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from preProcessLocation.getAddress import getAddressAndType
-from preProcessLocation.location_cluster import cluster
-from preProcessLocation import models
+from locationServer.getAddress import getAddressAndType
+from locationServer.location_cluster import cluster
+from locationServer import models
 import datetime
 import time
 

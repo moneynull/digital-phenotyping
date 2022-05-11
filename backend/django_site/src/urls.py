@@ -23,5 +23,5 @@ urlpatterns = [
     path('dataServer/', include("dataServer.urls")),
     path('sms/', include("sms.urls")),
     path('appForeground/', include('appForeground.urls')),
-    path('preProcessLocation/', include('preProcessLocation.urls'))
+    path('locationServer/', include('locationServer.urls'))
 ]
