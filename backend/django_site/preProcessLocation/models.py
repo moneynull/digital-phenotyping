@@ -37,7 +37,7 @@ class Locations(models.Model):
         db_table = 'locations'
 
 class TbLocCluster(models.Model):
-    uid = models.AutoField(primary_key=True)
+    _id = models.AutoField(primary_key=True)
     timestamp = models.FloatField(blank=True, null=True)
     device_id = models.CharField(max_length=150, blank=True, null=True)
     double_latitude = models.FloatField(blank=True, null=True)
