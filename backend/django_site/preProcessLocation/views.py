@@ -138,35 +138,57 @@ class NumbersLocation(APIView):
             = PreProcessLocation.getDatePremeters(start_timestamp, end_timestamp)
 
         data_2d_arr = []
+
+        type_dic = {}
+        try:
+            type_results = models.TbLocCluster.objects.filter(device_id=device_id) \
+                .exclude(timestamp__gte=end_zero_timestamp).filter(timestamp__gte=start_zero_timestamp) \
+                    .values('loc_type')\
+                        .distinct()
+        except:
+            raise Http404
+
+        for result in type_results:
+            if result['loc_type'] not in type_dic:
+                type_dic[result['loc_type']] = 0
+
         for j in range(interval):
             target_day_start_date = PreProcessLocation.getFutureDate(start_zero_date, j)
             target_day_start_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_start_date)
             target_day_end_date = PreProcessLocation.getFutureDate(start_zero_date, j + 1)
             target_day_end_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_end_date)
 
+            # address_name_dic = {}
 
-            address_name_dic = {}
-            type_dic = {}
             try:
                 clustered_loc_results = models.TbLocCluster.objects.filter(device_id=device_id) \
                     .exclude(timestamp__gte=target_day_end_timestamp).filter(timestamp__gte=target_day_start_timestamp) \
-                    .values('address')
+                    .values('address','loc_type')
             except:
                 raise Http404
 
-            for result in clustered_loc_results:
-                if result['address'] not in address_name_dic:
-                    address_name_dic[result['address']] = 0
-                if result['loc_type'] not in type_dic:
-                    type_dic[result['loc_type']] = 0
-                address_name_dic[result['address']] += 1
-                type_dic[result['loc_type']] += 1
+            for item in type_dic:
+                type_dic[item] = 0
 
-            addr_arr = []
-            count_arr = []
-            for address, count in address_name_dic.items():
-                addr_arr.append(address)
-                count_arr.append(count)
+            num_visited_today = len(clustered_loc_results)
+
+            for result in clustered_loc_results:
+                # if result['address'] not in address_name_dic:
+                #     address_name_dic[result['address']] = 1
+                # else:
+                #     address_name_dic[result['address']] += 1
+
+                if result['loc_type'] not in type_dic:
+                    type_dic[result['loc_type']] = 1
+                else:
+                    type_dic[result['loc_type']] += 1
+                
+
+            # addr_arr = []
+            # count_arr = []
+            # for address, count in address_name_dic.items():
+            #     addr_arr.append(address)
+            #     count_arr.append(count)
 
             type_arr = []
             type_count_arr = []
@@ -174,7 +196,7 @@ class NumbersLocation(APIView):
                 type_arr.append(type_name)
                 type_count_arr.append(count)
 
-            data_2d_arr.append([target_day_start_timestamp, addr_arr, count_arr, type_arr, type_count_arr])
+            data_2d_arr.append([target_day_start_timestamp, num_visited_today, type_arr, type_count_arr])
 
         return Response(data_2d_arr)
 
