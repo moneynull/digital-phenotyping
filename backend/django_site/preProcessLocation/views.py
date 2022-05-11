@@ -16,50 +16,6 @@ class PreProcessLocation(APIView):
         PreProcessLocation.initialProcessLocation()
         return Response()
 
-    @staticmethod
-    def post(request):
-        req = json.loads(request.body.decode().replace("'", "\""))
-        uid = req.get('uid')
-        start_timestamp = req.get('startDate')
-        end_timestamp = req.get('endDate')
-        
-        device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
-        device_id = device_result[0]["awaredeviceid"]
-        
-        # a day's timestamp, address_list, visited_times_list, type_list
-        start_zero_date, end_zero_date, interval, start_zero_timestamp, end_zero_timestamp\
-            = PreProcessLocation.getDatePremeters(start_timestamp, end_timestamp)
-
-        data_2d_arr = []
-        for j in range(interval):
-            target_day_start_date = PreProcessLocation.getFutureDate(start_zero_date, j)
-            target_day_start_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_start_date)
-            target_day_end_date = PreProcessLocation.getFutureDate(start_zero_date, j + 1)
-            target_day_end_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_end_date)
-
-            address_name_dic = {}
-            try:
-                clustered_loc_results = models.TbLocCluster.objects.filter(device_id=device_id)\
-                    .exclude(timestamp__gte = target_day_end_timestamp).filter(timestamp__gte = target_day_start_timestamp)\
-                        .values('address')
-            except:
-                raise Http404
- 
-            for result in clustered_loc_results:
-                if result['address'] not in address_name_dic:
-                    address_name_dic[result['address']] = 0
-                address_name_dic[result['address']] += 1
-
-            addr_arr = []
-            count_arr = []
-            for address, count in address_name_dic.items():
-                addr_arr.append(address)
-                count_arr.append(count)
-
-            data_2d_arr.append([target_day_start_timestamp, addr_arr, count_arr])
-
-        return Response(data_2d_arr)
-
     def getUserLatlng(device_id, startDate, endDate):
         location_results = models.Locations.objects.filter(device_id=device_id)\
             .exclude(timestamp__gte = endDate).filter(timestamp__gte = startDate)\
@@ -164,4 +120,48 @@ class PreProcessLocation(APIView):
     def getFutureDate(date, value):
         target_date = date + datetime.timedelta(days=value)
         return target_date
-        
+
+class NumbersLocation(APIView):
+    @staticmethod
+    def post(request):
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        start_timestamp = req.get('startDate')
+        end_timestamp = req.get('endDate')
+
+        device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
+        device_id = device_result[0]["awaredeviceid"]
+
+        # a day's timestamp, address_list, visited_times_list, type_list
+        start_zero_date, end_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
+            = PreProcessLocation.getDatePremeters(start_timestamp, end_timestamp)
+
+        data_2d_arr = []
+        for j in range(interval):
+            target_day_start_date = PreProcessLocation.getFutureDate(start_zero_date, j)
+            target_day_start_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_start_date)
+            target_day_end_date = PreProcessLocation.getFutureDate(start_zero_date, j + 1)
+            target_day_end_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_end_date)
+
+            address_name_dic = {}
+            try:
+                clustered_loc_results = models.TbLocCluster.objects.filter(device_id=device_id) \
+                    .exclude(timestamp__gte=target_day_end_timestamp).filter(timestamp__gte=target_day_start_timestamp) \
+                    .values('address')
+            except:
+                raise Http404
+
+            for result in clustered_loc_results:
+                if result['address'] not in address_name_dic:
+                    address_name_dic[result['address']] = 0
+                address_name_dic[result['address']] += 1
+
+            addr_arr = []
+            count_arr = []
+            for address, count in address_name_dic.items():
+                addr_arr.append(address)
+                count_arr.append(count)
+
+            data_2d_arr.append([target_day_start_timestamp, addr_arr, count_arr])
+
+        return Response(data_2d_arr)
