@@ -2,20 +2,18 @@ import json
 import datetime
 import time
 
-from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
-from django.shortcuts import render
-from django.db import connection, connections
 
 # Create your views here.
 from dataServer import models
 
 one_day = 86400000
 
+
 def extract_message(request):
     if request.method == 'POST':
-        req=json.loads(request.body.decode().replace("'", "\""))
+        req = json.loads(request.body.decode().replace("'", "\""))
         uid = req.get('uid')
         start_date_stamp = req.get('startDate')
         end_date_stamp = req.get('endDate')
@@ -61,7 +59,7 @@ def calls_process(calls_result, start_date_stmp, date_interval):
     for j in range(date_interval.days):
         for r in calls_result:
             if start_date_stmp + j * one_day <= r["timestamp"] < start_date_stmp + (j + 1) * one_day:
-                res_array[r["call_type"]-1][j] += 1
+                res_array[r["call_type"] - 1][j] += 1
             else:
                 continue
         res_day.append(datetime.datetime.fromtimestamp(int(start_date_stmp + j * one_day) / 1000))

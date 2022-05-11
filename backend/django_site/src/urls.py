@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('dataServer/', include("dataServer.urls")),
     path('sms/', include("sms.urls")),
-    path('appForeground/', include('appForeground.urls'))
+    path('appForeground/', include('appForeground.urls')),
+    path('locationServer/', include('locationServer.urls'))
 ]
