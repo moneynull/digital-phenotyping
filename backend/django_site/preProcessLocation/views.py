@@ -8,6 +8,7 @@ from preProcessLocation import models
 import datetime
 import time
 
+one_day = 86400000
 
 class PreProcessLocation(APIView):
     
@@ -126,8 +127,8 @@ class NumbersLocation(APIView):
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
         uid = req.get('uid')
-        start_timestamp = req.get('startDate')
         end_timestamp = req.get('endDate')
+        start_timestamp = end_timestamp - one_day * 6
 
         device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
         device_id = device_result[0]["awaredeviceid"]
