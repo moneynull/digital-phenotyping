@@ -144,7 +144,9 @@ class NumbersLocation(APIView):
             target_day_end_date = PreProcessLocation.getFutureDate(start_zero_date, j + 1)
             target_day_end_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_end_date)
 
+
             address_name_dic = {}
+            type_dic = {}
             try:
                 clustered_loc_results = models.TbLocCluster.objects.filter(device_id=device_id) \
                     .exclude(timestamp__gte=target_day_end_timestamp).filter(timestamp__gte=target_day_start_timestamp) \
@@ -155,7 +157,10 @@ class NumbersLocation(APIView):
             for result in clustered_loc_results:
                 if result['address'] not in address_name_dic:
                     address_name_dic[result['address']] = 0
+                if result['loc_type'] not in type_dic:
+                    type_dic[result['loc_type']] = 0
                 address_name_dic[result['address']] += 1
+                type_dic[result['loc_type']] += 1
 
             addr_arr = []
             count_arr = []
@@ -163,6 +168,13 @@ class NumbersLocation(APIView):
                 addr_arr.append(address)
                 count_arr.append(count)
 
-            data_2d_arr.append([target_day_start_timestamp, addr_arr, count_arr])
+            type_arr = []
+            type_count_arr = []
+            for type_name, count in type_dic.items():
+                type_arr.append(type_name)
+                type_count_arr.append(count)
+
+            data_2d_arr.append([target_day_start_timestamp, addr_arr, count_arr, type_arr, type_count_arr])
 
         return Response(data_2d_arr)
+
