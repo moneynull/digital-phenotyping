@@ -32,7 +32,7 @@ const dummyChartData = {
       },
     },
     xaxis: {
-      categories: [],
+      categories: [] as any[],
     },
   },
   series: [
@@ -51,20 +51,25 @@ function AppUsageChart() {
   const fetchData = () => {
     let curDate = new Date();
     axios
-      .post('http://ec2-52-64-190-37.ap-southeast-2.compute.amazonaws.com:80/appForeground/', {
+      .post('https://digital-phenotyping.herokuapp.com/appForeground/', {
         uid: '1',
-        startDate: '1641029938549',
-        endDate: '1641675274282',
+        startDate: '1641634738549',
+        endDate: '1641901876549',
       })
       .then((response) => {
         Log('Fetched data..', response.data);
         let res = dummyChartData;
+        let categories = [];
+        let series = [];
+        for (let i = 0; i < response.data[0].length; i++) {
+          if (response.data[1][i] >= 1) {
+            categories.push(response.data[0][i]);
+            series.push(response.data[1][i]);
+          }
+        }
 
-        response.data[0].splice(3, 1);
-        res.options.xaxis.categories = response.data[0];
-
-        response.data[1].splice(3, 1);
-        res.series[0].data = response.data[1];
+        res.options.xaxis.categories = categories;
+        res.series[0].data = series;
         // @ts-ignore
         setBarState(res);
       });

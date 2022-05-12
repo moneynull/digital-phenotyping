@@ -18,7 +18,7 @@ const NavTitleContainer = styled.div`
   color: ${COLORS.text};
   flex-direction: row;
 `;
-const NavTitleText = styled.text`
+const NavTitleText = styled.div`
   font-size: 30px;
   width: 350px;
   font-family: 'Open Sans', sans-serif;
