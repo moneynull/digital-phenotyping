@@ -19,7 +19,6 @@ import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
 import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
 import CallsUsageChart from '../../components/InfoDetailsChart/CallsUsageChart';
 import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDurationChart';
-import LocationNumberChart from '../../components/InfoDetailsChart/locationNumberChart';
 import LocationNumberHeatMapChart from '../../components/InfoDetailsChart/locationNumberChartHeatmap';
 import LocationNumberColumnChart from '../../components/InfoDetailsChart/locationNumberColumnChart';
 import UnlockTimesChart from '../../components/InfoDetailsChart/UnlockTimesChart';
@@ -81,7 +80,7 @@ function InfoDetailsPage() {
 
   const defaultGreeting = (
     <CardContainer>
-      <Reminder>Select any type of aware information to see detail chart</Reminder>
+      <Reminder>Select an AWARE category to see more details.</Reminder>
     </CardContainer>
   );
 
@@ -198,7 +197,7 @@ const IconText = styled.div<Props>`
   justify-content: center;
   align-items: center;
 `;
-const AppName = styled.text`
+const AppName = styled.div`
   margin: 10px;
   font-size: 20px;
   font-family: 'Open Sans', sans-serif;
@@ -214,7 +213,7 @@ const Spacer = styled.div`
   height: 20px;
   width: 30%;
 `;
-const Reminder = styled.text`
+const Reminder = styled.div`
   margin: 10px;
   font-size: 20px;
   font-family: 'Open Sans', sans-serif;

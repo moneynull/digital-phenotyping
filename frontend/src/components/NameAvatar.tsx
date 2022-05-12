@@ -16,7 +16,7 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
 `;
-const Name = styled.text`
+const Name = styled.div`
   font-size: 30px;
   font-weight: 700;
   font-family: 'Open Sans', sans-serif;

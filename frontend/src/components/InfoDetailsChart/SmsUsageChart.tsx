@@ -62,28 +62,37 @@ function SmsUsageChart() {
   });
   const fetchData = () => {
     let curDate = new Date();
+    Log('SMS fetch');
     axios
-      .post('http://ec2-52-64-190-37.ap-southeast-2.compute.amazonaws.com:80/sms/', {
-        uid: '1',
-        startDate: '1641029938549',
-        endDate: '1641675274282',
+      .post('https://digital-phenotyping.herokuapp.com/sms/', {
+        uid: 1,
+        startDate: 1641634738549,
+        endDate: 1642309999999,
       })
       .then((response) => {
-        Log('Fetched data..', response.data);
+        Log('Fetched SMS data..', response.data);
         let res = dummySMSData;
-
+        let data = response.data;
         //response.data[0].splice(3, 1);
-        //res.options.xaxis.categories = response.data[0];
+        res.options.xaxis.categories = data[2];
+        let series = [
+          {
+            name: 'Incoming',
+            data: data[0],
+          },
+          {
+            name: 'Outgoing',
+            data: data[1],
+          },
+        ];
 
-        //response.data[1].splice(3, 1);
-        //res.series[0].data = response.data[1];
-        //setBarState(res);
+        res.series = series;
+        // @ts-ignore
+        setSMSState(res);
       });
   };
   useEffect(() => {
     fetchData();
-    //@ts-ignore
-    setSMSState(dummySMSData);
   }, []);
 
   return (
