@@ -56,9 +56,9 @@ function CallsUsageChart() {
     let curDate = new Date();
     axios
       .post('https://digital-phenotyping.herokuapp.com/dataServer/calls', {
-        uid: '1',
-        startDate: '1641634738549',
-        endDate: '1642309999999',
+        uid: 1,
+        startDate: 1641634738549,
+        endDate: 1642309999999,
       })
       .then((response) => {
         console.log('Fetched data..', response.data.data);
