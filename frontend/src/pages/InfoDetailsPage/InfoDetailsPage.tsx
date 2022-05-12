@@ -19,7 +19,6 @@ import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
 import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
 import CallsUsageChart from '../../components/InfoDetailsChart/CallsUsageChart';
 import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDurationChart';
-import LocationNumberChart from '../../components/InfoDetailsChart/locationNumberChart';
 import LocationNumberHeatMapChart from '../../components/InfoDetailsChart/locationNumberChartHeatmap';
 import LocationNumberColumnChart from '../../components/InfoDetailsChart/locationNumberColumnChart';
 import UnlockTimesChart from '../../components/InfoDetailsChart/UnlockTimesChart';

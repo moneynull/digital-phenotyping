@@ -52,9 +52,9 @@ function AppUsageChart() {
     let curDate = new Date();
     axios
       .post('https://digital-phenotyping.herokuapp.com/appForeground/', {
-        uid: '1',
-        startDate: '1641634738549',
-        endDate: '1641901876549',
+        uid: 1,
+        startDate: 1641634738549,
+        endDate: 1641901876549,
       })
       .then((response) => {
         Log('Fetched data..', response.data);
