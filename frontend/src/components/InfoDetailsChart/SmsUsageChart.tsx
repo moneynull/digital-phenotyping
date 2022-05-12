@@ -63,10 +63,10 @@ function SmsUsageChart() {
   const fetchData = () => {
     let curDate = new Date();
     axios
-      .post('http://ec2-52-64-190-37.ap-southeast-2.compute.amazonaws.com:80/sms/', {
+      .post('https://digital-phenotyping.herokuapp.com/sms', {
         uid: '1',
-        startDate: '1641029938549',
-        endDate: '1641675274282',
+        startDate: '1641634738549',
+        endDate: '1641901876549',
       })
       .then((response) => {
         Log('Fetched data..', response.data);

@@ -1,23 +1,12 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import COLORS from '../../constant/Colors';
+import { Log } from '../Logger';
 
 // dummy data for Calls usage
 const dummyCallsData = {
-  series: [
-    {
-      name: 'Incoming',
-      data: [5, 4, 6, 3, 7, 8, 2],
-    },
-    {
-      name: 'Outgoing',
-      data: [5, 3, 1, 8, 6, 7, 2],
-    },
-    {
-      name: 'Missed',
-      data: [1, 1, 1, 0, 1, 2, 3],
-    },
-  ],
+  series: [] as any[],
   options: {
     chart: {
       type: 'bar',
@@ -53,20 +42,57 @@ const dummyCallsData = {
       },
     },
     xaxis: {
-      categories: ['May 1', 'May 2', 'May 3', 'May 4', 'May 5', 'May 6', 'May 7'],
+      categories: [] as any[],
     },
   },
 };
 
 function CallsUsageChart() {
-  const [callsState, setCallsState] = useState(dummyCallsData);
+  const [callsState, setCallsState] = useState({
+    options: {},
+    series: [],
+  });
+  const fetchData = () => {
+    let curDate = new Date();
+    axios
+      .post('https://digital-phenotyping.herokuapp.com/dataServer/calls', {
+        uid: '1',
+        startDate: '1641634738549',
+        endDate: '1642309999999',
+      })
+      .then((response) => {
+        console.log('Fetched data..', response.data.data);
+        let res = dummyCallsData;
+        let data = response.data.data;
+        let series = [
+          {
+            name: 'Incoming',
+            data: data[0],
+          },
+          {
+            name: 'Outgoing',
+            data: data[1],
+          },
+          {
+            name: 'Missed',
+            data: data[2],
+          },
+        ];
+        for (let i = 0; i < data[0].length; i++) {
+          data[3][i] = data[3][i].slice(0, 10);
+        }
+        res.options.xaxis.categories = data[3];
+        res.series = series;
+        // @ts-ignore
+        setCallsState(res);
+      });
+  };
   useEffect(() => {
-    setCallsState(dummyCallsData);
+    fetchData();
   }, []);
 
   return (
     <Chart
-      // @ts-ignore
       options={callsState.options}
       series={callsState.series}
       type='bar'
