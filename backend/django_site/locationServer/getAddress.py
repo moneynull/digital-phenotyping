@@ -1,4 +1,5 @@
-import googlemaps   
+import googlemaps  
+import os 
           
 def getAddressAndType(locations_arr):
 
@@ -15,7 +16,8 @@ def getAddressAndType(locations_arr):
                                                  hospital, insurance_agency, jewelry_store, laundry, \
                                                      lawyer, library, light_rail_station, liquor_store, local_government_office, locksmith, lodging, meal_delivery, meal_takeaway, mosque, movie_rental, movie_theater, moving_company, museum, night_club, painter, park, parking, pet_store, pharmacy, physiotherapist, plumber, police, post_office, primary_school, real_estate_agency, restaurant, roofing_contractor, rv_park, school, secondary_school, shoe_store, shopping_mall, spa, stadium, storage, store, subway_station, supermarket, synagogue, taxi_stand, tourist_attraction, train_station, transit_station, travel_agency, university, veterinary_care, zoo"
         
-    gmaps = googlemaps.Client(key='AIzaSyCF-I4LgabjEwFFjMqHSuMNdX1_MTa6P6A')
+    GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY','1')
+    gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
 
     locations = locations_arr
 
