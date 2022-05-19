@@ -32,7 +32,7 @@ def extract_message(request):
     end_date_timestamp = int(time.mktime(end_date.timetuple()) * 1000)
 
     calls_result = models.Calls.objects \
-        .filter(device_id=device_id, timestamp__lte=end_date_timestamp, timestamp__gte=start_date_timestamp) \
+        .filter(device_id=device_id, timestamp__lt=end_date_timestamp, timestamp__gte=start_date_timestamp) \
         .values("timestamp", "call_type", "call_duration", "field_id").order_by("timestamp")
 
     data = calls_process(calls_result, start_date_timestamp, date_interval)

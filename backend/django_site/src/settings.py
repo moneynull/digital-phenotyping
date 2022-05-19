@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-wwyde7bd_3e*2m7m0rc@ph$j#+t!@31m4srzs+*jjpc7fs$(f5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 
@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'dataServer',
     'sms',
     'rest_framework',
-    'locationServer'
+    'locationServer',
+    'screenServer'
 ]
 
 MIDDLEWARE = [
@@ -58,7 +59,6 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True  # default False
 
 CORS_ALLOW_CREDENTIALS = True  # allow cookie
-ALLOWED_HOSTS = ['127.0.0.1']
 
 CORS_ALLOW_HEADERS = (
     'x-requested-with',
