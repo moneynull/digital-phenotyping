@@ -45,7 +45,7 @@ class ScreenUnlocked(APIView):
                     .order_by('timestamp').values('timestamp', 'screen_status')
                 screenList.append(screen_result)
                 unlocked_date.append(cur_start)
-                print(i, cur_start, cur_end)
+                # print(i, cur_start, cur_end)
         except:
             raise Http404
 
@@ -62,6 +62,5 @@ class ScreenUnlocked(APIView):
             unlocked_times.append(count)
 
         result = [unlocked_date, unlocked_times, unlocked_duration]
-        print(unlocked_times)
 
         return Response(result)
