@@ -12,6 +12,7 @@ from screenServer import models
 from locationServer.views import PreProcessLocation
 
 one_day = 86400000
+one_min = 60000
 
 
 def extract_data(request):
@@ -56,10 +57,26 @@ class ScreenUnlocked(APIView):
             count = 0
             duration = 0
             for j in range(len(screenList[i])):
-                if screenList[i][j]['screen_status'] == 2:
+                if screenList[i][j]['screen_status'] == 3:
                     count += 1
+                    x = j + 1
+                    y = i
+                    while x < len(screenList[y]):
+                        if screenList[y][x]['screen_status'] == 0 or screenList[y][x]['screen_status'] == 2:
+                            duration += screenList[y][x]['timestamp'] - screenList[i][j]['timestamp']
+                            break
+                        if x == len(screenList[y]) - 1:
+                            if y == interval - 1:
+                                break
+                            else:
+                                y += 1
+                                x = 0
+                        else:
+                            x += 1
 
             unlocked_times.append(count)
+            duration = round(duration / one_min)
+            unlocked_duration.append(duration)
 
         result = [unlocked_date, unlocked_times, unlocked_duration]
 
