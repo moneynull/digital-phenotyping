@@ -80,7 +80,8 @@ function InfoDetailsPage() {
 
   const defaultGreeting = (
     <CardContainer>
-      <Reminder>Select an AWARE category to see more details.</Reminder>
+      <Reminder>Client Name: Simon</Reminder>
+      <Reminder>Select an AWARE category to see more details about.</Reminder>
     </CardContainer>
   );
 
