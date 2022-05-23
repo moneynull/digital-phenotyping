@@ -105,7 +105,7 @@ function InfoDetailsPage() {
   return (
     <MainContainer>
       <Header onClick={navBack}>
-        <Link to='/loginpage'>
+        <Link to='/homepage'>
           <NavTitle title='Client Details' showArrowBack={true} />
         </Link>
         <SearchBar />

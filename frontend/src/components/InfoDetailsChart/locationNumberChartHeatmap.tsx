@@ -60,7 +60,7 @@ function LocationNumberHeatMapChart() {
     axios
       .post('https://digital-phenotyping.herokuapp.com/locationServer/NumbersOfLocation', {
         uid: 1,
-        endDate: 1641901876549,
+        endDate: 1642299999549,
       })
       .then((response) => {
         Log('Fetched HeatMap data..', response.data);
