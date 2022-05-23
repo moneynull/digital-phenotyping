@@ -80,6 +80,7 @@ function InfoDetailsPage() {
 
   const defaultGreeting = (
     <CardContainer>
+      <Reminder>Client Name: Simon</Reminder>
       <Reminder>Select an AWARE category to see more details.</Reminder>
     </CardContainer>
   );
@@ -105,7 +106,7 @@ function InfoDetailsPage() {
   return (
     <MainContainer>
       <Header onClick={navBack}>
-        <Link to='/loginpage'>
+        <Link to='/homepage'>
           <NavTitle title='Client Details' showArrowBack={true} />
         </Link>
         <SearchBar />

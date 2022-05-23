@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
 import { Log } from '../Logger';
 import axios from 'axios';
@@ -81,14 +82,27 @@ function AppUsageChart() {
   }, []);
 
   return (
-    <Chart
-      options={barState.options}
-      series={barState.series}
-      type='bar'
-      width='600'
-      height='400'
-    />
+    <Container>
+      <DateText>{`${new Date(1641634738549).toISOString().slice(0, 10)} - ${new Date(1641901876549)
+        .toISOString()
+        .slice(0, 10)}`}</DateText>
+
+      <Chart
+        options={barState.options}
+        series={barState.series}
+        type='bar'
+        width='600'
+        height='400'
+      />
+    </Container>
   );
 }
 
 export default AppUsageChart;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const DateText = styled.div`
+  font-size: 15px;
+`;

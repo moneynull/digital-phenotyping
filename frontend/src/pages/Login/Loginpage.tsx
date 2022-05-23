@@ -9,7 +9,7 @@ export default function Loginpage() {
       Loginpage
       <div>
         <Link to='/homepage'>
-          <Button variant='contained'>Go to Home Page </Button>
+          <Button variant='contained'>Login</Button>
         </Link>
       </div>
     </MainContainer>
@@ -17,6 +17,11 @@ export default function Loginpage() {
 }
 
 const MainContainer = styled.div`
-  color: red;
+  color: black;
   font-size: 32px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
 `;
