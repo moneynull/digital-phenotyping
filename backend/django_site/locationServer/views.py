@@ -45,7 +45,7 @@ class PreProcessLocation(APIView):
 
         for i in device_id_list:
             start_timestamp, end_timestamp = PreProcessLocation.getStartAndEndTimestamp(i)
-            start_zero_date, end_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
+            start_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
                 = PreProcessLocation.getDatePremeters(start_timestamp, end_timestamp)
             print(start_timestamp, " -- ", end_timestamp, " ++++++++++++++++ ")
 
@@ -54,10 +54,9 @@ class PreProcessLocation(APIView):
 
             for j in range(interval):
                 target_day_start_date = PreProcessLocation.getFutureDate(start_zero_date, j)
-                target_day_start_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_start_date)
+                target_day_start_timestamp = PreProcessLocation.getTimestampFromDate(target_day_start_date)
                 target_day_end_date = PreProcessLocation.getFutureDate(start_zero_date, j + 1)
-                target_day_end_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_end_date)
-                print(target_day_start_date, ' - ', target_day_end_date)
+                target_day_end_timestamp = PreProcessLocation.getTimestampFromDate(target_day_end_date)
 
                 # If timestamp exist, pass
                 if target_day_start_timestamp in check_time_list:
@@ -92,10 +91,10 @@ class PreProcessLocation(APIView):
             PreProcessLocation.getNextDate( \
                 PreProcessLocation.getDateFromTimestamp(end_timestamp)))
         interval = end_zero_date - start_zero_date
-        start_zero_timestamp = PreProcessLocation.getTimeStampFromDate(start_zero_date)
-        end_zero_timestamp = PreProcessLocation.getTimeStampFromDate(end_zero_date)
+        start_zero_timestamp = PreProcessLocation.getTimestampFromDate(start_zero_date)
+        end_zero_timestamp = PreProcessLocation.getTimestampFromDate(end_zero_date)
 
-        return start_zero_date, end_zero_date, interval.days, start_zero_timestamp, end_zero_timestamp
+        return start_zero_date, interval.days, start_zero_timestamp, end_zero_timestamp
 
     def getStartAndEndTimestamp(device_id):
         timestamp_list = models.Locations.objects.filter(device_id=device_id) \
@@ -114,7 +113,6 @@ class PreProcessLocation(APIView):
         for t in timestamp_list:
             start_timestamp_list.append(int(t["timestamp"]))
 
-        print(start_timestamp_list)
         return start_timestamp_list
 
     def getZeroDate(date):
@@ -131,7 +129,7 @@ class PreProcessLocation(APIView):
         target_date = datetime.datetime.fromtimestamp(int(timestamp) / 1000)
         return target_date
 
-    def getTimeStampFromDate(date):
+    def getTimestampFromDate(date):
         target_timestamp = int(time.mktime(date.timetuple()) * 1000)
         return target_timestamp
 
@@ -156,7 +154,7 @@ class NumbersLocation(APIView):
         device_id = device_result[0]["awaredeviceid"]
 
         # a day's timestamp, address_list, visited_times_list, type_list
-        start_zero_date, end_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
+        start_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
             = PreProcessLocation.getDatePremeters(start_timestamp, end_timestamp)
 
         data_2d_arr = []
@@ -176,9 +174,9 @@ class NumbersLocation(APIView):
 
         for j in range(interval):
             target_day_start_date = PreProcessLocation.getFutureDate(start_zero_date, j)
-            target_day_start_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_start_date)
+            target_day_start_timestamp = PreProcessLocation.getTimestampFromDate(target_day_start_date)
             target_day_end_date = PreProcessLocation.getFutureDate(start_zero_date, j + 1)
-            target_day_end_timestamp = PreProcessLocation.getTimeStampFromDate(target_day_end_date)
+            target_day_end_timestamp = PreProcessLocation.getTimestampFromDate(target_day_end_date)
 
             # address_name_dic = {}
 
