@@ -15,4 +15,5 @@ test('main feature buttom functionable', async () => {
     expect(screen.findByRole('button', {name: 'Communication'}))
     expect(screen.findByRole('button', {name: 'Locations'}))
     expect(screen.findByRole('button', {name: 'Screen'}))
+    expect(screen.findByRole('button', {name: 'Client Details'}))
 })
