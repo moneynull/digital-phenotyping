@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default function SectionTitle(props) {
+export default function SectionTitle(props: any) {
   return <Title>{props.title}</Title>;
 }
-const Title = styled.text`
+const Title = styled.div`
   font-weight: bold;
   font-size: 20px;
   width: 300px;

@@ -7,7 +7,7 @@ import { Log } from './Logger';
 import IconButton from '@mui/material/IconButton';
 function SearchBar() {
   const [searchText, setSearchText] = useState('');
-  const onEnter = (e) => {
+  const onEnter = (e: any) => {
     if (e.key === 'Enter') {
       Log('enter pressed');
       submitSearch();
@@ -16,7 +16,7 @@ function SearchBar() {
   const submitSearch = () => {
     Log(searchText);
   };
-  const onChange = (e) => {
+  const onChange = (e: any) => {
     setSearchText(e.target.value);
   };
   return (
