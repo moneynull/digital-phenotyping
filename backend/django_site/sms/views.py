@@ -29,9 +29,12 @@ class QuerySMS(APIView):
             start_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
             end_date_timestamp = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
         
+        if uid == None or start_date_timestamp == None or end_date_timestamp == None or end_date_timestamp < start_date_timestamp:
+            return Response(uid)
+
         device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
-        print(device_result)
-        print(len(device_result))
+        # print(device_result)
+        # print(len(device_result))
         if len(device_result) == 0:
             return Response(device_result)
         device_id = device_result[0]["awaredeviceid"]
@@ -66,6 +69,9 @@ class QuerySMS(APIView):
                 .filter(timestamp__gte = zero_start_date_timestamp)\
                     .values("field_id","timestamp","device_id","message_type","trace")\
                         .order_by("timestamp")
+
+        if len(sms_results) == 0:
+            return Response(sms_results)
 
         # store data into list, optimize performance
         timestamp_list=[]
