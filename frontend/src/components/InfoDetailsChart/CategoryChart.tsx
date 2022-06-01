@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
 
 const categories = [
@@ -11,7 +12,7 @@ const categories = [
   'Health and Fitness',
 ];
 
-const usage = [33, 99, 18, 50, 75, 44];
+const usage = [3, 13, 26, 5, 9, 8];
 
 const colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#00D9E9'];
 
@@ -86,14 +87,27 @@ function CategoryChart() {
   }, []);
 
   return (
-    <Chart //@ts-ignore
-      options={barState.options}
-      series={barState.series}
-      type='bar'
-      width='650'
-      height='400'
-    />
+    <Container>
+      <DateText>{`${new Date(1641634738549).toISOString().slice(0, 10)} - ${new Date(1641901876549)
+        .toISOString()
+        .slice(0, 10)}`}</DateText>
+
+      <Chart //@ts-ignore
+        options={barState.options}
+        series={barState.series}
+        type='bar'
+        width='650'
+        height='400'
+      />
+    </Container>
   );
 }
 
 export default CategoryChart;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const DateText = styled.div`
+  font-size: 15px;
+`;

@@ -28,4 +28,4 @@ jobs:
     - name: Run Tests
       working-directory: backend/django_site # Path to the Django folder
       run: |
-        python manage.py test
+        python manage.py test --keepdb

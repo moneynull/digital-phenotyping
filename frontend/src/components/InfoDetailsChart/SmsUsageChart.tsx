@@ -67,7 +67,7 @@ function SmsUsageChart() {
       .post('https://digital-phenotyping.herokuapp.com/sms/', {
         uid: 1,
         startDate: 1641634738549,
-        endDate: 1642309999999,
+        endDate: 1642209999999,
       })
       .then((response) => {
         Log('Fetched SMS data..', response.data);

@@ -1,6 +1,8 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import COLORS from '../../constant/Colors';
+import { Log } from '../Logger';
 
 // TODO!!!!   apply backend api
 // auto generated fake data for a year
@@ -24,7 +26,7 @@ const loacationNumberSeries = [
   },
 ];
 
-const locationNumberData = {
+const screenDummayData = {
   series: loacationNumberSeries,
   options: {
     chart: {
@@ -73,9 +75,40 @@ function UnlockTimesChart() {
     options: {},
     series: [],
   });
+  const fetchData = () => {
+    let curDate = new Date();
+    Log('ScreenUnlocked fetch');
+    axios
+      .post('https://digital-phenotyping.herokuapp.com/screenServer/ScreenUnlocked', {
+        uid: 1,
+        endDate: 1642299999549,
+      })
+      .then((response) => {
+        Log('Fetched ScreenUnlocked data..', response.data);
+        let res = screenDummayData;
+        let data = response.data;
+        let categories = [];
+        let series = [
+          {
+            name: 'times unlocked',
+            data: [] as any[],
+          },
+        ];
+        for (let i = 0; i < data[0].length; i++) {
+          series[0].data.push(data[1][i]);
+          categories.push(new Date(data[0][i]).toISOString().slice(0, 10));
+        }
+        Log('cate', categories);
+        res.options.xaxis.categories = categories;
+        res.series = series;
+        //response.data[0].splice(3, 1);
+        Log(data);
+        //@ts-ignore
+        setBarState(res);
+      });
+  };
   useEffect(() => {
-    //@ts-ignore
-    setBarState(locationNumberData);
+    fetchData();
   }, []);
 
   return (

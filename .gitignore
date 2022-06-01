@@ -1,2 +1,5 @@
 backend/venv/
 __pycache__/
+backend/django_site/htmlcov
+
+backend/django_site/.coverage

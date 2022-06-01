@@ -17,8 +17,6 @@ function App() {
           <Link to='/homepage'>Homepage</Link>
           <div></div>
           <Link to='/loginpage'>Login</Link>
-          <div></div>
-          <Link to='/infodetailspage'>Info Details</Link>
         </nav>
       </header>
     </div>
