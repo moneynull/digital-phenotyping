@@ -35,84 +35,71 @@ class ScreenUnlocked(APIView):
         device_id, start_timestamp, end_timestamp = extract_data(request)
         print(device_id)
 
-        start_zero_date, end_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
+        start_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
             = PreProcessLocation.getDatePremeters(start_timestamp, end_timestamp)
 
-        screenList = []
-        unlocked_date = []
         try:
-            for i in range(interval):
-                cur_start = start_zero_timestamp + i * one_day
-                screen_result = models.Screen.objects \
-                    .filter(device_id=device_id, timestamp__lt=cur_start + one_day, timestamp__gte=cur_start) \
-                    .order_by('timestamp').values('timestamp', 'screen_status')
-                screenList.append(screen_result)
-                unlocked_date.append(cur_start)
+            screen_result = models.Screen.objects \
+                .filter(device_id=device_id,
+                        timestamp__lt=start_zero_timestamp + one_day * interval,
+                        timestamp__gte=start_zero_timestamp) \
+                .order_by('timestamp').values('timestamp', 'screen_status')
         except:
             raise Http404
 
-        unlocked_times = []
+        unlocked_date = []
         unlocked_duration = []
-        timestamp_now = int(time.time() * 1000)
-        unlocked_flag = False
+        unlocked_times = []
 
-        # Get last screen status
-        if len(screenList[0]) == 0:
-            unlocked_result = models.Screen.objects \
-                                  .filter(device_id=device_id, timestamp__lt=start_zero_timestamp) \
-                                  .order_by('-timestamp').values('screen_status')[:1]
-            if len(unlocked_result) != 0 and unlocked_result[0]['screen_status'] == 3:
-                unlocked_flag = True
-
-        # handle each day interval
+        # init unlocked info array
         for i in range(interval):
-            count = 0
-            duration = 0
-            len_screen = len(screenList[i])
+            unlocked_times.append(0)
+            unlocked_duration.append(0)
+            unlocked_date.append(start_zero_timestamp + i * one_day)
 
-            # unlocked cross a day,
-            if len_screen != 0:
-                # handle before off
-                if screenList[i][0]['screen_status'] == 0 and unlocked_flag == True:
-                    duration += screenList[i][0]['timestamp'] - unlocked_date[i]
-                # handle after unlocked
-                if screenList[i][len_screen - 1]['screen_status'] == 3:
-                    # if the date is today
-                    if (timestamp_now - one_day) < unlocked_date[i] < timestamp_now:
-                        duration += timestamp_now - screenList[i][len_screen - 1]['timestamp']
+        # handle first record
+        unlocked_result = models.Screen.objects.filter(device_id=device_id, timestamp__lt=start_zero_timestamp) \
+                              .order_by('-timestamp').values('timestamp', 'screen_status')[:1]
+        if len(unlocked_result) != 0 and unlocked_result[0]['screen_status'] == 3:
+            if screen_result[0]['timestamp'] - unlocked_result[0]['timestamp'] <= 6 * 60 * one_min:
+                unlocked_duration[0] += screen_result[0]['timestamp'] - unlocked_date[0]
+
+        unlocked_index = 0
+        result_len = len(screen_result)
+        for i in range(result_len - 1):
+            # next day
+            if screen_result[i]['timestamp'] >= unlocked_date[unlocked_index] + one_day:
+                unlocked_index += 1
+
+            if screen_result[i]['screen_status'] == 3:
+                # ignore the record more than 6 hours
+                if screen_result[i + 1]['timestamp'] - screen_result[i]['timestamp'] <= 6 * 60 * one_min:
+                    unlocked_times[unlocked_index] += 1
+                    # normal case
+                    if screen_result[i + 1]['timestamp'] <= unlocked_date[unlocked_index] + one_day:
+                        unlocked_duration[unlocked_index] += \
+                            screen_result[i + 1]['timestamp'] - screen_result[i]['timestamp']
+                    # cross day
                     else:
-                        if unlocked_date[i] <= (timestamp_now - one_day):
-                            duration += unlocked_date[i] + one_day - screenList[i][len_screen - 1]['timestamp']
-                    unlocked_flag = True
-                else:
-                    unlocked_flag = False
-            # unlocked over a day
-            else:
-                if unlocked_date[i] <= timestamp_now and unlocked_flag:
-                    duration = one_day
+                        unlocked_duration[unlocked_index] += \
+                            unlocked_date[unlocked_index] + one_day - screen_result[i]['timestamp']
+                        # go to next day
+                        unlocked_index += 1
+                        unlocked_duration[unlocked_index] += screen_result[i + 1]['timestamp'] - unlocked_date[
+                            unlocked_index]
 
-            for j in range(len_screen):
-                # unlocked
-                if screenList[i][j]['screen_status'] == 3:
-                    count += 1
-                    x = j + 1  # value in list
-                    y = i  # day in interval
-                    # find first OFF or first locked
-                    while x < len_screen:
-                        if screenList[y][x]['screen_status'] == 0 or screenList[y][x]['screen_status'] == 2:
-                            duration += screenList[y][x]['timestamp'] - screenList[i][j]['timestamp']
-                            break
-                        x += 1
+        # handle last record
+        if screen_result[result_len - 1]['screen_status'] == 3:
+            off_result = models.Screen.objects.filter(device_id=device_id,
+                                                      timestamp__gte=start_zero_timestamp + one_day * interval) \
+                             .order_by('timestamp').values('timestamp', 'screen_status')[:1]
+            if len(off_result) != 0:  # and off_result[0]['screen_status'] == 0:
+                if off_result[0]['timestamp'] - screen_result[result_len - 1]['timestamp'] <= 6 * 60 * one_min:
+                    unlocked_duration[-1] += unlocked_date[-1] + one_day - screen_result[-1]['timestamp']
 
-            unlocked_times.append(count)
-            duration = round(duration / one_min)
-            unlocked_duration.append(duration)
+        duration_min = []
+        for d in unlocked_duration:
+            duration_min.append(round(d / one_min, 1))
 
-        result = [unlocked_date, unlocked_times, unlocked_duration]
-        print("3: ", datetime.datetime.fromtimestamp(int(1645891200000) / 1000))
-        print("3: ", datetime.datetime.fromtimestamp(int(1645922052541) / 1000))
-        print("3: ", datetime.datetime.fromtimestamp(int(1646187891078) / 1000))
-        print("3: ", datetime.datetime.fromtimestamp(int(1646409600000) / 1000))
-        print("3: ", timestamp_now)
-
+        result = [unlocked_date, unlocked_times, duration_min]
         return Response(result)
