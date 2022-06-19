@@ -18,11 +18,16 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView, TokenObtainPairView
+
+from userServer.views import MyTokenObtainPairView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dataServer/', include("dataServer.urls")),
     path('sms/', include("sms.urls")),
     path('appForeground/', include('appForeground.urls')),
     path('locationServer/', include('locationServer.urls')),
-    path('screenServer/', include('screenServer.urls'))
+    path('screenServer/', include('screenServer.urls')),
+    path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair')
 ]
