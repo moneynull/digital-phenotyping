@@ -29,5 +29,6 @@ urlpatterns = [
     path('appForeground/', include('appForeground.urls')),
     path('locationServer/', include('locationServer.urls')),
     path('screenServer/', include('screenServer.urls')),
-    path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair')
+    path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('userServer/',include('userServer.urls'))
 ]
