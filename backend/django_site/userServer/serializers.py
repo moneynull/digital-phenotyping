@@ -12,7 +12,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['access'] = str(refresh.access_token)
         data['username'] = self.user.username
 
-        patient_info = views.extract_patient_info(self.user.username)
+        patient_info = views.response_client_info(self.user.username)
         data['patient_info'] = patient_info
         data['patient_count'] = len(patient_info)
         return data

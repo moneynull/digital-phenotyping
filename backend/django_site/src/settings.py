@@ -85,7 +85,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=30)
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1)
 }
 
 AUTHENTICATION_BACKENDS = ['userServer.views.CusModelBackend', ]

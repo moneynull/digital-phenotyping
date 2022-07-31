@@ -32,37 +32,62 @@ class CusModelBackend(ModelBackend):
             return None
 
 
-def extract_patient_info(username):
+def response_client_info(username):
     clinician_id = models.AuthUser.objects.filter(username=username).values("id")[0]["id"]
     info_result = models.TbClient.objects.filter(clinicianid=clinician_id)
-    patient_info = info_result.values('uid', 'clienttitle', 'awaredeviceid')
+    client_info = info_result.values('uid', 'clienttitle', 'awaredeviceid')
 
-    return patient_info
+    return client_info
 
 
-class PatientProfile(APIView):
+class ClientProfile(APIView):
     @staticmethod
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
         uid = req.get('uid')
 
-        profile_result = models.TbClient.objects.filter(uid=uid)
-        return Response(profile_result.values()[0])
+        client_result = models.TbClient.objects.filter(uid=uid)
+        return Response(client_result.values()[0])
+
+
+def get_client_form(req):
+    client_form = {
+        'clinicianid': req.get('clinicianId'),
+        'clienttitle': req.get('clientTitle'),
+        'firstname': req.get('firstName'),
+        'lastname': req.get('lastName'),
+        'dateofbirth': req.get('dateOfBirth'),
+        'textnotes': req.get('textNotes'),
+        'twitterid': req.get('twitterId'),
+        'facebookid': req.get('facebookId'),
+        'awaredeviceid': req.get('awareDeviceId')
+    }
+    return client_form
 
 
 class ChangeProfile(APIView):
     @staticmethod
     def post(request):
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        change_form = get_client_form(req)
+        models.TbClient.objects.filter(uid=uid).update(**change_form)
         return Response(200)
 
 
-class AddPatient(APIView):
+class AddClient(APIView):
     @staticmethod
     def post(request):
+        req = json.loads(request.body.decode().replace("'", "\""))
+        add_form = get_client_form(req)
+        models.TbClient.objects.create(**add_form)
         return Response(200)
 
 
-class DeletePatient(APIView):
+class DeleteClient(APIView):
     @staticmethod
     def post(request):
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        models.TbClient.objects.filter(uid=uid).delete()
         return Response(200)
