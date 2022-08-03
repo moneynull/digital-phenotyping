@@ -1,6 +1,7 @@
 import json
 import datetime
 import time
+import utils.twitterCrawler as tc
 
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
@@ -10,6 +11,17 @@ from dataServer import models
 
 one_day = 86400000
 
+def extract_twitter_keywords(request):
+    if request.method == 'GET':
+        uid = 0
+    else:
+        uid = 0
+        
+    res = {
+        'success': True,
+        'data': tc.get_recent_tweets('1385479485286338562')
+    }
+    return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
 def extract_message(request):
     if request.method == 'POST':

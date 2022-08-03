@@ -16,3 +16,6 @@ django-dotenv==1.4.2
 djangorestframework_simplejwt==5.2.0
 pyjwt
 numpy~=1.22.3
+google_play_scraper==1.2.0
+tweepy==4.10.0
+nltk==3.7
