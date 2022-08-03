@@ -14,12 +14,25 @@ one_day = 86400000
 def extract_twitter_keywords(request):
     if request.method == 'GET':
         uid = 0
+        # uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
     else:
         uid = 0
-        
+    
+    # Use the next line
+    # twitter_id = models.TbClient.objects.filter(uid=uid).values("twitterID")
+    twitter_id = '1385479485286338562'   
+
+    # the following code is for get twitter id based on twitter username
+    # it will be used in the profile page
+    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    # client = tweepy.Client(bearer_token=bearer_token)
+    # username = "" # Username is what client inputs
+    # twitter_id = client.get_user(username=username).data.id
+    # 
+
     res = {
         'success': True,
-        'data': tc.get_recent_tweets('1385479485286338562')
+        'data': tc.get_recent_tweets(twitter_id)
     }
     return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
