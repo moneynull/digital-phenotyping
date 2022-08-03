@@ -170,4 +170,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-GOOGLE_MAPS_API_KEY = 'AIzaSyCF-I4LgabjEwFFjMqHSuMNdX1_MTa6P6A'
+GOOGLE_MAPS_API_KEY = ''
