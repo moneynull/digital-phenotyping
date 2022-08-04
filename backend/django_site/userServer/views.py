@@ -32,12 +32,13 @@ class CusModelBackend(ModelBackend):
             return None
 
 
-def response_client_info(username):
-    clinician_id = models.AuthUser.objects.filter(username=username).values("id")[0]["id"]
-    info_result = models.TbClient.objects.filter(clinicianid=clinician_id)
-    client_info = info_result.values('uid', 'clienttitle', 'awaredeviceid')
+def response_clinician_info(username):
+    clinician_result = models.AuthUser.objects.filter(username=username)
+    clinician_info = clinician_result.values('id', 'username', 'first_name', 'last_name', 'email')[0]
+    # info_result = models.TbClient.objects.filter(clinicianid=clinician_id)
+    # client_info = info_result.values('uid', 'clienttitle', 'awaredeviceid')
 
-    return client_info
+    return clinician_info
 
 
 class ClientProfile(APIView):

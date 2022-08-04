@@ -8,11 +8,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         refresh = self.get_token(self.user)
-        data['refresh'] = str(refresh)
+        # data['refresh'] = str(refresh)
         data['access'] = str(refresh.access_token)
-        data['username'] = self.user.username
 
-        patient_info = views.response_client_info(self.user.username)
-        data['patient_info'] = patient_info
-        data['patient_count'] = len(patient_info)
+        clinician_info = views.response_clinician_info(self.user.username)
+        data['clinician_info'] = clinician_info
         return data
