@@ -15,7 +15,6 @@ class ApplicationsForeground(models.Model):
     package_name = models.TextField(blank=True, null=True)
     application_name = models.TextField(blank=True, null=True)
     is_system_app = models.IntegerField(blank=True, null=True)
-    application_category=models.TextField(blank=True,null=True)
 
     class Meta:
         managed = False
@@ -53,6 +52,7 @@ class AuthPermission(models.Model):
 
 
 class AuthUser(models.Model):
+    id = models.AutoField(db_column='id', primary_key=True)
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.IntegerField()
@@ -316,7 +316,7 @@ class TbClient(models.Model):
 
 
 class TbClinician(models.Model):
-    uid = models.AutoField(primary_key=True)
+    _id = models.AutoField(primary_key=True)
     firstname = models.CharField(db_column='firstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
     lastname = models.CharField(db_column='lastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
     password = models.CharField(max_length=255)

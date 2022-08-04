@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+import datetime
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,8 +43,10 @@ INSTALLED_APPS = [
     'dataServer',
     'sms',
     'rest_framework',
+    'rest_framework_simplejwt',
     'locationServer',
-    'screenServer'
+    'screenServer',
+    'userServer'
 ]
 
 MIDDLEWARE = [
@@ -68,6 +72,23 @@ CORS_ALLOW_HEADERS = (
     'authorization',
     'x-csrftoken'
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1)
+}
+
+AUTHENTICATION_BACKENDS = ['userServer.views.CusModelBackend', ]
 
 ROOT_URLCONF = 'src.urls'
 
@@ -149,4 +170,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-GOOGLE_MAPS_API_KEY = 'AIzaSyCF-I4LgabjEwFFjMqHSuMNdX1_MTa6P6A'
+GOOGLE_MAPS_API_KEY = ''
