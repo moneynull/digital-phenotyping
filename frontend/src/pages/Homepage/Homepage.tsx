@@ -2,9 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import logo from '../../../src/assets/senpsi_logo.png';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
 import Button from '@mui/material/Button';
 
 export default function Homepage() {
+  let navigate = useNavigate()
+  const logout = () =>{
+    sessionStorage.removeItem("userInfo")
+    navigate("/homepage");
+  }
   return (
     <MainContainer>
       Homepage
@@ -12,7 +18,7 @@ export default function Homepage() {
       <img src={logo} alt='logo' />
       <div>
         <Link to='/loginpage'>
-          <Button variant='contained'>Log Out</Button>
+          <Button onClick={logout} variant='contained'>Log Out</Button>
         </Link>
       </div>
       <Link to='/infodetailspage'>

@@ -62,12 +62,20 @@ function SmsUsageChart() {
   });
   const fetchData = () => {
     let curDate = new Date();
+    // @ts-ignore
+    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+     
     Log('SMS fetch');
     axios
       .post('https://digital-phenotyping.herokuapp.com/sms/', {
         uid: 1,
         startDate: 1641634738549,
         endDate: 1642209999999,
+      },
+      {
+        headers:{
+          Authorization: `Bearer ${userInfo!.access}`
+        }
       })
       .then((response) => {
         Log('Fetched SMS data..', response.data);

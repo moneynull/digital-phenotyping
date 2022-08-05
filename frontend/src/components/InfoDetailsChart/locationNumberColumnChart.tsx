@@ -75,10 +75,18 @@ function LocationNumberChart() {
   });
   const fetchData = () => {
     let curDate = new Date();
+    // @ts-ignore
+    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+     
     axios
       .post('https://digital-phenotyping.herokuapp.com/locationServer/NumbersOfLocation', {
         uid: 1,
         endDate: 1642299999549,
+      },
+      {
+        headers:{
+          Authorization: `Bearer ${userInfo!.access}`
+        }
       })
       .then((response) => {
         Log('Fetched Location Number data..', response.data);
