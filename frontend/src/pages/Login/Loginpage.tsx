@@ -47,18 +47,10 @@ export default function Loginpage() {
     Log(account)
     Log(password)
     
-    // @ts-ignore
-    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-     
     axios
       .post('https://digital-phenotyping.herokuapp.com/login/', {
         username: account,
         password: password,
-      },
-      {
-        headers:{
-          Authorization: `Bearer ${userInfo!.access}`
-        }
       })
       .then((response) => {
         Log('Fetched SMS data..', response.data);
