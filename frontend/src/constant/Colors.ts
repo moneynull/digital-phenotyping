@@ -5,8 +5,11 @@ interface iCOLORS {
   light_background: string;
   text: string;
   text_2: string;
+  text_light_grey: string;
   shadow: string;
   light_grey: string;
+  text_field: string;
+  login_btn: string;
 }
 const COLORS: iCOLORS = {
   primary: '#5E5EF5',
@@ -15,7 +18,10 @@ const COLORS: iCOLORS = {
   light_background: '#EFF3F9',
   text: '#3E3E3E',
   text_2: '#263238',
+  text_light_grey: '#585858',
   shadow: '#83838343',
   light_grey: '#979797',
+  text_field: '#B8B8FA88',
+  login_btn: '#6258DC',
 };
 export default COLORS;

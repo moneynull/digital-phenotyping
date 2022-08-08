@@ -1,145 +1,103 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-
+import { useState, useEffect, forwardRef } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import CardContainer from '../../components/CardContainer';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import TextField from '@mui/material/TextField';
+import {   useNavigate } from 'react-router-dom'; 
 import EmailIcon from '@mui/icons-material/Email';
-import KeyIcon from '@mui/icons-material/Key';
-import IconButton from '@mui/material/IconButton';
-
-import OutlinedInput from '@mui/material/OutlinedInput';
-import FormHelperText from '@mui/material/FormHelperText';
+import KeyIcon from '@mui/icons-material/Key'; 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Background from '../../assets/loginBackground.png';
-import Paper from '@mui/material/Paper';
-import COLORS from '../../constant/Colors';
-import logo from '../../assets/senpsi_logo.png';
+import COLORS from '../../constant/Colors'; 
+import { Log } from '../../components/Logger';
+import axios from 'axios';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
-interface State {
-  amount: string;
-  password: string;
-  weight: string;
-  weightRange: string;
-  showPassword: boolean;
-}
-
-const styles = {
-  paperContainer: {
-    backgroundImage: `url(${Background})`,
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    width: '100vw',
-    height: '100vh',
-  },
-};
 
 export default function Loginpage() {
-  const [values, setValues] = React.useState<State>({
-    amount: '',
-    password: '',
-    weight: '',
-    weightRange: '',
-    showPassword: false,
+  const [account, setAccount] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPwd, setShowPwd] = useState(false)
+  const [showSnackbar, setShowSnackbar] = useState(false)
+  let navigate = useNavigate()
+
+  const toggleShowPwd = () => {
+    setShowPwd(!showPwd)
+  };
+  const changeAccount = (e: any) => {
+    setAccount(e.target.value);
+  };
+  const changePassword = (e: any) => {
+    setPassword(e.target.value);
+  };
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setShowSnackbar(false)
+  }; 
+
+  const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
-
-  const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
-  };
-
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
+  function login(){
+    Log(account)
+    Log(password)
+    
+    axios
+      .post('https://digital-phenotyping.herokuapp.com/login/', {
+        username: account,
+        password: password,
+      })
+      .then((response) => {
+        Log('Fetched SMS data..', response.data);
+        if(response.data.access !== undefined){
+          sessionStorage.setItem("userInfo",JSON.stringify(response.data))
+          navigate("/homepage");
+        }
+        
+      }).catch((err) =>{
+        Log(err)
+        setShowSnackbar(true)
+      });
+  }
+   
   return (
     <MainContainer>
-      <Paper style={styles.paperContainer}>
-        <Box sx={{ ml: 150, mt: 40 }}>
-          <Container>
-            <Box sx={{ px: 2, py: 1 }}>
-              <Box sx={{ fontSize: 'h4.fontSize', fontWeight: 'bold' }}>
-                Welcome to
-                <img src={logo} width={152} height={63} alt='senpsi logo' />
-              </Box>
+      <Container>
+        <Welcome>Welcome to SenPsi</Welcome>
+        <TextInputContainer>
+          <EmailIcon sx={{fontSize:33}} />
+          <Wrapper>
+            <Title>
+              Email
+            </Title>
+            <TextInput onChange={changeAccount} value={account}/>
+          </Wrapper>
+        </TextInputContainer>
+        <TextInputContainer>
+          <KeyIcon  sx={{fontSize:33}}/>
+          <Wrapper>
+            <Title>
+              Password
+            </Title>
+            <TextInput onChange={changePassword} value={password} type={showPwd?"":"password"} />
+          </Wrapper>
+          {showPwd ? <VisibilityBtn onClick={toggleShowPwd} /> :<VisibilityOffBtn onClick={toggleShowPwd}  />} 
+        </TextInputContainer>
+        <LoginButton onClick={login}>Login</LoginButton>
+      </Container>
+      
+      <Snackbar
+        anchorOrigin={{ vertical:'top', horizontal:'right' }}
+        open={showSnackbar} 
+        onClose={handleClose}
+        autoHideDuration={3000} 
+      ><Alert severity="error">Wrong password or email</Alert></Snackbar>
 
-              <Box
-                component='form'
-                sx={{ '& .MuiTextField-root': { m: 1, width: '20ch' } }}
-                noValidate
-                autoComplete='off'
-              >
-                <div>
-                  <TextField
-                    id='filled-required'
-                    label='Email: '
-                    variant='filled'
-                    sx={{ m: 1 }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start'>
-                          <EmailIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <br></br>
-                  <FormControl
-                    sx={{ m: 1, width: '20ch' }}
-                    variant='outlined'
-                    style={{ background: '#d6d6fc' }}
-                  >
-                    <InputLabel htmlFor='outlined-adornment-password'>
-                      <KeyIcon /> Password:
-                    </InputLabel>
-                    <OutlinedInput
-                      id='outlined-adornment-password'
-                      type={values.showPassword ? 'text' : 'password'}
-                      value={values.password}
-                      onChange={handleChange('password')}
-                      endAdornment={
-                        <InputAdornment position='end'>
-                          <IconButton
-                            aria-label='toggle password visibility'
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge='end'
-                          >
-                            {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                      label='Password'
-                    />
-                  </FormControl>
-                </div>
-              </Box>
-
-              <Box sx={{ mx: 20, my: 'auto' }}>
-                <Link to='/homepage'>
-                  <Button variant='contained'>Login</Button>
-                </Link>
-              </Box>
-            </Box>
-          </Container>
-        </Box>
-      </Paper>
     </MainContainer>
   );
 }
@@ -147,6 +105,10 @@ export default function Loginpage() {
 const MainContainer = styled.div`
   color: black;
   font-size: 32px;
+  background-image: url(${Background});
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -156,10 +118,73 @@ const MainContainer = styled.div`
 const Container = styled.div`
   background-color: ${COLORS.white};
   border-radius: 20px;
+  position: absolute;
+  height: 300px;
+  width: 400px;  
+  right: 4vw;
+  top: 0;
+  bottom: 0;
+  margin: auto;
   display: flex;
   flex-direction: column;
+  padding: 20px;
   box-shadow: 2px 2px 15px 1px ${COLORS.shadow};
-  width: 400px;
-  padding: 30px;
-  margin: 20px;
 `;
+const Welcome = styled.div`
+  font-weight: bold;
+  margin-bottom: 10px;
+`;
+const TextInputContainer = styled.div`
+  margin-top: 30px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 10px;
+  height: 60px;
+  background-color: ${COLORS.text_field};
+`
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left:12px;
+`
+const Title = styled.div`
+  color: ${COLORS.text_light_grey};
+  font-size: 18px;
+`
+const TextInput = styled.input`
+  border: 0px;
+  font-size:20px;
+  border-bottom: 1px solid ${COLORS.text_light_grey};
+  background-color: transparent;
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid ${COLORS.primary};
+  }
+`
+const LoginButton = styled.div`
+  text-align:center;
+  width: 100px;
+  padding: 5px;
+  font-weight: bold;
+  font-size: 23px;
+  border-radius: 15px;
+  margin: 20px auto;
+  color: ${COLORS.white};
+  background-color: ${COLORS.login_btn};
+  &:hover{
+    cursor: pointer
+  }
+`
+const VisibilityBtn = styled(Visibility)`
+  &:hover{
+    cursor: pointer
+  }
+`
+const VisibilityOffBtn = styled(VisibilityOff)`
+  &:hover{
+    cursor: pointer
+  }
+`

@@ -91,10 +91,18 @@ function UnlockDurationChart() {
   const fetchData = () => {
     let curDate = new Date();
     Log('ScreenUnlocked fetch');
+    // @ts-ignore
+    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
+     
     axios
       .post('https://digital-phenotyping.herokuapp.com/screenServer/ScreenUnlocked', {
         uid: 1,
         endDate: 1642299999549,
+      },
+      {
+        headers:{
+          Authorization: `Bearer ${userInfo!.access}`
+        }
       })
       .then((response) => {
         Log('Fetched ScreenUnlocked data..', response.data);
