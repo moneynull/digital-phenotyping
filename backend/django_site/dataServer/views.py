@@ -45,8 +45,8 @@ def extract_message(request):
     else:
         uid = 0
 
-    device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
-    device_id = device_result[0]["awaredeviceid"]
+    device_result = models.TbClient.objects.filter(uid=uid).values("aware_device_id")
+    device_id = device_result[0]["aware_device_id"]
 
     start_date = datetime.datetime.fromtimestamp(int(start_date_stamp) / 1000)
     end_date = datetime.datetime.fromtimestamp(int(end_date_stamp) / 1000)

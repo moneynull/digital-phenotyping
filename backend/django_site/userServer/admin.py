@@ -16,7 +16,7 @@ class CusUserChangeForm(UserChangeForm):
         email = self.cleaned_data['email']
         # 注意用exclude排除自身
         if email and User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError("This email already used")
+            raise forms.ValidationError("This email has already used")
         return email
 
 
@@ -33,8 +33,8 @@ admin.site.register(User, CusUserAdmin)
 
 
 class ShowClient(admin.ModelAdmin):
-    list_display = ('uid', 'clinicianid', 'clienttitle')
-    search_fields = ('uid', 'clinicianid', 'clienttitle')
+    list_display = ('uid', 'clinician_id', 'client_title')
+    search_fields = ('uid', 'clinician_id', 'client_title')
 
 
 admin.site.register(models.TbClient, ShowClient)

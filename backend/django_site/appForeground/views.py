@@ -41,7 +41,7 @@ class AppForeground(APIView):
             date_from = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
             date_to = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
 
-        device_id = TbClient.objects.filter(uid=uid).values("awaredeviceid")
+        device_id = TbClient.objects.filter(uid=uid).values("aware_device_id")
 
         # categorize all app name and map timestamp piece
         appForeground = ApplicationsForeground.objects.all().exclude(timestamp__lte=date_from).exclude(

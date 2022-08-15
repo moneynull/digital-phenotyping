@@ -32,12 +32,12 @@ class QuerySMS(APIView):
         if uid == None or start_date_timestamp == None or end_date_timestamp == None or end_date_timestamp < start_date_timestamp:
             return Response(uid)
 
-        device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
+        device_result = models.TbClient.objects.filter(uid=uid).values("aware_device_id")
         # print(device_result)
         # print(len(device_result))
         if len(device_result) == 0:
             return Response(device_result)
-        device_id = device_result[0]["awaredeviceid"]
+        device_id = device_result[0]["aware_device_id"]
 
         # today_timestamp = "1642056676314"
         # today = datetime.datetime.fromtimestamp(int(today_timestamp)/1000)

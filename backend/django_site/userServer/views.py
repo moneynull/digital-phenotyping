@@ -35,10 +35,18 @@ class CusModelBackend(ModelBackend):
 def response_clinician_info(username):
     clinician_result = models.AuthUser.objects.filter(username=username)
     clinician_info = clinician_result.values('id', 'username', 'first_name', 'last_name', 'email')[0]
-    # info_result = models.TbClient.objects.filter(clinicianid=clinician_id)
-    # client_info = info_result.values('uid', 'clienttitle', 'awaredeviceid')
-
     return clinician_info
+
+
+class ClientInfoList(APIView):
+    @staticmethod
+    def post(request):
+        req = json.loads(request.body.decode().replace("'", "\""))
+        clinician_id = req.get('id')
+        info_result = models.TbClient.objects.filter(clinician_id=clinician_id)
+        client_info = info_result.values('uid', 'client_title', 'aware_device_id')
+
+        return Response(client_info.values())
 
 
 class ClientProfile(APIView):
@@ -53,15 +61,15 @@ class ClientProfile(APIView):
 
 def get_client_form(req):
     client_form = {
-        'clinicianid': req.get('clinicianId'),
-        'clienttitle': req.get('clientTitle'),
-        'firstname': req.get('firstName'),
-        'lastname': req.get('lastName'),
-        'dateofbirth': req.get('dateOfBirth'),
-        'textnotes': req.get('textNotes'),
-        'twitterid': req.get('twitterId'),
-        'facebookid': req.get('facebookId'),
-        'awaredeviceid': req.get('awareDeviceId')
+        'clinician_id': req.get('clinicianId'),
+        'client_title': req.get('clientTitle'),
+        'first_name': req.get('firstName'),
+        'last_name': req.get('lastName'),
+        'date_of_birth': req.get('dateOfBirth'),
+        'text_notes': req.get('textNotes'),
+        'twitter_id': req.get('twitterId'),
+        'facebook_id': req.get('facebookId'),
+        'aware_device_id': req.get('awareDeviceId')
     }
     return client_form
 
@@ -81,6 +89,11 @@ class AddClient(APIView):
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
         add_form = get_client_form(req)
+        # TODO:check the username in auth_user,
+        #  insert into auth_user,
+        #  return/select auth_id,
+        #  insert into tb_client
+
         models.TbClient.objects.create(**add_form)
         return Response(200)
 

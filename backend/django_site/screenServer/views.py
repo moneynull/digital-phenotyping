@@ -24,8 +24,8 @@ def extract_data(request):
     end_timestamp = req.get('endDate')
     start_timestamp = end_timestamp - one_day * 6
 
-    device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
-    device_id = device_result[0]["awaredeviceid"]
+    device_result = models.TbClient.objects.filter(uid=uid).values("aware_device_id")
+    device_id = device_result[0]["aware_device_id"]
     return device_id, start_timestamp, end_timestamp
 
 
