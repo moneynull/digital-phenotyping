@@ -1,4 +1,6 @@
+import datetime
 import json
+import time
 
 from django.shortcuts import render
 
@@ -32,10 +34,10 @@ class CusModelBackend(ModelBackend):
             return None
 
 
-def response_clinician_info(username):
-    clinician_result = models.AuthUser.objects.filter(username=username)
-    clinician_info = clinician_result.values('id', 'username', 'first_name', 'last_name', 'email')[0]
-    return clinician_info
+def response_user_info(username):
+    user_result = models.AuthUser.objects.filter(username=username)
+    user_info = user_result.values('id', 'username', 'first_name', 'last_name', 'email', 'is_staff')[0]
+    return user_info
 
 
 class ClientInfoList(APIView):
@@ -44,7 +46,7 @@ class ClientInfoList(APIView):
         req = json.loads(request.body.decode().replace("'", "\""))
         clinician_id = req.get('id')
         info_result = models.TbClient.objects.filter(clinician_id=clinician_id)
-        client_info = info_result.values('uid', 'client_title', 'aware_device_id')
+        client_info = info_result.values('uid', 'client_title', 'aware_device_id', 'last_update')
 
         return Response(client_info.values())
 
@@ -53,6 +55,7 @@ class ClientProfile(APIView):
     @staticmethod
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
+        # TODO:uid or auth_user_id?
         uid = req.get('uid')
 
         client_result = models.TbClient.objects.filter(uid=uid)
@@ -69,12 +72,12 @@ def get_client_form(req):
         'text_notes': req.get('textNotes'),
         'twitter_id': req.get('twitterId'),
         'facebook_id': req.get('facebookId'),
-        'aware_device_id': req.get('awareDeviceId')
+        'aware_device_id': req.get('awareDeviceId'),
     }
     return client_form
 
 
-class ChangeProfile(APIView):
+class UpdateClientProfile(APIView):
     @staticmethod
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
@@ -89,12 +92,25 @@ class AddClient(APIView):
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
         add_form = get_client_form(req)
-        # TODO:check the username in auth_user,
-        #  insert into auth_user,
-        #  return/select auth_id,
-        #  insert into tb_client
+        username = add_form.get('first_name') + add_form.get('last_name')
+        # TODO: age + uid/auth_user_id?
+        num_uname = models.AuthUser.objects.filter(username__icontains=username).count()
+        if num_uname != 0:
+            username = username + str(num_uname)
+        auth_form = {
+            'password': 'P@ssword2',
+            'is_superuser': 0,
+            'username': username,
+            'email': username + '@',
+            'first_name': add_form.get('first_name'),
+            'last_name': add_form.get('last_name'),
+            'is_staff': 0,
+            'is_active': 1,
+            # 'date_joined': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        auth_client = models.AuthUser.objects.create(**auth_form)
 
-        models.TbClient.objects.create(**add_form)
+        models.TbClient.objects.create(**add_form, auth_user_id=auth_client.id)
         return Response(200)
 
 
