@@ -74,8 +74,8 @@ def get_client_form(req):
     client_form = {
         'clinician_id': req.get('clinicianId'),
         'client_title': req.get('clientTitle'),
-        'first_name': req.get('firstName'),
-        'last_name': req.get('lastName'),
+        'first_name': str.capitalize(req.get('firstName')),
+        'last_name': str.capitalize(req.get('lastName')),
         'date_of_birth': req.get('dateOfBirth'),
         'age': age(datetime.strptime(req.get('dateOfBirth'), '%Y-%m-%d')),
         'text_notes': req.get('textNotes'),
@@ -101,7 +101,7 @@ class AddClient(APIView):
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
         add_form = get_client_form(req)
-        username = add_form.get('first_name') + add_form.get('last_name')
+        username = str.lower(add_form.get('first_name') + add_form.get('last_name'))
         num_uname = models.AuthUser.objects.filter(username__icontains=username).count()
         if num_uname != 0:
             username = username + str(num_uname)

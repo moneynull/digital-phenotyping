@@ -5,8 +5,6 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
-import datetime
-
 from django.db import models
 
 
@@ -17,12 +15,13 @@ class TbClient(models.Model):
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     date_of_birth = models.CharField(max_length=255, blank=True, null=True)
-    age = models.SmallIntegerField(blank=True, null=True)
+    age = models.IntegerField(blank=True, null=True)
     text_notes = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=255, blank=True, null=True)
     twitter_id = models.CharField(max_length=255, blank=True, null=True)
     facebook_id = models.CharField(max_length=255, blank=True, null=True)
     aware_device_id = models.CharField(max_length=255, blank=True, null=True)
-    last_update = models.DateTimeField(default=datetime.datetime.now())
+    last_update = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -39,7 +38,7 @@ class AuthUser(models.Model):
     email = models.CharField(unique=True, max_length=254)
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
-    date_joined = models.DateTimeField(default=datetime.datetime.now())
+    date_joined = models.DateTimeField()
 
     class Meta:
         managed = False

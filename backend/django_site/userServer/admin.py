@@ -28,7 +28,6 @@ class MyUserChangeForm(UserChangeForm):
 
 
 class MyUserCreationForm(UserCreationForm):
-
     error_messages = {
         "password_mismatch": _("The two password fields didn’t match."),
         "email_used": _("This email has already used."),
@@ -85,8 +84,11 @@ admin.site.register(User, MyUserAdmin)
 
 
 class ShowClient(admin.ModelAdmin):
-    list_display = ('uid', 'clinician_id', 'client_title')
-    search_fields = ('uid', 'clinician_id', 'client_title')
+    list_display = ('uid', 'clinician_id', 'client_title', 'first_name', 'last_name', 'date_of_birth', 'age',
+                    'text_notes', 'status', 'twitter_id', 'facebook_id', 'aware_device_id', 'last_update')
+
+    search_fields = ('uid', 'clinician_id', 'client_title', 'first_name', 'last_name', 'date_of_birth', 'age',
+                     'text_notes', 'status', 'twitter_id', 'facebook_id', 'aware_device_id', 'last_update')
 
 
 admin.site.register(models.TbClient, ShowClient)
