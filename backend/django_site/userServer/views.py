@@ -2,6 +2,7 @@ import datetime
 import json
 import time
 
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render
 
 # Create your views here.
@@ -11,9 +12,11 @@ from userServer import models
 from rest_framework_simplejwt.views import TokenObtainPairView
 from userServer.serializers import MyTokenObtainPairSerializer
 
-from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
+
+from datetime import datetime
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -46,7 +49,7 @@ class ClientInfoList(APIView):
         req = json.loads(request.body.decode().replace("'", "\""))
         clinician_id = req.get('id')
         info_result = models.TbClient.objects.filter(clinician_id=clinician_id)
-        client_info = info_result.values('uid', 'client_title', 'aware_device_id', 'last_update')
+        client_info = info_result.values()
 
         return Response(client_info.values())
 
@@ -55,11 +58,16 @@ class ClientProfile(APIView):
     @staticmethod
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
-        # TODO:uid or auth_user_id?
         uid = req.get('uid')
 
         client_result = models.TbClient.objects.filter(uid=uid)
         return Response(client_result.values()[0])
+
+
+def age(birthdate):
+    today = datetime.today()
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    return age
 
 
 def get_client_form(req):
@@ -69,6 +77,7 @@ def get_client_form(req):
         'first_name': req.get('firstName'),
         'last_name': req.get('lastName'),
         'date_of_birth': req.get('dateOfBirth'),
+        'age': age(datetime.strptime(req.get('dateOfBirth'), '%Y-%m-%d')),
         'text_notes': req.get('textNotes'),
         'twitter_id': req.get('twitterId'),
         'facebook_id': req.get('facebookId'),
@@ -93,15 +102,14 @@ class AddClient(APIView):
         req = json.loads(request.body.decode().replace("'", "\""))
         add_form = get_client_form(req)
         username = add_form.get('first_name') + add_form.get('last_name')
-        # TODO: age + uid/auth_user_id?
         num_uname = models.AuthUser.objects.filter(username__icontains=username).count()
         if num_uname != 0:
             username = username + str(num_uname)
         auth_form = {
-            'password': 'P@ssword2',
+            'password': make_password('P@ssword2'),
             'is_superuser': 0,
             'username': username,
-            'email': username + '@',
+            'email': username + '@.com',
             'first_name': add_form.get('first_name'),
             'last_name': add_form.get('last_name'),
             'is_staff': 0,
@@ -110,7 +118,7 @@ class AddClient(APIView):
         }
         auth_client = models.AuthUser.objects.create(**auth_form)
 
-        models.TbClient.objects.create(**add_form, auth_user_id=auth_client.id)
+        models.TbClient.objects.create(**add_form, uid=auth_client.id)
         return Response(200)
 
 
