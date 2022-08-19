@@ -9,7 +9,8 @@ class TbClientModelTest(TestCase):
         TbClient.objects.create(
             uid=1, 
             clinician_id='2', 
-            password='passord'
+            # did not find password in locationServer.TbClient
+            # password='passord'
         )
 
     # ------------ test label ----------- #
@@ -55,15 +56,16 @@ class TbClientModelTest(TestCase):
         max_length = client._meta.get_field('aware_device_id').max_length
         self.assertEqual(max_length, 255)
 
-    def test_password_max_length(self):
-        client = TbClient.objects.get(uid=1)
-        max_length = client._meta.get_field('password').max_length
-        self.assertEqual(max_length, 255)
+    # did not find password in locationServer.TbClient
+    # def test_password_max_length(self):
+    #     client = TbClient.objects.get(uid=1)
+    #     max_length = client._meta.get_field('password').max_length
+    #     self.assertEqual(max_length, 255)
 
-    # did not find email_address in TbClient
-    def test_email_address_max_length(self):
-        client = TbClient.objects.get(uid=1)
-        max_length = client._meta.get_field('email_address').max_length
-        self.assertEqual(max_length, 255)
+    # did not find email_address in locationServer.TbClient
+    # def test_email_address_max_length(self):
+    #     client = TbClient.objects.get(uid=1)
+    #     max_length = client._meta.get_field('email_address').max_length
+    #     self.assertEqual(max_length, 255)
 
     # ------------ test model func ----------- #
