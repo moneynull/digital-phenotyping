@@ -1,6 +1,7 @@
 import datetime
 import json
 import time
+import tweepy
 
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render
@@ -18,6 +19,7 @@ from django.db.models import Q
 
 from datetime import datetime
 
+from utils import tw_cbd_credentials
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -101,6 +103,11 @@ class AddClient(APIView):
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
         add_form = get_client_form(req)
+
+        client = tweepy.Client(bearer_token=tw_cbd_credentials.bearer_token)
+        username = add_form.get('twitter_id')
+        twitter_id = client.get_user(username=username).data.id
+
         username = str.lower(add_form.get('first_name') + add_form.get('last_name'))
         num_uname = models.AuthUser.objects.filter(username__icontains=username).count()
         if num_uname != 0:
@@ -114,6 +121,7 @@ class AddClient(APIView):
             'last_name': add_form.get('last_name'),
             'is_staff': 0,
             'is_active': 1,
+            'twitter_id':twitter_id
             # 'date_joined': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         auth_client = models.AuthUser.objects.create(**auth_form)
