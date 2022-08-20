@@ -15,6 +15,7 @@ class ApplicationsForeground(models.Model):
     package_name = models.TextField(blank=True, null=True)
     application_name = models.TextField(blank=True, null=True)
     is_system_app = models.IntegerField(blank=True, null=True)
+    application_category = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -58,10 +59,11 @@ class AuthUser(models.Model):
     username = models.CharField(unique=True, max_length=150)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
-    email = models.CharField(max_length=254)
+    email = models.CharField(unique=True, max_length=254)
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
     date_joined = models.DateTimeField()
+    role_type = models.IntegerField()
 
     class Meta:
         managed = False
@@ -270,57 +272,44 @@ class Screen(models.Model):
         db_table = 'screen'
 
 
-class SmsSms(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    sms_id = models.IntegerField()
-    device_id = models.CharField(max_length=150)
-    message_type = models.IntegerField()
-    timestamp = models.IntegerField()
-    trace = models.TextField()
-
-    class Meta:
-        managed = False
-        db_table = 'sms_sms'
-
-
-class TbAdmin(models.Model):
-    uid = models.AutoField(primary_key=True)
-    firstname = models.CharField(db_column='firstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    lastname = models.CharField(db_column='lastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    password = models.CharField(max_length=255)
-    emailadress = models.CharField(db_column='emailAdress', max_length=255)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'tb_admin'
-
-
 class TbClient(models.Model):
     uid = models.AutoField(primary_key=True)
-    clinicianid = models.CharField(db_column='clinicianId', max_length=255)  # Field name made lowercase.
-    clienttitle = models.CharField(db_column='clientTitle', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    firstname = models.CharField(db_column='firstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    lastname = models.CharField(db_column='lastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    dateofbirth = models.CharField(db_column='dateOfBirth', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    textnotes = models.TextField(db_column='textNotes', blank=True, null=True)  # Field name made lowercase.
-    twitterid = models.CharField(db_column='twitterId', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    facebookid = models.CharField(db_column='facebookId', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    awaredeviceid = models.CharField(db_column='awareDeviceId', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    password = models.CharField(max_length=255)
-    emailaddress = models.CharField(db_column='emailAddress', max_length=255)  # Field name made lowercase.
+    clinician_id = models.CharField(max_length=255)
+    client_title = models.CharField(max_length=255, blank=True, null=True)
+    first_name = models.CharField(max_length=255, blank=True, null=True)
+    last_name = models.CharField(max_length=255, blank=True, null=True)
+    date_of_birth = models.CharField(max_length=255, blank=True, null=True)
+    text_notes = models.TextField(blank=True, null=True)
+    twitter_id = models.CharField(max_length=255, blank=True, null=True)
+    facebook_id = models.CharField(max_length=255, blank=True, null=True)
+    aware_device_id = models.CharField(max_length=255, blank=True, null=True)
+    auth_user_id = models.IntegerField()
+    last_update = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'tb_client'
 
 
-class TbClinician(models.Model):
-    _id = models.AutoField(primary_key=True)
-    firstname = models.CharField(db_column='firstName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    lastname = models.CharField(db_column='lastName', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    password = models.CharField(max_length=255)
-    emailaddress = models.CharField(db_column='emailAddress', max_length=255)  # Field name made lowercase.
+class TbLocCluster(models.Model):
+    field_id = models.AutoField(db_column='_id', primary_key=True)  # Field renamed because it started with '_'.
+    timestamp = models.FloatField(blank=True, null=True)
+    device_id = models.CharField(max_length=150)
+    double_latitude = models.FloatField(blank=True, null=True)
+    double_longitude = models.FloatField(blank=True, null=True)
+    address = models.CharField(max_length=150, blank=True, null=True)
+    loc_type = models.CharField(max_length=150, blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'tb_clinician'
+        db_table = 'tb_loc_cluster'
+
+class TwitterWordCloud(models.Model):
+    field_id = models.AutoField(db_column='_id', primary_key=True)
+    twitter_id = models.CharField(max_length=32, blank=False, null=False)
+    word = models.CharField(max_length=45, blank=False, null=False)
+    occurance = models.IntegerField(blank=False, null=False)
+    
+    class Meta:
+        managed = False
+        db_table = 'twitter_word_cloud'

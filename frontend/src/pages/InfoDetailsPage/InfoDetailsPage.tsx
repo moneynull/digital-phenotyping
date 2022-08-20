@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import NavTitle from '../../components/NavTitle';
 import SearchBar from '../../components/SearchBar';
@@ -12,9 +12,9 @@ import PhonelinkIcon from '@mui/icons-material/Phonelink';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import AccessTimeFilledRoundedIcon from '@mui/icons-material/AccessTimeFilledRounded';
+import TwitterIcon from '@mui/icons-material/Twitter';
 import { Log } from '../../components/Logger';
 import AppUsageChart from '../../components/InfoDetailsChart/AppUsageChart';
-import { Divider } from '@mui/material';
 import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
 import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
 import CallsUsageChart from '../../components/InfoDetailsChart/CallsUsageChart';
@@ -22,9 +22,17 @@ import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDuratio
 import LocationNumberHeatMapChart from '../../components/InfoDetailsChart/locationNumberChartHeatmap';
 import LocationNumberColumnChart from '../../components/InfoDetailsChart/locationNumberColumnChart';
 import UnlockTimesChart from '../../components/InfoDetailsChart/UnlockTimesChart';
+import KeywordCloud from '../../components/InfoDetailsChart/KeywordCloud';
 function InfoDetailsPage() {
+  let navigate = useNavigate();
   const [patientId, setPatientId] = useState('123');
   const [curSelected, setCurSelected] = useState('Application');
+  let token = sessionStorage.getItem('userInfo');
+  useEffect(() => {
+    if (!token) {
+      navigate('/');
+    }
+  }, []);
   const selected = (name: string) => {
     Log(name);
     setCurSelected(name);
@@ -78,6 +86,12 @@ function InfoDetailsPage() {
     </ChartContainer>
   );
 
+  const tagCloud = (
+    <CardContainer>
+      <KeywordCloud />
+    </CardContainer>
+  );
+
   const defaultGreeting = (
     <CardContainer>
       <Reminder>Client Name: Simon</Reminder>
@@ -96,6 +110,8 @@ function InfoDetailsPage() {
         return locChart;
       case 'Screen':
         return screenChart;
+      case 'Twitter':
+        return tagCloud;
       default:
         return defaultGreeting;
     }
@@ -147,6 +163,12 @@ function InfoDetailsPage() {
               <IconText curSelected={curSelected} name='Screen'>
                 <AccessTimeFilledRoundedIcon sx={{ fontSize: 80 }} />
                 <AppName>Screen</AppName>
+              </IconText>
+            </Grid>
+            <Grid item onClick={() => selected('Twitter')} xs={2}>
+              <IconText curSelected={curSelected} name='Twitter'>
+                <TwitterIcon sx={{ fontSize: 80 }} />
+                <AppName>Twitter</AppName>
               </IconText>
             </Grid>
           </Grid>

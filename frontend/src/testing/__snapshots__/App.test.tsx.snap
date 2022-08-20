@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot library render 1`] = `
+<div>
+  <div
+    class="App"
+  >
+    <header
+      class="App-header"
+    >
+      <img
+        alt="logo"
+        class="App-logo"
+        src="senpsi_logo.png"
+      />
+      <nav
+        style="border-bottom: 1px solid; padding-bottom: 1rem;"
+      >
+        <a
+          href="/homepage"
+        >
+          Homepage
+        </a>
+        <div />
+        <a
+          href="/loginpage"
+        >
+          Login
+        </a>
+      </nav>
+    </header>
+  </div>
+</div>
+`;

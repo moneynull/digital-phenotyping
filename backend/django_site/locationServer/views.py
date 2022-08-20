@@ -36,12 +36,12 @@ class PreProcessLocation(APIView):
     def initialProcessLocation():
 
         all_devices = models.TbClient.objects \
-            .values("awaredeviceid") \
+            .values("aware_device_id") \
             .distinct()
 
         device_id_list = []
         for i in all_devices:
-            device_id_list.append(i["awaredeviceid"])
+            device_id_list.append(i["aware_device_id"])
 
         for i in device_id_list:
             start_timestamp, end_timestamp = PreProcessLocation.getStartAndEndTimestamp(i)
@@ -150,8 +150,8 @@ class NumbersLocation(APIView):
         end_timestamp = req.get('endDate')
         start_timestamp = end_timestamp - one_day * 6
 
-        device_result = models.TbClient.objects.filter(uid=uid).values("awaredeviceid")
-        device_id = device_result[0]["awaredeviceid"]
+        device_result = models.TbClient.objects.filter(uid=uid).values("aware_device_id")
+        device_id = device_result[0]["aware_device_id"]
 
         # a day's timestamp, address_list, visited_times_list, type_list
         start_zero_date, interval, start_zero_timestamp, end_zero_timestamp \

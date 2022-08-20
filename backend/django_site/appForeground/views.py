@@ -5,6 +5,8 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from appForeground.models import ApplicationsForeground, TbClient
+from google_play_scraper import app as google_app
+
 
 class AppForeground(APIView):
 
@@ -39,7 +41,7 @@ class AppForeground(APIView):
             date_from = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
             date_to = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
 
-        device_id = TbClient.objects.filter(uid=uid).values("awaredeviceid")
+        device_id = TbClient.objects.filter(uid=uid).values("aware_device_id")
 
         # categorize all app name and map timestamp piece
         appForeground = ApplicationsForeground.objects.all().exclude(timestamp__lte=date_from).exclude(
@@ -70,7 +72,7 @@ class AppForeground(APIView):
         index_dic = dict((name, index) for name, index in zip(app_name_set, index_arr))
 
         # convert app timestamp from [dict] to []
-        timestamp_string=[]
+        timestamp_string = []
         for l in timestamp_l:
             timestamp_string.append(l['timestamp'])
 
@@ -81,8 +83,8 @@ class AppForeground(APIView):
             name = app_name_l[i]['application_name']
             if name != 'System UI':
                 startTime = timestamp_string[i]
-                endTime = timestamp_string[i+1]
-                appTime_arr[index_dic[name]] += (endTime- startTime)
+                endTime = timestamp_string[i + 1]
+                appTime_arr[index_dic[name]] += (endTime - startTime)
             i += 1
 
         appUsage_arr = AppForeground.calculatePercentage(appTime_arr)
@@ -100,3 +102,22 @@ class AppForeground(APIView):
         usage2d_arr.append(per_arr)
 
         return Response(usage2d_arr)
+
+
+class AppCategory(APIView):
+    @staticmethod
+    def get(request):
+
+        genre_result = ApplicationsForeground.objects.filter(application_category__isnull=True)
+        for r in genre_result:
+            try:
+                google_info = google_app(r.package_name)  # https://pypi.org/project/google-play-scraper/
+                if google_info['genre']:
+                    # update application_category cell for this record
+                    r.application_category = google_info['genre']
+                    print(r.application_category)
+                    #r.save()
+            except:
+                pass
+        ApplicationsForeground.objects.bulk_update(genre_result, fields=['application_category'])
+        return Response(200)
