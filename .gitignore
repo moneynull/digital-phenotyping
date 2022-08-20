@@ -1,5 +1,5 @@
 backend/venv/
 __pycache__/
 backend/django_site/htmlcov
-
+.env
 backend/django_site/.coverage
