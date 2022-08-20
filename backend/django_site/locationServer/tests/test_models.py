@@ -8,7 +8,7 @@ class TbClientModelTest(TestCase):
         # Set up non-modified objects used by all test methods
         TbClient.objects.create(
             uid=1, 
-            clinician_id='2', 
+            clinician_id=2,
         )
 
     # ------------ test label ----------- #
