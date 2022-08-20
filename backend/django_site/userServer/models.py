@@ -19,7 +19,7 @@ class TbClient(models.Model):
     date_of_birth = models.CharField(max_length=255, blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)
     text_notes = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=255, blank=True, null=True)
+    status = models.CharField(default='Normal', max_length=255, blank=True, null=True)
     twitter_id = models.CharField(max_length=255, blank=True, null=True)
     facebook_id = models.CharField(max_length=255, blank=True, null=True)
     aware_device_id = models.CharField(max_length=255, blank=True, null=True)

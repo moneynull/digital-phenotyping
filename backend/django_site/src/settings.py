@@ -129,6 +129,14 @@ DATABASES = {
         'HOST': '47.95.10.24',
         'PORT': '3306',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'swen90013',
+    #     'USER': 'bing',
+    #     'PASSWORD': 'N8ZHRiVDGQNk6Su',
+    #     'HOST': 'swen90013.mysql.database.azure.com',
+    #     'PORT': '3306',
+    # }
 }
 
 # Password validation
