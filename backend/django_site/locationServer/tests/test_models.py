@@ -2,6 +2,7 @@
 
 # from locationServer.models import TbClient
 
+
 # class TbClientModelTest(TestCase):
 #     @classmethod
 #     def setUpTestData(cls):
@@ -10,6 +11,7 @@
 #             uid=1, 
 #             clinician_id='2', 
 #         )
+
 
 #     # ------------ test label ----------- #
 
