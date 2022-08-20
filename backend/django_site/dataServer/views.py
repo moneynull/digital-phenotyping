@@ -4,7 +4,7 @@ import time
 import utils.twitterCrawler as tc
 
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 
 # Create your views here.
 from dataServer import models
@@ -12,15 +12,11 @@ from dataServer import models
 one_day = 86400000
 
 def extract_twitter_keywords(request):
-    if request.method == 'GET':
-        uid = 0
-        # uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
-    else:
-        uid = 0
-    
-    # Use the next line
-    # twitter_id = models.TbClient.objects.filter(uid=uid).values("twitterID")
-    twitter_id = '1385479485286338562'   
+    if request.method != 'GET':
+        return HttpResponseBadRequest
+    req = json.loads(request.body.decode().replace("'", "\""))
+    uid = req.get('id')
+    twitter_id = models.TbClient.objects.get(uid=uid).twitter_id
 
     # the following code is for get twitter id based on twitter username
     # it will be used in the profile page
@@ -30,9 +26,11 @@ def extract_twitter_keywords(request):
     # twitter_id = client.get_user(username=username).data.id
     # 
 
+    records = models.TwitterWordCloud.objects.filter(twitter_id=twitter_id).values_list('word','occurance')
+
     res = {
         'success': True,
-        'data': tc.get_recent_tweets(twitter_id)
+        'data': dict(list(records))
     }
     return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
