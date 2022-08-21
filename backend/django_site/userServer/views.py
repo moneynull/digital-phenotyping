@@ -107,6 +107,7 @@ class AddClient(APIView):
         client = tweepy.Client(bearer_token=tw_cbd_credentials.bearer_token)
         username = add_form.get('twitter_id')
         twitter_id = client.get_user(username=username).data.id
+        add_form['twitter_id'] = twitter_id
 
         username = str.lower(add_form.get('first_name') + add_form.get('last_name'))
         num_uname = models.AuthUser.objects.filter(username__icontains=username).count()
@@ -121,7 +122,6 @@ class AddClient(APIView):
             'last_name': add_form.get('last_name'),
             'is_staff': 0,
             'is_active': 1,
-            'twitter_id':twitter_id
             # 'date_joined': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         auth_client = models.AuthUser.objects.create(**auth_form)
