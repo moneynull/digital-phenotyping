@@ -38,10 +38,10 @@ def retrieve_2weeks_tweets():
 
     try:
         for id in twitter_idList:
-            word_cloud = get_recent_tweets(id)
+            word_cloud = dict(get_recent_tweets(id))
         
             if models.TwitterWordCloud.objects.filter(twitter_id=id).exists():
-                for (word, occurance) in word_cloud:
+                for (word, occurance) in word_cloud.items():
                     if models.TwitterWordCloud.objects.filter(twitter_id=id,word=word).exists():
                         record = models.TwitterWordCloud.objects.get(twitter_id=id,word=word)
                         record.occurance = record.occurance + occurance
@@ -53,7 +53,7 @@ def retrieve_2weeks_tweets():
                             occurance=occurance
                         )
             else:
-                for (word, occurance) in word_cloud:
+                for (word, occurance) in word_cloud.items():
                     models.TwitterWordCloud.objects.create(
                         twitter_id=id,
                         word=word,
@@ -63,6 +63,37 @@ def retrieve_2weeks_tweets():
     except:
         raise Http404
     
+def retrieve_2weeks_tweets_manul(id):
+    
+    try:
+        
+        word_cloud = dict(get_recent_tweets(id))
+        # print(type(word_cloud))
+        # print(word_cloud.items()[0])
+    
+        if models.TwitterWordCloud.objects.filter(twitter_id=id).exists():
+            for (word, occurance) in word_cloud.items():
+                if models.TwitterWordCloud.objects.filter(twitter_id=id,word=word).exists():
+                    record = models.TwitterWordCloud.objects.get(twitter_id=id,word=word)
+                    record.occurance = record.occurance + occurance
+                    record.save()
+                else:
+                    models.TwitterWordCloud.objects.create(
+                        twitter_id=id,
+                        word=word,
+                        occurance=occurance
+                    )
+        else:
+            for word,occurance in word_cloud.items():
+                models.TwitterWordCloud.objects.create(
+                    twitter_id=id,
+                    word=word,
+                    occurance=occurance
+                )
+                
+    except:
+        raise Http404
+
 
 # remove collection words
 def remove_collction_words(tweets, collection_words):
@@ -102,8 +133,13 @@ def get_recent_tweets(user_id):
     api = tw.API(auth, wait_on_rate_limit=True)
 
     # get tweets from twitter
-    tweets = tw.Cursor(api.user_timeline,
-                    id=user_id).items(100)
+    # tweets = tw.Cursor(api.user_timeline,
+    #                 id=user_id).items(100)
+
+    client = tw.Client(bearer_token=tw_cbd_credentials.bearer_token)
+    max_length = 50
+    tweets = client.get_users_tweets(id=user_id,max_results=max_length).data
+    print("1")
 
     all_tweets = [tweet.text for tweet in tweets]
 
