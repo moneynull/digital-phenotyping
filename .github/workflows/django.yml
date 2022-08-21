@@ -6,10 +6,10 @@ on:
   pull_request:
     branches: [ main, development ]
 
-env:
-  DATABASE_USER: root
-  DATABASE_PASSWORD: @WSX1qaz
-  DATABASE_HOST: 47.95.10.24
+env: |
+  DATABASE_USER: root \
+  DATABASE_PASSWORD: @WSX1qaz \
+  DATABASE_HOST: 47.95.10.24 \
 
 jobs:
   build:
