@@ -1,7 +1,6 @@
-import React from 'react';
 import styled from 'styled-components';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import COLORS from '../constant/Colors';
+import COLORS from '../../constant/Colors';
 
 function NavTitle(props: any) {
   return (
@@ -20,9 +19,11 @@ const NavTitleContainer = styled.div`
 `;
 const NavTitleText = styled.div`
   font-size: 30px;
-  width: 350px;
+  @media screen and (max-width: 1300px){
+    font-size: 23px;
+  }
+  white-space: nowrap;
   font-family: 'Open Sans', sans-serif;
-  margin-left: 20px;
   font-weight: bold;
 `;
 export default NavTitle;

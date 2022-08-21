@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import COLORS from '../../constant/Colors';
-import { Log } from '../Logger';
+import { Log } from '../common/Logger';
 
 const loacationNumberSeries = [];
 
@@ -50,7 +50,7 @@ const locationNumberData = {
   },
 };
 
-function LocationNumberHeatMapChart() {
+function LocationNumberHeatMapChart(props: any) {
   const [barState, setBarState] = useState({
     options: {},
     series: [],
@@ -58,18 +58,21 @@ function LocationNumberHeatMapChart() {
   const fetchData = () => {
     let curDate = new Date();
     // @ts-ignore
-    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-     
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
     axios
-      .post('https://digital-phenotyping.herokuapp.com/locationServer/NumbersOfLocation', {
-        uid: 1,
-        endDate: 1642299999549,
-      },
-      {
-        headers:{
-          Authorization: `Bearer ${userInfo!.access}`
+      .post(
+        'https://digital-phenotyping.herokuapp.com/locationServer/NumbersOfLocation',
+        {
+          uid: props.uid,
+          endDate: 1642299999549,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo!.access}`,
+          },
         }
-      })
+      )
       .then((response) => {
         Log('Fetched HeatMap data..', response.data);
         let data = response.data;

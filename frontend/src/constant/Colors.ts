@@ -10,6 +10,8 @@ interface iCOLORS {
   light_grey: string;
   text_field: string;
   login_btn: string;
+  red: string;
+  light_purple: string;
 }
 const COLORS: iCOLORS = {
   primary: '#5E5EF5',
@@ -23,5 +25,7 @@ const COLORS: iCOLORS = {
   light_grey: '#979797',
   text_field: '#B8B8FA88',
   login_btn: '#6258DC',
+  red: 'red',
+  light_purple: '#7A7CFF',
 };
 export default COLORS;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import COLORS from '../../constant/Colors';
-import { Log } from '../Logger';
+import { Log } from '../common/Logger';
 
 // dummy data for Calls usage
 const dummyCallsData = {
@@ -47,7 +47,7 @@ const dummyCallsData = {
   },
 };
 
-function CallsUsageChart() {
+function CallsUsageChart(props: any) {
   const [callsState, setCallsState] = useState({
     options: {},
     series: [],
@@ -55,19 +55,22 @@ function CallsUsageChart() {
   const fetchData = () => {
     let curDate = new Date();
     // @ts-ignore
-    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-     
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
     axios
-      .post('https://digital-phenotyping.herokuapp.com/dataServer/calls', {
-        uid: 1,
-        startDate: 1641634738549,
-        endDate: 1642309999999,
-      },
-      {
-        headers:{
-          Authorization: `Bearer ${userInfo!.access}`
+      .post(
+        'https://digital-phenotyping.herokuapp.com/dataServer/calls',
+        {
+          uid: props.uid,
+          startDate: 1641634738549,
+          endDate: 1642309999999,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo!.access}`,
+          },
         }
-      })
+      )
       .then((response) => {
         console.log('Fetched data..', response.data.data);
         let res = dummyCallsData;

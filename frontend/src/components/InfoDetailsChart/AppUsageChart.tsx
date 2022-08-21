@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
-import { Log } from '../Logger';
+import { Log } from '../common/Logger';
 import axios from 'axios';
 // dummy data for app time usage
 const dummyChartData = {
@@ -44,7 +44,7 @@ const dummyChartData = {
   ],
 };
 
-function AppUsageChart() {
+function AppUsageChart(props: any) {
   const [barState, setBarState] = useState({
     options: {},
     series: [],
@@ -52,19 +52,21 @@ function AppUsageChart() {
   const fetchData = () => {
     let curDate = new Date();
     // @ts-ignore
-    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-     
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
     axios
-      .post('https://digital-phenotyping.herokuapp.com/appForeground/', {
-        uid: 1,
-        startDate: 1641634738549,
-        endDate: 1641901876549,
-      },
-      {
-        headers:{
-          Authorization: `Bearer ${userInfo!.access}`
+      .post(
+        'https://digital-phenotyping.herokuapp.com/appForeground/',
+        {
+          uid: props.uid,
+          startDate: 1641634738549,
+          endDate: 1641901876549,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo!.access}`,
+          },
         }
-      }
       )
       .then((response) => {
         Log('Fetched data..', response.data);

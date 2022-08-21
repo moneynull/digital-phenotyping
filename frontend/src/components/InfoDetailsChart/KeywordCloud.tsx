@@ -60,7 +60,34 @@ const options = {
     fontSizes: fontSizes
   };
 
-function KeywordCloud() {
+function KeywordCloud(props: any) {
+   
+    useEffect(()=>{
+        fetchData()
+    },[])
+
+    const fetchData = () => {
+        let curDate = new Date();
+        // @ts-ignore
+        let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        console.log("UID",props.uid)
+        axios
+          .post(
+            'https://digital-phenotyping.herokuapp.com/dataServer/twitter_demo',
+            {
+              uid: props.uid,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${userInfo!.access}`,
+              },
+            }   
+          )
+          .then((response) => {
+            console.log('Fetched data..', response.data.data);
+            
+          });
+      };
     return (
         <ReactWordcloud options={options} words={data} />
     )

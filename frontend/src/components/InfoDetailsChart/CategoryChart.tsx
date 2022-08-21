@@ -80,7 +80,7 @@ const dummyCategoryData = {
   ],
 };
 
-function CategoryChart() {
+function CategoryChart(props: any) {
   const [barState, setBarState] = useState(dummyCategoryData);
   useEffect(() => {
     //setBarState();

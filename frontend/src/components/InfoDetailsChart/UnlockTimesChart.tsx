@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import COLORS from '../../constant/Colors';
-import { Log } from '../Logger';
+import { Log } from '../common/Logger';
 
 // TODO!!!!   apply backend api
 // auto generated fake data for a year
@@ -70,7 +70,7 @@ const screenDummayData = {
   },
 };
 
-function UnlockTimesChart() {
+function UnlockTimesChart(props: any) {
   const [barState, setBarState] = useState({
     options: {},
     series: [],
@@ -79,18 +79,21 @@ function UnlockTimesChart() {
     let curDate = new Date();
     Log('ScreenUnlocked fetch');
     // @ts-ignore
-    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-     
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
     axios
-      .post('https://digital-phenotyping.herokuapp.com/screenServer/ScreenUnlocked', {
-        uid: 1,
-        endDate: 1642299999549,
-      },
-      {
-        headers:{
-          Authorization: `Bearer ${userInfo!.access}`
+      .post(
+        'https://digital-phenotyping.herokuapp.com/screenServer/ScreenUnlocked',
+        {
+          uid: props.uid,
+          endDate: 1642299999549,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo!.access}`,
+          },
         }
-      })
+      )
       .then((response) => {
         Log('Fetched ScreenUnlocked data..', response.data);
         let res = screenDummayData;

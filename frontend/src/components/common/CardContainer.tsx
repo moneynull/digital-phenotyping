@@ -1,6 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import COLORS from '../constant/Colors';
+import COLORS from '../../constant/Colors';
 
 export default function CardContainer(props: any) {
   return <Container>{props.children}</Container>;
