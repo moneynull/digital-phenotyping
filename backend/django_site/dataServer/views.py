@@ -12,7 +12,7 @@ from dataServer import models
 one_day = 86400000
 
 def extract_twitter_keywords(request):
-    if request.method != 'GET':
+    if request.method != 'POST':
         return HttpResponseBadRequest
     req = json.loads(request.body.decode().replace("'", "\""))
     uid = req.get('id')
