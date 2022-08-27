@@ -59,7 +59,7 @@ class ScreenUnlocked(APIView):
             unlocked_date.append(start_zero_timestamp + i * one_day)
             unlocked_date_DATE_format.append(\
                 PreProcessLocation.getDateFromTimestamp(start_zero_timestamp + i * one_day)\
-                    .strftime("%Y-%m-%d %H:%M:%S"))
+                    .strftime("%Y-%m-%d"))
 
         # handle first record
         unlocked_result = models.Screen.objects.filter(device_id=device_id, timestamp__lt=start_zero_timestamp) \

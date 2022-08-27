@@ -96,7 +96,7 @@ class QuerySMS(APIView):
         for i in range(date_interval.days):
             result_array[1].append(0)
         for i in range(date_interval.days):
-            result_array[2].append((start_date + datetime.timedelta(days=i)).date().strftime('%d/%m/%Y'))
+            result_array[2].append((start_date + datetime.timedelta(days=i)).date().strftime('%Y-%m-%d'))
             date_array.append(start_date + datetime.timedelta(days=i))
 
         i = 0

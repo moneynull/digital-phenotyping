@@ -218,7 +218,7 @@ class NumbersLocation(APIView):
                 type_arr.append(type_name)
                 type_count_arr.append(count)
 
-            data_2d_arr.append([target_day_start_date.strftime("%Y-%m-%d %H:%M:%S"), \
+            data_2d_arr.append([target_day_start_date.strftime("%Y-%m-%d"), \
                 num_visited_today, type_arr, type_count_arr])
 
         return Response(data_2d_arr)
