@@ -308,7 +308,7 @@ class TwitterWordCloud(models.Model):
     field_id = models.AutoField(db_column='_id', primary_key=True)
     twitter_id = models.CharField(max_length=32, blank=False, null=False)
     word = models.CharField(max_length=45, blank=False, null=False)
-    occurance = models.IntegerField(blank=False, null=False)
+    occurrence = models.IntegerField(blank=False, null=False)
     
     class Meta:
         managed = False

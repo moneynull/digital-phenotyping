@@ -16,7 +16,7 @@ def extract_twitter_keywords(request):
     if request.method != 'POST':
         return HttpResponseBadRequest
     req = json.loads(request.body.decode().replace("'", "\""))
-    uid = req.get('id')
+    uid = req.get('uid')
     twitter_id = models.TbClient.objects.get(uid=uid).twitter_id
 
     # the following code is for get twitter id based on twitter username
@@ -27,7 +27,7 @@ def extract_twitter_keywords(request):
     # twitter_id = client.get_user(username=username).data.id
     # 
 
-    records = models.TwitterWordCloud.objects.filter(twitter_id=twitter_id).values_list('word','occurance')
+    records = models.TwitterWordCloud.objects.filter(twitter_id=twitter_id).values_list('word','occurrence')
 
     res = {
         'success': True,
