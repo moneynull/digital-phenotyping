@@ -148,9 +148,11 @@ class NumbersLocation(APIView):
         req = json.loads(request.body.decode().replace("'", "\""))
         uid = req.get('uid')
         end_timestamp = req.get('endDate')
-        start_timestamp = end_timestamp - one_day * 6
+        start_timestamp = req.get('startDate')
 
         device_result = models.TbClient.objects.filter(uid=uid).values("aware_device_id")
+        if len(device_result) == 0:
+            return Response("uid does not exist")
         device_id = device_result[0]["aware_device_id"]
 
         # a day's timestamp, address_list, visited_times_list, type_list
@@ -216,6 +218,7 @@ class NumbersLocation(APIView):
                 type_arr.append(type_name)
                 type_count_arr.append(count)
 
-            data_2d_arr.append([target_day_start_timestamp, num_visited_today, type_arr, type_count_arr])
+            data_2d_arr.append([target_day_start_date.strftime("%Y-%m-%d"), \
+                num_visited_today, type_arr, type_count_arr])
 
         return Response(data_2d_arr)

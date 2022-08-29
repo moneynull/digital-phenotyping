@@ -22,7 +22,7 @@ def extract_data(request):
     req = json.loads(request.body.decode().replace("'", "\""))
     uid = req.get('uid')
     end_timestamp = req.get('endDate')
-    start_timestamp = end_timestamp - one_day * 6
+    start_timestamp = req.get('startDate')
 
     device_result = models.TbClient.objects.filter(uid=uid).values("aware_device_id")
     device_id = device_result[0]["aware_device_id"]
@@ -50,12 +50,16 @@ class ScreenUnlocked(APIView):
         unlocked_date = []
         unlocked_duration = []
         unlocked_times = []
+        unlocked_date_DATE_format = []
 
         # init unlocked info array
         for i in range(interval):
             unlocked_times.append(0)
             unlocked_duration.append(0)
             unlocked_date.append(start_zero_timestamp + i * one_day)
+            unlocked_date_DATE_format.append(\
+                PreProcessLocation.getDateFromTimestamp(start_zero_timestamp + i * one_day)\
+                    .strftime("%Y-%m-%d"))
 
         # handle first record
         unlocked_result = models.Screen.objects.filter(device_id=device_id, timestamp__lt=start_zero_timestamp) \
@@ -101,5 +105,5 @@ class ScreenUnlocked(APIView):
         for d in unlocked_duration:
             duration_min.append(round(d / one_min, 1))
 
-        result = [unlocked_date, unlocked_times, duration_min]
+        result = [unlocked_date_DATE_format, unlocked_times, duration_min]
         return Response(result)
