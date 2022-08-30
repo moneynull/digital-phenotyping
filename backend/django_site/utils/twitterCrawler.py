@@ -10,6 +10,8 @@ import nltk
 from nltk.corpus import stopwords
 import re
 
+import os
+
 # use this to run crontasks under the background
 from apscheduler.schedulers.background import BackgroundScheduler 
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
@@ -118,11 +120,21 @@ def remove_url(txt):
 # Remove stop words from each tweet list of words
 # usage conts_rsw.most_common(15)
 def remove_stop_words(words_in_tweet):
-    nltk.download('stopwords')
+    module_path = os.path.dirname(__file__)
+    file_path = os.path.join(module_path, 'stopwords_list.txt')
+    stopwords_file = open(file_path,"r")
+    try:
+        content = stopwords_file.read()
+        stopwords_list = content.split(",")
+    finally:
+        stopwords_file.close()
+    
+    stopwords = [word.replace('"','').replace(' ','') for word in stopwords_list]
+    # nltk.download('stopwords')
 
-    stop_words = set(stopwords.words('english'))
+    # stop_words = set(stopwords.words('english'))
 
-    return [[word for word in tweet_words if not word in stop_words]
+    return [[word for word in tweet_words if not word in stopwords]
               for tweet_words in words_in_tweet]
 
 def get_recent_tweets(user_id):

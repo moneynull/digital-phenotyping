@@ -15,7 +15,13 @@ import tweepy
 class QuerySMS(APIView):
     @staticmethod
     def get(request):
-       
+
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        twitter_id = models.TbClient.objects.get(uid=uid).twitter_id
+        
+        tc.retrieve_2weeks_tweets_manul(twitter_id)
+
         return Response()
 
     
