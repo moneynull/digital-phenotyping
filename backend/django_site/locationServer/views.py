@@ -1,4 +1,6 @@
 import json
+import os
+
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -50,7 +52,7 @@ class PreProcessLocation(APIView):
             print(start_timestamp, " -- ", end_timestamp, " ++++++++++++++++ ")
 
             # check duplicate timestamp
-            check_time_list=PreProcessLocation.getCheckTime(i)
+            check_time_list = PreProcessLocation.getCheckTime(i)
 
             for j in range(interval):
                 target_day_start_date = PreProcessLocation.getFutureDate(start_zero_date, j)
@@ -106,7 +108,7 @@ class PreProcessLocation(APIView):
         return start_timestamp, end_timestamp
 
     def getCheckTime(device_id):
-        start_timestamp_list=[]
+        start_timestamp_list = []
         timestamp_list = models.TbLocCluster.objects.filter(device_id=device_id) \
             .values("timestamp").distinct().order_by("timestamp")
 
@@ -165,8 +167,8 @@ class NumbersLocation(APIView):
         try:
             type_results = models.TbLocCluster.objects.filter(device_id=device_id) \
                 .exclude(timestamp__gte=end_zero_timestamp).filter(timestamp__gte=start_zero_timestamp) \
-                    .values('loc_type')\
-                        .distinct()
+                .values('loc_type') \
+                .distinct()
         except:
             raise Http404
 
@@ -185,7 +187,7 @@ class NumbersLocation(APIView):
             try:
                 clustered_loc_results = models.TbLocCluster.objects.filter(device_id=device_id) \
                     .exclude(timestamp__gte=target_day_end_timestamp).filter(timestamp__gte=target_day_start_timestamp) \
-                    .values('address','loc_type')
+                    .values('address', 'loc_type')
             except:
                 raise Http404
 
@@ -205,7 +207,6 @@ class NumbersLocation(APIView):
                 else:
                     type_dic[result['loc_type']] += 1
 
-
             # addr_arr = []
             # count_arr = []
             # for address, count in address_name_dic.items():
@@ -219,6 +220,45 @@ class NumbersLocation(APIView):
                 type_count_arr.append(count)
 
             data_2d_arr.append([target_day_start_date.strftime("%Y-%m-%d"), \
-                num_visited_today, type_arr, type_count_arr])
+                                num_visited_today, type_arr, type_count_arr])
 
         return Response(data_2d_arr)
+
+
+class MapCoordinate(APIView):
+    @staticmethod
+    def post(request):
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        end_timestamp = req.get('endDate')
+        start_timestamp = req.get('startDate')
+
+        device_result = models.TbClient.objects.filter(uid=uid).values("aware_device_id")
+        if len(device_result) == 0:
+            return Response("uid does not exist")
+        device_id = device_result[0]["aware_device_id"]
+
+        # a day's timestamp, address_list, visited_times_list, type_list
+        start_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
+            = PreProcessLocation.getDatePremeters(start_timestamp, end_timestamp)
+
+        try:
+            loc_results = models.TbLocCluster.objects.filter(device_id=device_id) \
+                .exclude(timestamp__gte=end_zero_timestamp).filter(timestamp__gte=start_zero_timestamp) \
+                .values('field_id', 'double_latitude', 'double_longitude', 'address', 'loc_type')
+        except:
+            raise Http404
+
+        data = []
+        for r in loc_results:
+            data.append({
+                "id": r['field_id'],
+                "address": r['address'],
+                "locType": r['loc_type'],
+                "position": {
+                    "lat": r['double_latitude'],
+                    "lng": r['double_longitude']
+                }
+            })
+        result_dic = {"key": os.environ.get('GOOGLE_API_KEY', '1'), "data": data}
+        return Response(result_dic)

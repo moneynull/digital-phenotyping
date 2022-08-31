@@ -57,8 +57,8 @@ class ScreenUnlocked(APIView):
             unlocked_times.append(0)
             unlocked_duration.append(0)
             unlocked_date.append(start_zero_timestamp + i * one_day)
-            unlocked_date_DATE_format.append(\
-                PreProcessLocation.getDateFromTimestamp(start_zero_timestamp + i * one_day)\
+            unlocked_date_DATE_format.append( \
+                PreProcessLocation.getDateFromTimestamp(start_zero_timestamp + i * one_day) \
                     .strftime("%Y-%m-%d"))
 
         # handle first record
@@ -93,7 +93,7 @@ class ScreenUnlocked(APIView):
                             unlocked_index]
 
         # handle last record
-        if screen_result[result_len - 1]['screen_status'] == 3:
+        if result_len != 0 and screen_result[result_len - 1]['screen_status'] == 3:
             off_result = models.Screen.objects.filter(device_id=device_id,
                                                       timestamp__gte=start_zero_timestamp + one_day * interval) \
                              .order_by('timestamp').values('timestamp', 'screen_status')[:1]
