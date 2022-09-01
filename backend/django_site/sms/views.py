@@ -18,7 +18,7 @@ class QuerySMS(APIView):
 
         req = json.loads(request.body.decode().replace("'", "\""))
         uid = req.get('uid')
-        twitter_id = models.TbClient.objects.get(uid=uid).twitter_id
+        twitter_id = models.TbClient.objects.get(uid=uid).twitter_id_int
         
         tc.retrieve_2weeks_tweets_manul(twitter_id)
 
