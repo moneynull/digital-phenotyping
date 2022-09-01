@@ -36,7 +36,7 @@ except Exception as e:
 
 # retrieve the latest 2 weeks tweets in the database
 def retrieve_2weeks_tweets():
-    twitter_idList = models.TbClient.objects.values("twitter_id")
+    twitter_idList = models.TbClient.objects.values("twitter_id_int")
 
     try:
         for id in twitter_idList:
