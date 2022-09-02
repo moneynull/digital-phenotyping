@@ -1,8 +1,9 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
-import { Log } from '../common/Logger';
+import DateRangeSelector from '../common/DateRangeSelector'; 
 
 // dummy data for Calls usage
 const dummyCallsData = {
@@ -11,13 +12,12 @@ const dummyCallsData = {
     chart: {
       type: 'bar',
       height: 440,
-      stacked: true,
     },
     colors: ['#008FFB', '#FF4560', '#775DD0'],
     plotOptions: {
       bar: {
-        horizontal: true,
-        barHeight: '80%',
+        horizontal: false,
+        endingShape: 'rounded'
       },
     },
     stroke: {
@@ -48,12 +48,14 @@ const dummyCallsData = {
 };
 
 function CallsUsageChart(props: any) {
-  const [callsState, setCallsState] = useState({
-    options: {},
-    series: [],
-  });
-  const fetchData = () => {
-    let curDate = new Date();
+  const [options, setOptions] = useState({})
+  const [series, setSeries] = useState([])
+  
+
+  const [startDateVal, setStartDateVal] = useState(1641634738549)
+  const [endDateVal, setEndDateVal] = useState(1641901876549)
+  
+  const fetchData = () => { 
     // @ts-ignore
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 
@@ -62,8 +64,8 @@ function CallsUsageChart(props: any) {
         'https://digital-phenotyping.herokuapp.com/dataServer/calls',
         {
           uid: props.uid,
-          startDate: 1641634738549,
-          endDate: 1642309999999,
+          startDate: startDateVal,
+          endDate: endDateVal,
         },
         {
           headers: {
@@ -75,7 +77,7 @@ function CallsUsageChart(props: any) {
         console.log('Fetched data..', response.data.data);
         let res = dummyCallsData;
         let data = response.data.data;
-        let series = [
+        let newSeries = [
           {
             name: 'Incoming',
             data: data[0],
@@ -88,29 +90,50 @@ function CallsUsageChart(props: any) {
             name: 'Missed',
             data: data[2],
           },
-        ];
-        for (let i = 0; i < data[0].length; i++) {
-          data[3][i] = data[3][i].slice(0, 10);
-        }
+        ]; 
         res.options.xaxis.categories = data[3];
-        res.series = series;
-        // @ts-ignore
-        setCallsState(res);
+        res.series = newSeries;
+        console.log(res.options.xaxis.categories)
+        setOptions(pre => ({
+          ...pre,
+          xaxis:{
+            //@ts-ignore
+            ...pre.xaxis,
+            categories: data[3]
+          }
+        }))
+        //@ts-ignore
+        setSeries([ ...newSeries])
       });
-  };
+  };  
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [startDateVal]);
 
   return (
-    <Chart
-      options={callsState.options}
-      series={callsState.series}
+    <Container>
+      <DateWrapper>
+        <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
+      </DateWrapper>
+      <Chart
+      options={options}
+      series={series}
       type='bar'
       width='650'
       height='400'
     />
+    </Container>
+    
   );
 }
 
 export default CallsUsageChart;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const DateWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;

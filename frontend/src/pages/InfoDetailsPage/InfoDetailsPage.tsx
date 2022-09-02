@@ -19,10 +19,11 @@ import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
 import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
 import CallsUsageChart from '../../components/InfoDetailsChart/CallsUsageChart';
 import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDurationChart';
-import LocationNumberHeatMapChart from '../../components/InfoDetailsChart/locationNumberChartHeatmap';
-import LocationNumberColumnChart from '../../components/InfoDetailsChart/locationNumberColumnChart';
+import LocationNumberHeatMapChart from '../../components/InfoDetailsChart/LocationNumberHeatMapChart';
 import UnlockTimesChart from '../../components/InfoDetailsChart/UnlockTimesChart';
 import KeywordCloud from '../../components/InfoDetailsChart/KeywordCloud';
+import LocationNumberBarChart from '../../components/InfoDetailsChart/LocationNumberBarChart';
+import LocationMap from '../../components/InfoDetailsChart/LocationMap';
 
 function InfoDetailsPage() {
   let navigate = useNavigate();
@@ -75,14 +76,21 @@ function InfoDetailsPage() {
 
   // chart to show when clicking locations button
   const locChart = (
+    <>
     <ChartContainer>
       <CardContainer>
         <LocationNumberHeatMapChart uid={patientId} />
       </CardContainer>
       <CardContainer>
-        <LocationNumberColumnChart uid={patientId} />
+        <LocationNumberBarChart uid={patientId} />
       </CardContainer>
     </ChartContainer>
+    <ChartContainer>
+      <CardContainer>
+        <LocationMap uid={patientId} />
+      </CardContainer>
+    </ChartContainer>
+    </>
   );
 
   // chart to show when clicking screen button
@@ -135,7 +143,7 @@ function InfoDetailsPage() {
       {loadingPage ? <></> : 
       <>
       <Header onClick={navBack}>
-        <Link to='/homepage'>
+        <Link style={{ textDecoration: 'none' }} to='/homepage'>
           <NavTitle title='Client Details' showArrowBack={true} />
         </Link>
         <SearchBar />
@@ -228,6 +236,7 @@ const IconText = styled.div<Props>`
   background-color: ${(props: Props) =>
     props.name === props.curSelected ? COLORS.primary : COLORS.white};
   border-radius: 10px;
+  box-shadow: 2px 2px 15px 1px ${COLORS.shadow};
   display: flex;
   width: 180px;
   flex-direction: column;

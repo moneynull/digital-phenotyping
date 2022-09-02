@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
+import DateRangeSelector from '../common/DateRangeSelector';
 import { Log } from '../common/Logger';
 
 const loacationNumberSeries = [];
@@ -51,10 +53,12 @@ const locationNumberData = {
 };
 
 function LocationNumberHeatMapChart(props: any) {
-  const [barState, setBarState] = useState({
-    options: {},
-    series: [],
-  });
+  const [options, setOptions] = useState({})
+  const [series, setSeries] = useState([])
+
+  const [startDateVal, setStartDateVal] = useState(1641634738549)
+  const [endDateVal, setEndDateVal] = useState(1641901876549)
+  
   const fetchData = () => {
     let curDate = new Date();
     // @ts-ignore
@@ -65,7 +69,8 @@ function LocationNumberHeatMapChart(props: any) {
         'https://digital-phenotyping.herokuapp.com/locationServer/NumbersOfLocation',
         {
           uid: props.uid,
-          endDate: 1642299999549,
+          startDate: startDateVal,
+          endDate: endDateVal,
         },
         {
           headers: {
@@ -75,40 +80,66 @@ function LocationNumberHeatMapChart(props: any) {
       )
       .then((response) => {
         Log('Fetched HeatMap data..', response.data);
-        let data = response.data;
-        let res = locationNumberData;
-        let series = [];
+        let data = response.data; 
+        let newSeries = [];
         for (let i = 0; i < data.length; i++) {
-          series.push({
-            name: new Date(data[i][0]).toISOString().slice(0, 10),
+          newSeries.push({
+            name:  data[i][0],
             data: [
-              { x: data[0][2][0], y: data[i][3][0] },
-              { x: data[0][2][1], y: data[i][3][1] },
-              { x: data[0][2][2], y: data[i][3][2] },
-              { x: data[0][2][3], y: data[i][3][3] },
+              { x: data[0][2][0] !== undefined ? data[0][2][0] :"street_address", y: data[i][3][0] !== undefined ? data[i][3][0] : 0 },
+              { x: data[0][2][1] !== undefined ? data[0][2][1] :"university", y: data[i][3][1] !== undefined ? data[i][3][1] : 0 },
+              { x: data[0][2][2]!== undefined ? data[0][2][2] :"establishment", y: data[i][3][2] !== undefined ? data[i][3][2] : 0 },
+              { x: data[0][2][3]!== undefined ? data[0][2][3] :"premise", y: data[i][3][3] !== undefined ? data[i][3][3] : 0 },
             ],
           });
         }
-        Log('series', series);
-        res.options.xaxis.categories = data[0][2];
-        res.series = series;
-        // @ts-ignore
-        setBarState(res);
+        Log('newSeries', newSeries); 
+        if(data.length === 0){
+          setOptions({})
+          setSeries([])
+        }else{
+          setOptions(pre => ({
+            ...pre,
+            ...locationNumberData.options,
+            xaxis:{
+              //@ts-ignore
+              ...pre.xaxis,
+              categories:data[0][2]
+            }
+          }))
+          //@ts-ignore
+          setSeries([ ...newSeries])
+        }
       });
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [startDateVal]);
 
   return (
+    <Container>
+      <DateWrapper>
+        <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
+      </DateWrapper>
+      
     <Chart
-      options={barState.options}
-      series={barState.series}
+      options={options}
+      series={series}
       type='heatmap'
       width='650'
       height='400'
     />
+    </Container>
   );
 }
 
 export default LocationNumberHeatMapChart;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const DateWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;

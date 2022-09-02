@@ -1,4 +1,4 @@
-import { useState, useEffect, forwardRef } from 'react';
+import { useState, forwardRef } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import EmailIcon from '@mui/icons-material/Email';
@@ -64,7 +64,7 @@ export default function Loginpage() {
         password: password,
       })
       .then((response) => {
-        Log('Fetched SMS data..', response.data);
+        Log('Login data..', response.data);
         if (response.data.access !== undefined) {
           setShowLoginLoading(false)
           sessionStorage.setItem('userInfo', JSON.stringify(response.data));
@@ -147,7 +147,7 @@ const Container = styled.div`
   background-color: ${COLORS.white};
   border-radius: 20px;
   position: absolute;
-  height: 300px;
+  height: 330px;
   width: 400px;
   right: 4vw;
   top: 0;
@@ -184,6 +184,7 @@ const Title = styled.div`
 `;
 const TextInput = styled.input`
   border: 0px;
+  height:22px;
   font-size: 20px;
   border-bottom: 1px solid ${COLORS.text_light_grey};
   background-color: transparent;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
+import DateRangeSelector from '../common/DateRangeSelector';
 
 const categories = [
   'Art and Design',
@@ -85,13 +86,14 @@ function CategoryChart(props: any) {
   useEffect(() => {
     //setBarState();
   }, []);
-
+  const [startDateVal, setStartDateVal] = useState(1641634738549)
+  const [endDateVal, setEndDateVal] = useState(1641901876549)
+  
   return (
     <Container>
-      <DateText>{`${new Date(1641634738549).toISOString().slice(0, 10)} - ${new Date(1641901876549)
-        .toISOString()
-        .slice(0, 10)}`}</DateText>
-
+      <DateWrapper>
+        <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
+      </DateWrapper>
       <Chart //@ts-ignore
         options={barState.options}
         series={barState.series}
@@ -107,7 +109,10 @@ export default CategoryChart;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-`;
-const DateText = styled.div`
-  font-size: 15px;
+`; 
+
+const DateWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
