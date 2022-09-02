@@ -32,7 +32,8 @@ def extract_twitter_keywords(request):
     # twitter_id = client.get_user(username=username).data.id
     # 
 
-    records = models.TwitterWordCloud.objects.filter(twitter_id=twitter_id[0]).values('word', 'occurrence')
+    records = models.TwitterWordCloud.objects\
+        .filter(twitter_id=twitter_id[0]['twitter_id_int']).values_list('word', 'occurrence')
 
     res = {
         'success': True,
