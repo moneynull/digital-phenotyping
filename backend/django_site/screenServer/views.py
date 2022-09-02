@@ -78,7 +78,7 @@ class ScreenUnlockedTimes(APIView):
         # get result
         result_list = []
         for i in unlock_date_times_list:
-            result_list.append([PreProcessLocation.getDateFromTimestamp(unlock_date_times_list[0][0]), i[1], i[2]])
+            result_list.append([PreProcessLocation.getDateFromTimestamp(unlock_date_times_list[0][0]).strftime("%Y-%m-%d"), i[1], i[2]])
 
         return Response(result_list)
 
