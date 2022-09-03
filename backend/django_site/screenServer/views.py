@@ -28,6 +28,62 @@ def extract_data(request):
     device_id = device_result[0]["aware_device_id"]
     return device_id, start_timestamp, end_timestamp
 
+class ScreenUnlockedTimes(APIView):
+    @staticmethod
+    def post(request):
+        device_id, start_timestamp, end_timestamp = extract_data(request)
+
+        start_zero_date, interval, start_zero_timestamp, end_zero_timestamp \
+            = PreProcessLocation.getDatePremeters(start_timestamp, end_timestamp)
+
+        try:
+            screen_result = models.Screen.objects \
+                .filter(device_id=device_id,
+                        timestamp__lt=start_zero_timestamp + one_day * interval,
+                        timestamp__gte=start_zero_timestamp) \
+                .order_by('timestamp').values('timestamp', 'screen_status')
+        except:
+            raise Http404   
+        
+        unlock_date_times_list = []
+        # init unlocked info array
+        
+        date_list = []
+        for i in range(interval):
+            zero_list = []
+            hour_list = []
+            for j in range(24):
+                zero_list.append(0)
+                hour_list.append(j)
+            
+            # assemble result data structure
+            date_list.append(start_zero_timestamp + i * one_day)
+            unlock_date_times_list.append([date_list[i], hour_list, zero_list])
+
+        # handle records
+        day = 0
+        
+        for i in range(len(screen_result)):
+            
+            if screen_result[i]['timestamp'] >= date_list[day] + one_day:
+                day = day + int((screen_result[i]['timestamp'] - date_list[day]) /  (one_day))
+                
+            if screen_result[i]['screen_status'] == 3:
+                # calculate the hourly times
+                hour = int((screen_result[i]['timestamp'] - date_list[day]) / (one_min * 60))
+                
+                unlock_date_times_list[day][2][hour] = unlock_date_times_list[day][2][hour] + 1
+        print(PreProcessLocation.getDateFromTimestamp(unlock_date_times_list[0][0]))
+        
+        # get result
+        result_list = []
+        for i in unlock_date_times_list:
+            total = 0
+            for j in i[2]:
+                total = total + j
+            result_list.append([PreProcessLocation.getDateFromTimestamp(unlock_date_times_list[0][0]).strftime("%Y-%m-%d"), total, i[1], i[2]])
+
+        return Response(result_list)
 
 class ScreenUnlocked(APIView):
     @staticmethod
