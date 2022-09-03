@@ -73,7 +73,6 @@ class ScreenUnlockedTimes(APIView):
                 hour = int((screen_result[i]['timestamp'] - date_list[day]) / (one_min * 60))
                 
                 unlock_date_times_list[day][2][hour] = unlock_date_times_list[day][2][hour] + 1
-        print(PreProcessLocation.getDateFromTimestamp(unlock_date_times_list[0][0]))
         
         # get result
         result_list = []
@@ -81,7 +80,7 @@ class ScreenUnlockedTimes(APIView):
             total = 0
             for j in i[2]:
                 total = total + j
-            result_list.append([PreProcessLocation.getDateFromTimestamp(unlock_date_times_list[0][0]).strftime("%Y-%m-%d"), total, i[1], i[2]])
+            result_list.append([PreProcessLocation.getDateFromTimestamp(i[0]).strftime("%Y-%m-%d"), total, i[1], i[2]])
 
         return Response(result_list)
 
