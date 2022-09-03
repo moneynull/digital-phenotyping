@@ -24,6 +24,7 @@ import UnlockTimesChart from '../../components/InfoDetailsChart/UnlockTimesChart
 import KeywordCloud from '../../components/InfoDetailsChart/KeywordCloud';
 import LocationNumberBarChart from '../../components/InfoDetailsChart/LocationNumberBarChart';
 import LocationMap from '../../components/InfoDetailsChart/LocationMap';
+import ScreenUsageHeatMap from '../../components/InfoDetailsChart/ScreenUsageHeatMap';
 
 function InfoDetailsPage() {
   let navigate = useNavigate();
@@ -95,6 +96,7 @@ function InfoDetailsPage() {
 
   // chart to show when clicking screen button
   const screenChart = (
+    <>
     <ChartContainer>
       <CardContainer>
         <UnlockDurationChart uid={patientId} />
@@ -103,6 +105,12 @@ function InfoDetailsPage() {
         <UnlockTimesChart uid={patientId} />
       </CardContainer>
     </ChartContainer>
+    <ChartContainer>
+      <CardContainer>
+        <ScreenUsageHeatMap uid={patientId} />
+      </CardContainer>
+    </ChartContainer>
+    </>
   );
 
   const tagCloud = (

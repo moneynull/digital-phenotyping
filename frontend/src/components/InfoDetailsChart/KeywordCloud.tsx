@@ -25,7 +25,7 @@ function KeywordCloud(props: any) {
         console.log("UID",props.uid)
         axios
           .post(
-            'https://digital-phenotyping.herokuapp.com/dataServer/twitter_demo',{
+            'https://digital-phenotyping.herokuapp.com/dataServer/twitterWordCloud',{
                 uid: props.uid
             },
             {
