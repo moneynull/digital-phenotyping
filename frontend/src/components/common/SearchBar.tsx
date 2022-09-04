@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import COLORS from '../constant/Colors';
+import COLORS from '../../constant/Colors';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { Log } from './Logger';
 
@@ -35,6 +35,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-left: 10px;
   padding-left: 10px;
   border-radius: 10px;
   background-color: ${COLORS.white};

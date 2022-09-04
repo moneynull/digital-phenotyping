@@ -1,37 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
-import NavTitle from '../../components/NavTitle';
-import SearchBar from '../../components/SearchBar';
-import NameAvatar from '../../components/NameAvatar';
+import NavTitle from '../../components/common/NavTitle';
+import SearchBar from '../../components/common/SearchBar';
+import NameAvatar from '../../components/common/NameAvatar';
 import COLORS from '../../constant/Colors';
-import CardContainer from '../../components/CardContainer';
-import SectionTitle from '../../components/SectionTitle';
+import CardContainer from '../../components/common/CardContainer';
+import SectionTitle from '../../components/common/SectionTitle';
 import PhonelinkIcon from '@mui/icons-material/Phonelink';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import AccessTimeFilledRoundedIcon from '@mui/icons-material/AccessTimeFilledRounded';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { Log } from '../../components/Logger';
+import { Log } from '../../components/common/Logger';
 import AppUsageChart from '../../components/InfoDetailsChart/AppUsageChart';
 import SmsUsageChart from '../../components/InfoDetailsChart/SmsUsageChart';
 import CategoryChart from '../../components/InfoDetailsChart/CategoryChart';
 import CallsUsageChart from '../../components/InfoDetailsChart/CallsUsageChart';
 import UnlockDurationChart from '../../components/InfoDetailsChart/UnlockDurationChart';
-import LocationNumberHeatMapChart from '../../components/InfoDetailsChart/locationNumberChartHeatmap';
-import LocationNumberColumnChart from '../../components/InfoDetailsChart/locationNumberColumnChart';
+import LocationNumberHeatMapChart from '../../components/InfoDetailsChart/LocationNumberHeatMapChart';
 import UnlockTimesChart from '../../components/InfoDetailsChart/UnlockTimesChart';
 import KeywordCloud from '../../components/InfoDetailsChart/KeywordCloud';
+import LocationNumberBarChart from '../../components/InfoDetailsChart/LocationNumberBarChart';
+import LocationMap from '../../components/InfoDetailsChart/LocationMap';
+import ScreenUsageHeatMap from '../../components/InfoDetailsChart/ScreenUsageHeatMap';
+
 function InfoDetailsPage() {
   let navigate = useNavigate();
-  const [patientId, setPatientId] = useState('123');
+  let location = useLocation();
+  const [patientId, setPatientId] = useState(1);
+  const [clientName, setClientName] = useState('')
   const [curSelected, setCurSelected] = useState('Application');
+  const [loadingPage, setLoadingpage] = useState(true)
+
   let token = sessionStorage.getItem('userInfo');
+  let stateFromPrePage: {clientInfo: any[]} = location.state as {clientInfo: any[]}
   useEffect(() => {
-    if (!token) {
+    if (!token || stateFromPrePage.clientInfo === null) {
       navigate('/');
+      return
     }
+    setPatientId(stateFromPrePage.clientInfo[5])
+    setLoadingpage(false)
+    setClientName(stateFromPrePage.clientInfo[0])
+    
   }, []);
   const selected = (name: string) => {
     Log(name);
@@ -42,10 +55,10 @@ function InfoDetailsPage() {
   const appChart = (
     <ChartContainer>
       <CardContainer>
-        <AppUsageChart />
+        <AppUsageChart uid={patientId} />
       </CardContainer>
       <CardContainer>
-        <CategoryChart />
+        <CategoryChart uid={patientId}/>
       </CardContainer>
     </ChartContainer>
   );
@@ -54,47 +67,61 @@ function InfoDetailsPage() {
   const comChart = (
     <ChartContainer>
       <CardContainer>
-        <SmsUsageChart />
+        <SmsUsageChart uid={patientId} />
       </CardContainer>
       <CardContainer>
-        <CallsUsageChart />
+        <CallsUsageChart uid={patientId} />
       </CardContainer>
     </ChartContainer>
   );
 
   // chart to show when clicking locations button
   const locChart = (
+    <>
     <ChartContainer>
       <CardContainer>
-        <LocationNumberHeatMapChart />
+        <LocationNumberHeatMapChart uid={patientId} />
       </CardContainer>
       <CardContainer>
-        <LocationNumberColumnChart />
+        <LocationNumberBarChart uid={patientId} />
       </CardContainer>
     </ChartContainer>
+    <ChartContainer>
+      <CardContainer>
+        <LocationMap uid={patientId} />
+      </CardContainer>
+    </ChartContainer>
+    </>
   );
 
   // chart to show when clicking screen button
   const screenChart = (
+    <>
     <ChartContainer>
       <CardContainer>
-        <UnlockDurationChart />
+        <UnlockDurationChart uid={patientId} />
       </CardContainer>
       <CardContainer>
-        <UnlockTimesChart />
+        <UnlockTimesChart uid={patientId} />
       </CardContainer>
     </ChartContainer>
+    <ChartContainer>
+      <CardContainer>
+        <ScreenUsageHeatMap uid={patientId} />
+      </CardContainer>
+    </ChartContainer>
+    </>
   );
 
   const tagCloud = (
     <CardContainer>
-      <KeywordCloud />
+      <KeywordCloud uid={patientId} />
     </CardContainer>
   );
 
   const defaultGreeting = (
     <CardContainer>
-      <Reminder>Client Name: Simon</Reminder>
+      <Reminder>Client Name: {clientName}</Reminder>
       <Reminder>Select an AWARE category to see more details.</Reminder>
     </CardContainer>
   );
@@ -121,8 +148,10 @@ function InfoDetailsPage() {
 
   return (
     <MainContainer>
+      {loadingPage ? <></> : 
+      <>
       <Header onClick={navBack}>
-        <Link to='/homepage'>
+        <Link style={{ textDecoration: 'none' }} to='/homepage'>
           <NavTitle title='Client Details' showArrowBack={true} />
         </Link>
         <SearchBar />
@@ -176,6 +205,7 @@ function InfoDetailsPage() {
 
         {chartToShow}
       </SubContainer>
+      </>}
     </MainContainer>
   );
 }
@@ -214,6 +244,7 @@ const IconText = styled.div<Props>`
   background-color: ${(props: Props) =>
     props.name === props.curSelected ? COLORS.primary : COLORS.white};
   border-radius: 10px;
+  box-shadow: 2px 2px 15px 1px ${COLORS.shadow};
   display: flex;
   width: 180px;
   flex-direction: column;

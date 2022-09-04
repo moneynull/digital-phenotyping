@@ -1,45 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import Chart from 'react-apexcharts';
-import COLORS from '../../constant/Colors';
-import { Log } from '../common/Logger';
-
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import Chart from 'react-apexcharts';
 import styled from 'styled-components';
+import COLORS from '../../constant/Colors';
 import DateRangeSelector from '../common/DateRangeSelector';
-const dummySMSData = {
-  series: [
-    {
-      name: 'Incoming',
-      data: [10, 9, 8, 7, 6],
-    },
-    {
-      name: 'Outgoing',
-      data: [1, 2, 3, 4, 5],
-    },
-  ],
+import { Log } from '../common/Logger';
+ 
+const locationNumberData = {
+  series: [] as any[],
   options: {
     chart: {
+      height: 350,
       type: 'bar',
-      height: 440, 
     },
-    colors: ['#008FFB', '#FF4560'],
-    plotOptions: {
-      bar: {
-        horizontal: false, 
-        endingShape: 'rounded'
+    colors: ['#008FFB', '#00E396'],
+
+    grid: {
+      xaxis: {
+        lines: {
+          show: true,
+        },
       },
-    },
-    stroke: {
-      width: 1,
-      colors: ['#fff'],
-    },
-    dataLabels: {
-      enabled: true,
     },
 
     title: {
-      text: 'SMSs Usage',
-      align: 'center',
+      text: 'Number of locations visited',
+      align: 'left',
       margin: 10,
       offsetX: 0,
       offsetY: 0,
@@ -51,12 +37,20 @@ const dummySMSData = {
       },
     },
     xaxis: {
-      categories: ['May 1', 'May 2', 'May 3', 'May 4', 'May 5'],
+      categories: [] as any[],
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 10,
+        dataLabels: {
+          position: 'top', // top, center, bottom
+        },
+      },
     },
   },
 };
 
-function SmsUsageChart(props: any) {
+function LocationNumberBarChart(props: any) {
   const [options, setOptions] = useState({})
   const [series, setSeries] = useState([])
   
@@ -68,10 +62,9 @@ function SmsUsageChart(props: any) {
     // @ts-ignore
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 
-    Log('SMS fetch');
     axios
       .post(
-        'https://digital-phenotyping.herokuapp.com/sms/',
+        'https://digital-phenotyping.herokuapp.com/locationServer/NumbersOfLocation',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -84,23 +77,20 @@ function SmsUsageChart(props: any) {
         }
       )
       .then((response) => {
-        Log('Fetched SMS data..', response.data);
-        let res = dummySMSData;
+        Log('Fetched Location Number data..', response.data);
         let data = response.data;
-        //response.data[0].splice(3, 1);
-        res.options.xaxis.categories = data[2];
+        let res = locationNumberData;
+        let categories: any[] = [];
         let newSeries = [
           {
-            name: 'Incoming',
-            data: data[0],
-          },
-          {
-            name: 'Outgoing',
-            data: data[1],
+            name: 'times visited',
+            data: [] as any[],
           },
         ];
-
-        res.series = newSeries;
+        for (let i = 0; i < data.length; i++) {
+          newSeries[0].data.push(data[i][1]);
+          categories.push(data[i][0]);
+        }
         if(data.length === 0){
           setOptions({})
           setSeries([])
@@ -110,14 +100,13 @@ function SmsUsageChart(props: any) {
             xaxis:{
               //@ts-ignore
               ...pre.xaxis,
-              categories: data[2]
+              categories:categories
             }
           }))
           //@ts-ignore
           setSeries([ ...newSeries])
         }
-        
-        
+         
       });
   };
   useEffect(() => {
@@ -129,19 +118,21 @@ function SmsUsageChart(props: any) {
       <DateWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
-      <Chart
-      options={options}
-      series={series}
-      type='bar'
-      width='600'
-      height='400'
-    />
-    </Container>
+      {series.length === 0 ? <div>No data available.</div> : (
+        <Chart
+        options={options}
+        series={series}
+        type='heatmap'
+        width='650'
+        height='400'
+      />
+      )}
     
+    </Container> 
   );
 }
 
-export default SmsUsageChart;
+export default LocationNumberBarChart;
 const Container = styled.div`
   display: flex;
   flex-direction: column;

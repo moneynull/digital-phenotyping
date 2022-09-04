@@ -24,6 +24,7 @@ class TbClient(models.Model):
     facebook_id = models.CharField(max_length=255, blank=True, null=True)
     aware_device_id = models.CharField(max_length=255, blank=True, null=True)
     last_update = models.DateTimeField(default=datetime.datetime.now())
+    twitter_id_int = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False

@@ -1,8 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
-import { Log } from '../Logger';
+import DateRangeSelector from '../common/DateRangeSelector';
+import { Log } from '../common/Logger';
 
 // TODO!!!!   apply backend api
 // auto generated fake data for a year
@@ -70,64 +72,94 @@ const screenDummayData = {
   },
 };
 
-function UnlockTimesChart() {
-  const [barState, setBarState] = useState({
-    options: {},
-    series: [],
-  });
+function UnlockTimesChart(props: any) {
+  const [options, setOptions] = useState({})
+  const [series, setSeries] = useState([])
+  
+  const [startDateVal, setStartDateVal] = useState(1641634738549)
+  const [endDateVal, setEndDateVal] = useState(1641901876549)
+  
   const fetchData = () => {
     let curDate = new Date();
     Log('ScreenUnlocked fetch');
     // @ts-ignore
-    let userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
-     
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
     axios
-      .post('https://digital-phenotyping.herokuapp.com/screenServer/ScreenUnlocked', {
-        uid: 1,
-        endDate: 1642299999549,
-      },
-      {
-        headers:{
-          Authorization: `Bearer ${userInfo!.access}`
+      .post(
+        'https://digital-phenotyping.herokuapp.com/screenServer/ScreenUnlocked',
+        {
+          uid: props.uid,
+          startDate: startDateVal,
+          endDate: endDateVal,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo!.access}`,
+          },
         }
-      })
+      )
       .then((response) => {
         Log('Fetched ScreenUnlocked data..', response.data);
         let res = screenDummayData;
         let data = response.data;
-        let categories = [];
-        let series = [
+        let categories: string[] = [];
+        let newSeries = [
           {
             name: 'times unlocked',
             data: [] as any[],
           },
         ];
         for (let i = 0; i < data[0].length; i++) {
-          series[0].data.push(data[1][i]);
+          newSeries[0].data.push(data[1][i]);
           categories.push(new Date(data[0][i]).toISOString().slice(0, 10));
         }
         Log('cate', categories);
         res.options.xaxis.categories = categories;
-        res.series = series;
+        res.series = newSeries;
         //response.data[0].splice(3, 1);
         Log(data);
+        setOptions(pre => ({
+          ...pre,
+          ...screenDummayData.options,
+          xaxis:{
+            //@ts-ignore
+            ...pre.xaxis,
+            categories:categories
+          }
+        }))
         //@ts-ignore
-        setBarState(res);
+        setSeries([ ...newSeries])
       });
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [startDateVal]);
 
   return (
+    <Container>
+      <DateWrapper>
+        <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
+      </DateWrapper>
+      
     <Chart
-      options={barState.options}
-      series={barState.series}
+      options={options}
+      series={series}
       type='bar'
       width='650'
       height='400'
     />
+    </Container>
   );
 }
 
 export default UnlockTimesChart;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const DateWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;

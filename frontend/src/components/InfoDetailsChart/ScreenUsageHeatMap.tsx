@@ -1,44 +1,43 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
+import DateRangeSelector from '../common/DateRangeSelector';
 import { Log } from '../common/Logger';
 
-import axios from 'axios';
-import styled from 'styled-components';
-import DateRangeSelector from '../common/DateRangeSelector';
-const dummySMSData = {
-  series: [
-    {
-      name: 'Incoming',
-      data: [10, 9, 8, 7, 6],
-    },
-    {
-      name: 'Outgoing',
-      data: [1, 2, 3, 4, 5],
-    },
-  ],
+const screenUsageSeries = [];
+
+const screenUsageData = {
+  series: [] as any[],
   options: {
     chart: {
-      type: 'bar',
-      height: 440, 
-    },
-    colors: ['#008FFB', '#FF4560'],
-    plotOptions: {
-      bar: {
-        horizontal: false, 
-        endingShape: 'rounded'
-      },
-    },
-    stroke: {
-      width: 1,
-      colors: ['#fff'],
+      height: 350,
+      type: 'heatmap',
     },
     dataLabels: {
       enabled: true,
+      style: {
+        fontSize: '14px',
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        fontWeight: 'bold',
+        colors: ['#000000'],
+      },
     },
-
+    plotOptions: {
+      heatmap: {
+        colorScale: {
+          inverse: true,
+        },
+      },
+    },
+    colors: ['#008FFB'],
+    xaxis: {
+      type: 'category',
+      categories: [] as any[],
+    },
     title: {
-      text: 'SMSs Usage',
+      text: 'Screen Usage Frequency',
       align: 'center',
       margin: 10,
       offsetX: 0,
@@ -50,16 +49,13 @@ const dummySMSData = {
         color: `${COLORS.text_2}`,
       },
     },
-    xaxis: {
-      categories: ['May 1', 'May 2', 'May 3', 'May 4', 'May 5'],
-    },
   },
 };
 
-function SmsUsageChart(props: any) {
+function ScreenUsageHeatMap(props: any) {
   const [options, setOptions] = useState({})
   const [series, setSeries] = useState([])
-  
+
   const [startDateVal, setStartDateVal] = useState(1641634738549)
   const [endDateVal, setEndDateVal] = useState(1641901876549)
   
@@ -68,10 +64,9 @@ function SmsUsageChart(props: any) {
     // @ts-ignore
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 
-    Log('SMS fetch');
     axios
       .post(
-        'https://digital-phenotyping.herokuapp.com/sms/',
+        'https://digital-phenotyping.herokuapp.com/screenServer/NumberOfScreen',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -84,40 +79,40 @@ function SmsUsageChart(props: any) {
         }
       )
       .then((response) => {
-        Log('Fetched SMS data..', response.data);
-        let res = dummySMSData;
-        let data = response.data;
-        //response.data[0].splice(3, 1);
-        res.options.xaxis.categories = data[2];
-        let newSeries = [
-          {
-            name: 'Incoming',
-            data: data[0],
-          },
-          {
-            name: 'Outgoing',
-            data: data[1],
-          },
-        ];
-
-        res.series = newSeries;
+        Log('Fetched HeatMap data..', response.data);
+        let data = response.data; 
+        let newSeries = [];
+        let xAxis:String[] = []
+        for (let i = 0; i < data.length; i++) {
+            let screenData = [] 
+            for(let h = 0; h < 24; h++) {
+                screenData.push({x: `${h}:00-${h+1}:00`, y: data[i][3][h] !== undefined ? data[i][3][h] : 0})
+                xAxis.push(`${h}:00-${h+1}:00`)
+            }
+            
+            newSeries.push({
+                name:  data[i][0],
+                data: screenData,
+            });
+            }
+        newSeries.reverse()
+        Log('newSeries', newSeries); 
         if(data.length === 0){
           setOptions({})
           setSeries([])
         }else{
           setOptions(pre => ({
             ...pre,
+            ...screenUsageData.options,
             xaxis:{
               //@ts-ignore
               ...pre.xaxis,
-              categories: data[2]
+              categories: xAxis
             }
           }))
           //@ts-ignore
           setSeries([ ...newSeries])
         }
-        
-        
       });
   };
   useEffect(() => {
@@ -129,19 +124,19 @@ function SmsUsageChart(props: any) {
       <DateWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
-      <Chart
+      
+    <Chart
       options={options}
       series={series}
-      type='bar'
-      width='600'
+      type='heatmap'
+      width='650'
       height='400'
     />
     </Container>
-    
   );
 }
 
-export default SmsUsageChart;
+export default ScreenUsageHeatMap;
 const Container = styled.div`
   display: flex;
   flex-direction: column;

@@ -1,55 +1,8 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import ReactWordcloud from "react-wordcloud";
-import COLORS from '../../constant/Colors';
+import { useEffect, useState } from 'react';
+import ReactWordcloud from "react-wordcloud"; 
 
-const data = [
-    {
-        text: "R",
-        value: 55
-    },
-    {
-        text: "Java",
-        value: 19
-    },
-    {
-        text: "Php",
-        value: 33
-    },
-    {
-        text: "Javascript",
-        value: 79
-    },
-    {
-        text: "Golang",
-        value: 28
-    },
-    {
-        text: "C++",
-        value: 63
-    },
-    {
-        text: "Python",
-        value: 91
-    },
-    {
-        text: "C#",
-        value: 23
-    },
-    {
-        text: "Matlab",
-        value: 11
-    },
-    {
-        text: "Kotlin",
-        value: 53
-    },
-    {
-        text: "NodeJs",
-        value: 44
-    }
-  ]
-
+ 
 const angles:[number, number] = [-10, 10]
 const fontSizes:[number, number] = [20,80]
 
@@ -60,9 +13,45 @@ const options = {
     fontSizes: fontSizes
   };
 
-function KeywordCloud() {
+function KeywordCloud(props: any) {
+    const [keywords, setKeywords] = useState([] as any[])
+    useEffect(()=>{
+        fetchData()
+    },[])
+
+    const fetchData = () => { 
+        // @ts-ignore
+        let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        console.log("UID",props.uid)
+        axios
+          .post(
+            'https://digital-phenotyping.herokuapp.com/dataServer/twitterWordCloud',{
+                uid: props.uid
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${userInfo!.access}`,
+              },
+            }   
+          )
+          .then((response) => {
+            console.log('Fetched data..', response.data);
+            let resData = response.data.data 
+            let resArr = []
+            for(const [key , val] of Object.entries<any>(resData)){
+                if(val > 3){
+                    resArr.push({
+                        text: key,
+                        value: val
+                    })
+                }
+            }
+            console.log(resArr)
+            setKeywords(resArr)
+          });
+      };
     return (
-        <ReactWordcloud options={options} words={data} />
+        <ReactWordcloud options={options} words={keywords} />
     )
 }
 
