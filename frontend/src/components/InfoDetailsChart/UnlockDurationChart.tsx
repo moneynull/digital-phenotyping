@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
+import DateRangeSelector from '../common/DateRangeSelector';
 import { Log } from '../common/Logger';
 
 // TODO!!!!   apply backend api
@@ -84,12 +86,14 @@ const durationData = {
 };
 
 function UnlockDurationChart(props: any) {
-  const [barState, setBarState] = useState({
-    options: {},
-    series: [],
-  });
-  const fetchData = () => {
-    let curDate = new Date();
+  const [options, setOptions] = useState({})
+  const [series, setSeries] = useState([])
+  
+
+  const [startDateVal, setStartDateVal] = useState(1641634738549)
+  const [endDateVal, setEndDateVal] = useState(1641901876549)
+  
+  const fetchData = () => { 
     Log('ScreenUnlocked fetch');
     // @ts-ignore
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
@@ -99,7 +103,8 @@ function UnlockDurationChart(props: any) {
         'https://digital-phenotyping.herokuapp.com/screenServer/ScreenUnlocked',
         {
           uid: props.uid,
-          endDate: 1642299999549,
+          startDate: startDateVal,
+          endDate: endDateVal,
         },
         {
           headers: {
@@ -111,39 +116,63 @@ function UnlockDurationChart(props: any) {
         Log('Fetched ScreenUnlocked data..', response.data);
         let res = durationData;
         let data = response.data;
-        let categories = [];
-        let series = [
+        let categories: any[] = [];
+        let newSeries = [
           {
-            name: 'times unlocked',
+            name: 'unlock screen time',
             data: [] as any[],
           },
         ];
         for (let i = 0; i < data[0].length; i++) {
-          series[0].data.push(data[2][i]);
-          categories.push(new Date(data[0][i]).toISOString().slice(0, 10));
+          newSeries[0].data.push(data[2][i]);
+          categories.push(data[0][i]);
         }
         Log('cate', categories);
         res.options.xaxis.categories = categories;
-        res.series = series;
+        res.series = newSeries;
         //response.data[0].splice(3, 1);
         Log(data);
+        setOptions(pre => ({
+          ...pre,
+          ...durationData.options,
+          xaxis:{
+            //@ts-ignore
+            ...pre.xaxis,
+            categories:categories
+          }
+        }))
         //@ts-ignore
-        setBarState(res);
+        setSeries([ ...newSeries])
       });
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [startDateVal]);
 
   return (
+    <Container>
+      <DateWrapper>
+        <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
+      </DateWrapper>
+      
     <Chart
-      options={barState.options}
-      series={barState.series}
+      options={options}
+      series={series}
       type='line'
       width='650'
       height='400'
     />
+    </Container>
   );
 }
 
 export default UnlockDurationChart;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const DateWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;

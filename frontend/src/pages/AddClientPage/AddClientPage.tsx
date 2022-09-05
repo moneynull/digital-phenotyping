@@ -133,7 +133,7 @@ function InfoDetailsPage() {
   return (
     <MainContainer>
       <Header onClick={navBack}>
-        <Link to='/homepage'>
+        <Link style={{ textDecoration: 'none' }} to='/homepage'>
           <NavTitle title='Add a Client' showArrowBack={true} />
         </Link>
         <SearchBar />
@@ -155,11 +155,10 @@ function InfoDetailsPage() {
           renderInput={(params:any) => <TextField required margin="dense" variant="standard" {...params} />}
           />
         </LocalizationProvider>
-        {/* <TextField value={dateOfBirth} onChange={handleDateOfBirth} error={dateOfBirthErr}  placeholder='1981-02-30'  margin="dense" label="Date of Birth" variant="standard" /> */}
-        <TextField value={textNotes} onChange={handleTextNotes} margin="dense" label="Text Notes" variant="standard" />
         <TextField value={twitterId} onChange={handleTwitterId} placeholder='@sjdalf'  margin="dense" label="Twitter ID" variant="standard" />
         <TextField value={facebookId} onChange={handleFacebookId} placeholder='simon.dalfonso'  margin="dense" label="Facebook ID" variant="standard" />
         <TextField required value={awareId} onChange={handleAwareId} placeholder='cf62dfa9-e22d-426f-b5a6-e4f2d72fc66a'  margin="dense" label="AWARE device ID" variant="standard" />
+        <TextField multiline rows={5} value={textNotes} onChange={handleTextNotes} margin="dense" label="Text Notes" variant="standard" />
         <BtnContainer>
         <Button fullWidth onClick={addClient} variant='contained' color='info'>
           Add

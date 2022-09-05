@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
 import { Log } from '../common/Logger';
-import axios from 'axios';
+import axios from 'axios'; 
+import DateRangeSelector from '../common/DateRangeSelector';
 // dummy data for app time usage
 const dummyChartData = {
   options: {
@@ -19,48 +20,35 @@ const dummyChartData = {
         fontWeight: 'bold',
         color: `${COLORS.text_2}`,
       },
-    },
-    fill: {
-      colors: [`${COLORS.primary}`],
-    },
-    chart: {
-      id: 'basic-bar',
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 4,
-        horizontal: true,
-      },
-    },
-    xaxis: {
-      categories: [] as any[],
-    },
+    }, 
+    chart: { 
+      width: 380,
+      type: 'pie',
+    }, 
+    labels: [] as any[], 
   },
-  series: [
-    {
-      name: 'Times Used',
-      data: [100, 78, 78, 43, 10, 22, 56],
-    },
-  ],
-};
+  series: [] as any[],
+}; 
 
 function AppUsageChart(props: any) {
-  const [barState, setBarState] = useState({
-    options: {},
-    series: [],
-  });
-  const fetchData = () => {
-    let curDate = new Date();
+  const [options, setOptions] = useState({})
+  const [series, setSeries] = useState([])
+  
+  const [startDateVal, setStartDateVal] = useState(1641634738549)
+  const [endDateVal, setEndDateVal] = useState(1641901876549)
+  
+  const fetchData = () => { 
     // @ts-ignore
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-
+    console.log(startDateVal)
+    console.log(endDateVal)
     axios
       .post(
         'https://digital-phenotyping.herokuapp.com/appForeground/',
         {
           uid: props.uid,
-          startDate: 1641634738549,
-          endDate: 1641901876549,
+          startDate: startDateVal,
+          endDate: endDateVal,
         },
         {
           headers: {
@@ -71,37 +59,42 @@ function AppUsageChart(props: any) {
       .then((response) => {
         Log('Fetched data..', response.data);
         let res = dummyChartData;
-        let categories = [];
-        let series = [];
+        let categories = [] as any[];
+        let newSeries = [];
         for (let i = 0; i < response.data[0].length; i++) {
           if (response.data[1][i] >= 1) {
             categories.push(response.data[0][i]);
-            series.push(response.data[1][i]);
+            newSeries.push(Math.round(response.data[1][i] * 100) / 100);
           }
         }
-
-        res.options.xaxis.categories = categories;
-        res.series[0].data = series;
-        // @ts-ignore
-        setBarState(res);
+        
+        res.options.labels = categories;
+        res.series = newSeries;
+        setOptions(pre => ({
+          ...pre,
+          //@ts-ignore
+          labels: categories
+        }))
+        //@ts-ignore
+        setSeries([ ...newSeries]) 
       });
   };
   useEffect(() => {
     Log('App usage chart...');
     fetchData();
     //setBarState(dummyChartData);
-  }, []);
-
+  }, [startDateVal]);
+ 
   return (
     <Container>
-      <DateText>{`${new Date(1641634738549).toISOString().slice(0, 10)} - ${new Date(1641901876549)
-        .toISOString()
-        .slice(0, 10)}`}</DateText>
+      <DateWrapper>
+        <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
+      </DateWrapper>
 
       <Chart
-        options={barState.options}
-        series={barState.series}
-        type='bar'
+        options={options}
+        series={series}
+        type='pie'
         width='600'
         height='400'
       />
@@ -114,6 +107,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const DateText = styled.div`
-  font-size: 15px;
-`;
+const DateWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`; 
