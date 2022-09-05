@@ -37,6 +37,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['*']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -127,14 +129,14 @@ import pymysql
 
 pymysql.install_as_MySQLdb()
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'swen90013',
-         'USER': env('DATABASE_USER'),
-         'PASSWORD': env('DATABASE_PASSWORD'),
-         'HOST': env('DATABASE_HOST'),
-         'PORT': '3306',
-     }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'swen90013',
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'),
+        'PORT': '3306',
+    }
 }
 
 # Password validation
