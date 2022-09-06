@@ -151,19 +151,13 @@ def get_recent_tweets(user_id):
     client = tw.Client(bearer_token=tw_cbd_credentials.bearer_token)
     max_length = 100
     tweets = client.get_users_tweets(id=user_id,max_results=max_length).data
-    print("1")
 
     all_tweets = [tweet.text for tweet in tweets]
 
-    print(all_tweets[:5])
-
     all_tweets_no_urls = [remove_url(tweet) for tweet in all_tweets]
-
-    print(all_tweets_no_urls[:5])
 
     # Create a list of lists containing lowercase words for each tweet
     words_in_tweet = [tweet.lower().split() for tweet in all_tweets_no_urls]
-    print(words_in_tweet[:2])
 
     # remove stop words
     tweets_rsw = remove_stop_words(words_in_tweet)
@@ -177,7 +171,5 @@ def get_recent_tweets(user_id):
 
     # Create counter of words in clean tweets
     counts_rsw_nc = collections.Counter(all_words_rsw_nc)
-
-    print(counts_rsw_nc.most_common())
 
     return counts_rsw_nc
