@@ -30,5 +30,6 @@ urlpatterns = [
     path('locationServer/', include('locationServer.urls')),
     path('screenServer/', include('screenServer.urls')),
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('userServer/',include('userServer.urls'))
+    path('userServer/',include('userServer.urls')),
+    path('twitterDataServer/',include('twitterDataServer.urls'))
 ]

@@ -13,35 +13,6 @@ from locationServer.views import PreProcessLocation
 one_day = 86400000
 
 
-def extract_twitter_keywords(request):
-    if request.method != 'POST':
-        return HttpResponseBadRequest
-    req = json.loads(request.body.decode().replace("'", "\""))
-    uid = req.get('uid')
-    twitter_id = models.TbClient.objects.filter(uid=uid).values('twitter_id_int')
-
-    if len(twitter_id) == 0:
-        return HttpResponse(json.dumps("twitter id of this user not exists!", cls=DjangoJSONEncoder),
-                            content_type='application/json')
-
-    # the following code is for get twitter id based on twitter username
-    # it will be used in the profile page
-    # ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    # client = tweepy.Client(bearer_token=bearer_token)
-    # username = "" # Username is what client inputs
-    # twitter_id = client.get_user(username=username).data.id
-    # 
-
-    records = models.TwitterWordCloud.objects\
-        .filter(twitter_id=twitter_id[0]['twitter_id_int']).values_list('word', 'occurrence')
-
-    res = {
-        'success': True,
-        'data': dict(list(records))
-    }
-    return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
-
-
 def extract_message(request):
     if request.method == 'POST':
         req = json.loads(request.body.decode().replace("'", "\""))
