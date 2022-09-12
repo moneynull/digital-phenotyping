@@ -1,6 +1,9 @@
+from http.client import HTTPResponse
 import itertools
 import collections
+import json
 
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http import Http404
 from dataServer import models
 
@@ -17,22 +20,29 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
 import time
 
-
-try:
-    scheduler = BackgroundScheduler()
-    scheduler.add_jobstore(DjangoJobStore(), "default")
-
-    @register_job(scheduler, "interval", hours=72)
-    def test_job():
-        # run every 2 weeks
-        retrieve_2weeks_tweets()
-
-    register_events(scheduler)
-    scheduler.start()
+class TimerView(APIView):
+    permission_classes = [AllowAny]
     
-except Exception as e:
-    print('CronTask Exception：%s' % str(e))
+    def get(self, request):
+        try:
+            scheduler = BackgroundScheduler()
+            scheduler.add_jobstore(DjangoJobStore(), "default")
 
+            @register_job(scheduler, "interval", hours=72)
+            def test_job():
+                # run every 2 weeks
+                retrieve_2weeks_tweets()
+
+            register_events(scheduler)
+            scheduler.start()
+            
+        except Exception as e:
+            print('CronTask Exception：%s' % str(e))
+        res = {
+            'success': True,
+            'data': 'timer resetting'
+        }
+        return HTTPResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
 # retrieve the latest 2 weeks tweets in the database
 def retrieve_2weeks_tweets():
