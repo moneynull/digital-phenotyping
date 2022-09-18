@@ -9,17 +9,18 @@ import Background from '../../assets/loginBackground.png';
 import COLORS from '../../constant/Colors';
 import { Log } from '../../components/common/Logger';
 import axios from 'axios';
+import URL from '../../constant/Endpoint';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { LoadingButton } from '@mui/lab';
 
 export default function Loginpage() {
-  const [errorMsg, setErrorMsg] = useState('')
+  const [errorMsg, setErrorMsg] = useState('');
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
-  const [showLoginLoading, setShowLoginLoading] = useState(false)
+  const [showLoginLoading, setShowLoginLoading] = useState(false);
   let navigate = useNavigate();
 
   const toggleShowPwd = () => {
@@ -43,38 +44,38 @@ export default function Loginpage() {
     return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
   });
 
-  const handleSubmit = (evt: any) =>{
-    if(evt.key === "Enter"){
-      login()
+  const handleSubmit = (evt: any) => {
+    if (evt.key === 'Enter') {
+      login();
     }
-  }
+  };
 
   function login() {
     Log(account);
     Log(password);
-    if(account === '' || password === ''){
-      setErrorMsg("Please fill out all fields")
-      setShowSnackbar(true)
-      return
+    if (account === '' || password === '') {
+      setErrorMsg('Please fill out all fields');
+      setShowSnackbar(true);
+      return;
     }
-    setShowLoginLoading(true)
+    setShowLoginLoading(true);
     axios
-      .post('https://digital-phenotyping.herokuapp.com/login/', {
+      .post(URL.BASE_URL + '/login/', {
         username: account,
         password: password,
       })
       .then((response) => {
         Log('Login data..', response.data);
         if (response.data.access !== undefined) {
-          setShowLoginLoading(false)
+          setShowLoginLoading(false);
           sessionStorage.setItem('userInfo', JSON.stringify(response.data));
           navigate('/homepage');
         }
       })
       .catch((err) => {
         Log(err);
-        setShowLoginLoading(false)
-        setErrorMsg('Wrong password or email')
+        setShowLoginLoading(false);
+        setErrorMsg('Wrong password or email');
         setShowSnackbar(true);
       });
   }
@@ -108,14 +109,10 @@ export default function Loginpage() {
           )}
         </TextInputContainer>
         <LoginButtonContainer>
-          
-          <LoginBtn  
-            color="info"
-            loading={showLoginLoading}
-            variant="contained" 
-            onClick={login}>Login</LoginBtn>
+          <LoginBtn color='info' loading={showLoginLoading} variant='contained' onClick={login}>
+            Login
+          </LoginBtn>
         </LoginButtonContainer>
-       
       </Container>
 
       <Snackbar
@@ -184,7 +181,7 @@ const Title = styled.div`
 `;
 const TextInput = styled.input`
   border: 0px;
-  height:22px;
+  height: 22px;
   font-size: 20px;
   border-bottom: 1px solid ${COLORS.text_light_grey};
   background-color: transparent;
@@ -196,12 +193,11 @@ const TextInput = styled.input`
 const LoginButtonContainer = styled.div`
   margin: 20px auto;
   width: 100px;
-  
 `;
 const LoginBtn = styled(LoadingButton)`
   color: ${COLORS.white};
   background-color: '${COLORS.login_btn}';
-`
+`;
 const VisibilityBtn = styled(Visibility)`
   &:hover {
     cursor: pointer;

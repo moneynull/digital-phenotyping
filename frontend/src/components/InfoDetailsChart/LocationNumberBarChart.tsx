@@ -1,11 +1,12 @@
 import axios from 'axios';
+import URL from '../../constant/Endpoint';
 import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
 import DateRangeSelector from '../common/DateRangeSelector';
 import { Log } from '../common/Logger';
- 
+
 const locationNumberData = {
   series: [] as any[],
   options: {
@@ -51,12 +52,12 @@ const locationNumberData = {
 };
 
 function LocationNumberBarChart(props: any) {
-  const [options, setOptions] = useState({})
-  const [series, setSeries] = useState([])
-  
-  const [startDateVal, setStartDateVal] = useState(1641634738549)
-  const [endDateVal, setEndDateVal] = useState(1641901876549)
-  
+  const [options, setOptions] = useState({});
+  const [series, setSeries] = useState([]);
+
+  const [startDateVal, setStartDateVal] = useState(1641634738549);
+  const [endDateVal, setEndDateVal] = useState(1641901876549);
+
   const fetchData = () => {
     let curDate = new Date();
     // @ts-ignore
@@ -64,7 +65,7 @@ function LocationNumberBarChart(props: any) {
 
     axios
       .post(
-        'https://digital-phenotyping.herokuapp.com/locationServer/NumbersOfLocation',
+        URL.BASE_URL + '/locationServer/NumbersOfLocation',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -91,22 +92,21 @@ function LocationNumberBarChart(props: any) {
           newSeries[0].data.push(data[i][1]);
           categories.push(data[i][0]);
         }
-        if(data.length === 0){
-          setOptions({})
-          setSeries([])
-        }else{
-          setOptions(pre => ({
+        if (data.length === 0) {
+          setOptions({});
+          setSeries([]);
+        } else {
+          setOptions((pre) => ({
             ...pre,
-            xaxis:{
+            xaxis: {
               //@ts-ignore
               ...pre.xaxis,
-              categories:categories
-            }
-          }))
+              categories: categories,
+            },
+          }));
           //@ts-ignore
-          setSeries([ ...newSeries])
+          setSeries([...newSeries]);
         }
-         
       });
   };
   useEffect(() => {
@@ -118,17 +118,12 @@ function LocationNumberBarChart(props: any) {
       <DateWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
-      {series.length === 0 ? <div>No data available.</div> : (
-        <Chart
-        options={options}
-        series={series}
-        type='heatmap'
-        width='650'
-        height='400'
-      />
+      {series.length === 0 ? (
+        <div>No data available.</div>
+      ) : (
+        <Chart options={options} series={series} type='heatmap' width='650' height='400' />
       )}
-    
-    </Container> 
+    </Container>
   );
 }
 
