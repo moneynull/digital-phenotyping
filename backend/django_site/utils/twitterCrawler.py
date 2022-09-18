@@ -40,7 +40,7 @@ class TimerView(APIView):
             print('CronTask Exception：%s' % str(e))
         res = {
             'success': True,
-            'data': 'timer resetting'
+            'data': 'resetting'
         }
         return HTTPResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
