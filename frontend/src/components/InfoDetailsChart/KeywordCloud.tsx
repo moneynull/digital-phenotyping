@@ -25,7 +25,7 @@ function KeywordCloud(props: any) {
     console.log('UID', props.uid);
     axios
       .post(
-        URL.BASE_URL + '/dataServer/twitterWordCloud',
+        URL.BASE_URL + '/twitterDataServer/twitterWordCloud',
         {
           uid: props.uid,
         },
@@ -36,8 +36,9 @@ function KeywordCloud(props: any) {
         }
       )
       .then((response) => {
-        console.log('Fetched data..', response.data);
+        console.log('Fetched keyword data..', response.data);
         let resData = response.data.data;
+        console.log('Fetched keyword data.data..', resData);
         let resArr = [];
         for (const [key, val] of Object.entries<any>(resData)) {
           if (val > 3) {

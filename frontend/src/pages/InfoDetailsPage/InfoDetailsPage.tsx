@@ -26,6 +26,8 @@ import LocationNumberBarChart from '../../components/InfoDetailsChart/LocationNu
 import LocationMap from '../../components/InfoDetailsChart/LocationMap';
 import ScreenUsageHeatMap from '../../components/InfoDetailsChart/ScreenUsageHeatMap';
 import UpdateInfo from '../../components/InfoDetailsChart/UpdateInfo';
+import TwitterHashtagChart from '../../components/InfoDetailsChart/TwitterHashtagChart';
+import TwitterHashtagBarchart from '../../components/InfoDetailsChart/TwitterHashtagBarchart';
 
 interface iResData {
   age: number;
@@ -132,9 +134,21 @@ function InfoDetailsPage() {
   );
 
   const tagCloud = (
-    <CardContainer>
-      <KeywordCloud uid={patientId} />
-    </CardContainer>
+    <>
+    <ChartContainer>
+      <CardContainer>
+        <KeywordCloud uid={patientId} />
+      </CardContainer>
+      <CardContainer>
+        <TwitterHashtagChart uid={patientId} />
+      </CardContainer>
+    </ChartContainer>
+    <ChartContainer>
+      <CardContainer>
+        <TwitterHashtagBarchart uid={patientId} />
+      </CardContainer>
+    </ChartContainer>
+    </>
   );
 
   const defaultGreeting = (
