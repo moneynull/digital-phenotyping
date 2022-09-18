@@ -1,4 +1,5 @@
 import axios from 'axios';
+import URL from '../../constant/Endpoint';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
@@ -73,12 +74,12 @@ const screenDummayData = {
 };
 
 function UnlockTimesChart(props: any) {
-  const [options, setOptions] = useState({})
-  const [series, setSeries] = useState([])
-  
-  const [startDateVal, setStartDateVal] = useState(1641634738549)
-  const [endDateVal, setEndDateVal] = useState(1641901876549)
-  
+  const [options, setOptions] = useState({});
+  const [series, setSeries] = useState([]);
+
+  const [startDateVal, setStartDateVal] = useState(1641634738549);
+  const [endDateVal, setEndDateVal] = useState(1641901876549);
+
   const fetchData = () => {
     let curDate = new Date();
     Log('ScreenUnlocked fetch');
@@ -87,7 +88,7 @@ function UnlockTimesChart(props: any) {
 
     axios
       .post(
-        'https://digital-phenotyping.herokuapp.com/screenServer/ScreenUnlocked',
+        URL.BASE_URL + '/screenServer/ScreenUnlocked',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -119,17 +120,17 @@ function UnlockTimesChart(props: any) {
         res.series = newSeries;
         //response.data[0].splice(3, 1);
         Log(data);
-        setOptions(pre => ({
+        setOptions((pre) => ({
           ...pre,
           ...screenDummayData.options,
-          xaxis:{
+          xaxis: {
             //@ts-ignore
             ...pre.xaxis,
-            categories:categories
-          }
-        }))
+            categories: categories,
+          },
+        }));
         //@ts-ignore
-        setSeries([ ...newSeries])
+        setSeries([...newSeries]);
       });
   };
   useEffect(() => {
@@ -141,14 +142,8 @@ function UnlockTimesChart(props: any) {
       <DateWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
-      
-    <Chart
-      options={options}
-      series={series}
-      type='bar'
-      width='650'
-      height='400'
-    />
+
+      <Chart options={options} series={series} type='bar' width='650' height='400' />
     </Container>
   );
 }
