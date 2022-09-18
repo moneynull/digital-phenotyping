@@ -4,8 +4,6 @@ import os
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework.decorators import api_view, permission_classes
 from locationServer.getAddress import getAddressAndType
 from locationServer.location_cluster import cluster
 from locationServer import models
@@ -18,8 +16,6 @@ one_day = 86400000
 class PreProcessLocation(APIView):
 
     @staticmethod
-    @api_view(['GET'])
-    @permission_classes([AllowAny]) 
     def get(request):
         PreProcessLocation.initialProcessLocation()
         return Response()
@@ -38,7 +34,6 @@ class PreProcessLocation(APIView):
         result_dic = {"double_latitude": latitude_list, "double_longitude": longitude_list}
 
         return result_dic
-
 
     def initialProcessLocation():
 
