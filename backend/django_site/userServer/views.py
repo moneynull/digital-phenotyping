@@ -73,11 +73,13 @@ class UpdateClientProfile(APIView):
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
         uid = req.get('uid')
-        change_form = get_client_form(req)
+
+        change_form = get_client_form(req, req.get('hasTwitterIdChanged'))
         if change_form == "notexist":
             return Response("Twitter account not exists!")
         elif change_form == "wrongformat":
             return Response("Please check Twitter id format!")
+        
         models.TbClient.objects.filter(uid=uid).update(**change_form)
         return Response(200)
 
@@ -87,7 +89,7 @@ class AddClient(APIView):
     def post(request):
         req = json.loads(request.body.decode())
 
-        add_form = get_client_form(req)
+        add_form = get_client_form(req, True)
         if add_form == "notexist":
             return Response("Twitter account not exists!")
         elif add_form == "wrongformat":
@@ -130,10 +132,8 @@ def age(birthdate):
     return age
 
 
-def get_client_form(req):
-    twitter_id, twitter_id_int = twitter_id_check(req.get('twitterId'))
-    if twitter_id == "error":
-        return twitter_id_int
+def get_client_form(req, tag):
+    
     client_form = {
         'clinician_id': req.get('clinicianId'),
         'client_title': req.get('clientTitle'),
@@ -142,11 +142,18 @@ def get_client_form(req):
         'date_of_birth': req.get('dateOfBirth'),
         'age': age(datetime.strptime(req.get('dateOfBirth'), '%Y-%m-%d')),
         'text_notes': req.get('textNotes'),
-        'twitter_id': twitter_id,
-        'twitter_id_int': twitter_id_int,
         'facebook_id': req.get('facebookId'),
         'aware_device_id': req.get('awareDeviceId'),
     }
+
+    if tag is True:
+        twitter_id, twitter_id_int = twitter_id_check(req.get('twitterId'))
+        if twitter_id == "error":
+            return twitter_id_int
+        
+        client_form['twitter_id'] = twitter_id
+        client_form['twitter_id_int'] = twitter_id_int
+
     return client_form
 
 

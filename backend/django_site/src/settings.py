@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'locationServer',
     'screenServer',
-    'userServer'
+    'userServer',
+    'twitterDataServer'
 ]
 
 MIDDLEWARE = [
