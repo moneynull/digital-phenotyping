@@ -12,6 +12,7 @@ interface iCOLORS {
   login_btn: string;
   red: string;
   light_purple: string;
+  twitter_blue: string;
 }
 const COLORS: iCOLORS = {
   primary: '#5E5EF5',
@@ -27,5 +28,6 @@ const COLORS: iCOLORS = {
   login_btn: '#6258DC',
   red: 'red',
   light_purple: '#7A7CFF',
+  twitter_blue: '#2490E8',
 };
 export default COLORS;

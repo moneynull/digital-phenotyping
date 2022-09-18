@@ -1,9 +1,10 @@
 import axios from 'axios';
+import URL from '../../constant/Endpoint';
 import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
-import DateRangeSelector from '../common/DateRangeSelector'; 
+import DateRangeSelector from '../common/DateRangeSelector';
 
 // dummy data for Calls usage
 const dummyCallsData = {
@@ -17,7 +18,7 @@ const dummyCallsData = {
     plotOptions: {
       bar: {
         horizontal: false,
-        endingShape: 'rounded'
+        endingShape: 'rounded',
       },
     },
     stroke: {
@@ -48,20 +49,19 @@ const dummyCallsData = {
 };
 
 function CallsUsageChart(props: any) {
-  const [options, setOptions] = useState({})
-  const [series, setSeries] = useState([])
-  
+  const [options, setOptions] = useState(dummyCallsData.options);
+  const [series, setSeries] = useState(dummyCallsData.series);
 
-  const [startDateVal, setStartDateVal] = useState(1641634738549)
-  const [endDateVal, setEndDateVal] = useState(1641901876549)
-  
-  const fetchData = () => { 
+  const [startDateVal, setStartDateVal] = useState(1641634738549);
+  const [endDateVal, setEndDateVal] = useState(1641901876549);
+
+  const fetchData = () => {
     // @ts-ignore
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 
     axios
       .post(
-        'https://digital-phenotyping.herokuapp.com/dataServer/calls',
+        URL.BASE_URL + '/dataServer/calls',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -90,22 +90,22 @@ function CallsUsageChart(props: any) {
             name: 'Missed',
             data: data[2],
           },
-        ]; 
+        ];
         res.options.xaxis.categories = data[3];
         res.series = newSeries;
-        console.log(res.options.xaxis.categories)
-        setOptions(pre => ({
+        console.log(res.options.xaxis.categories);
+        setOptions((pre) => ({
           ...pre,
-          xaxis:{
+          xaxis: {
             //@ts-ignore
             ...pre.xaxis,
-            categories: data[3]
-          }
-        }))
+            categories: data[3],
+          },
+        }));
         //@ts-ignore
-        setSeries([ ...newSeries])
+        setSeries([...newSeries]);
       });
-  };  
+  };
   useEffect(() => {
     fetchData();
   }, [startDateVal]);
@@ -116,14 +116,14 @@ function CallsUsageChart(props: any) {
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
       <Chart
-      options={options}
-      series={series}
-      type='bar'
-      width='650'
-      height='400'
-    />
+        //@ts-ignore
+        options={options}
+        series={series}
+        type='bar'
+        width='650'
+        height='400'
+      />
     </Container>
-    
   );
 }
 

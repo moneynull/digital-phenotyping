@@ -1,4 +1,5 @@
 import axios from 'axios';
+import URL from '../../constant/Endpoint';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
@@ -53,12 +54,12 @@ const locationNumberData = {
 };
 
 function LocationNumberHeatMapChart(props: any) {
-  const [options, setOptions] = useState({})
-  const [series, setSeries] = useState([])
+  const [options, setOptions] = useState({});
+  const [series, setSeries] = useState([]);
 
-  const [startDateVal, setStartDateVal] = useState(1641634738549)
-  const [endDateVal, setEndDateVal] = useState(1641901876549)
-  
+  const [startDateVal, setStartDateVal] = useState(1641634738549);
+  const [endDateVal, setEndDateVal] = useState(1641901876549);
+
   const fetchData = () => {
     let curDate = new Date();
     // @ts-ignore
@@ -66,7 +67,7 @@ function LocationNumberHeatMapChart(props: any) {
 
     axios
       .post(
-        'https://digital-phenotyping.herokuapp.com/locationServer/NumbersOfLocation',
+        URL.BASE_URL + '/locationServer/NumbersOfLocation',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -80,35 +81,47 @@ function LocationNumberHeatMapChart(props: any) {
       )
       .then((response) => {
         Log('Fetched HeatMap data..', response.data);
-        let data = response.data; 
+        let data = response.data;
         let newSeries = [];
         for (let i = 0; i < data.length; i++) {
           newSeries.push({
-            name:  data[i][0],
+            name: data[i][0],
             data: [
-              { x: data[0][2][0] !== undefined ? data[0][2][0] :"street_address", y: data[i][3][0] !== undefined ? data[i][3][0] : 0 },
-              { x: data[0][2][1] !== undefined ? data[0][2][1] :"university", y: data[i][3][1] !== undefined ? data[i][3][1] : 0 },
-              { x: data[0][2][2]!== undefined ? data[0][2][2] :"establishment", y: data[i][3][2] !== undefined ? data[i][3][2] : 0 },
-              { x: data[0][2][3]!== undefined ? data[0][2][3] :"premise", y: data[i][3][3] !== undefined ? data[i][3][3] : 0 },
+              {
+                x: data[0][2][0] !== undefined ? data[0][2][0] : 'street_address',
+                y: data[i][3][0] !== undefined ? data[i][3][0] : 0,
+              },
+              {
+                x: data[0][2][1] !== undefined ? data[0][2][1] : 'university',
+                y: data[i][3][1] !== undefined ? data[i][3][1] : 0,
+              },
+              {
+                x: data[0][2][2] !== undefined ? data[0][2][2] : 'establishment',
+                y: data[i][3][2] !== undefined ? data[i][3][2] : 0,
+              },
+              {
+                x: data[0][2][3] !== undefined ? data[0][2][3] : 'premise',
+                y: data[i][3][3] !== undefined ? data[i][3][3] : 0,
+              },
             ],
           });
         }
-        Log('newSeries', newSeries); 
-        if(data.length === 0){
-          setOptions({})
-          setSeries([])
-        }else{
-          setOptions(pre => ({
+        Log('newSeries', newSeries);
+        if (data.length === 0) {
+          setOptions({});
+          setSeries([]);
+        } else {
+          setOptions((pre) => ({
             ...pre,
             ...locationNumberData.options,
-            xaxis:{
+            xaxis: {
               //@ts-ignore
               ...pre.xaxis,
-              categories:data[0][2]
-            }
-          }))
+              categories: data[0][2],
+            },
+          }));
           //@ts-ignore
-          setSeries([ ...newSeries])
+          setSeries([...newSeries]);
         }
       });
   };
@@ -121,14 +134,8 @@ function LocationNumberHeatMapChart(props: any) {
       <DateWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
-      
-    <Chart
-      options={options}
-      series={series}
-      type='heatmap'
-      width='650'
-      height='400'
-    />
+
+      <Chart options={options} series={series} type='heatmap' width='650' height='400' />
     </Container>
   );
 }

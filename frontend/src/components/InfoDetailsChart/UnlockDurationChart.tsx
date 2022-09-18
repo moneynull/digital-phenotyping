@@ -1,4 +1,5 @@
 import axios from 'axios';
+import URL from '../../constant/Endpoint';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
@@ -86,21 +87,20 @@ const durationData = {
 };
 
 function UnlockDurationChart(props: any) {
-  const [options, setOptions] = useState({})
-  const [series, setSeries] = useState([])
-  
+  const [options, setOptions] = useState({});
+  const [series, setSeries] = useState([]);
 
-  const [startDateVal, setStartDateVal] = useState(1641634738549)
-  const [endDateVal, setEndDateVal] = useState(1641901876549)
-  
-  const fetchData = () => { 
+  const [startDateVal, setStartDateVal] = useState(1641634738549);
+  const [endDateVal, setEndDateVal] = useState(1641901876549);
+
+  const fetchData = () => {
     Log('ScreenUnlocked fetch');
     // @ts-ignore
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 
     axios
       .post(
-        'https://digital-phenotyping.herokuapp.com/screenServer/ScreenUnlocked',
+        URL.BASE_URL + '/screenServer/ScreenUnlocked',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -132,17 +132,17 @@ function UnlockDurationChart(props: any) {
         res.series = newSeries;
         //response.data[0].splice(3, 1);
         Log(data);
-        setOptions(pre => ({
+        setOptions((pre) => ({
           ...pre,
           ...durationData.options,
-          xaxis:{
+          xaxis: {
             //@ts-ignore
             ...pre.xaxis,
-            categories:categories
-          }
-        }))
+            categories: categories,
+          },
+        }));
         //@ts-ignore
-        setSeries([ ...newSeries])
+        setSeries([...newSeries]);
       });
   };
   useEffect(() => {
@@ -154,14 +154,8 @@ function UnlockDurationChart(props: any) {
       <DateWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
-      
-    <Chart
-      options={options}
-      series={series}
-      type='line'
-      width='650'
-      height='400'
-    />
+
+      <Chart options={options} series={series} type='line' width='650' height='400' />
     </Container>
   );
 }

@@ -13,7 +13,7 @@ class TbClient(models.Model):
     facebook_id = models.CharField(max_length=255, blank=True, null=True)
     aware_device_id = models.CharField(max_length=255, blank=True, null=True)
     last_update = models.DateTimeField()
-    twitter_id_int = models.IntegerField(blank=True, null=True)
+    twitter_id_int = models.CharField(max_length=45,blank=True, null=True)
 
     class Meta:
         managed = False
@@ -33,6 +33,7 @@ class TwitterHashtag(models.Model):
     field_id = models.AutoField(db_column='_id', primary_key=True)
     twitter_id_int = models.IntegerField(blank=False, null=False)
     hashtag = models.CharField(max_length=45, blank=False, null=False)
+    occurrence = models.IntegerField(blank=False, null=False)
 
     class Meta:
         managed = False
