@@ -4,6 +4,7 @@ import COLORS from '../../constant/Colors';
 import { Log } from '../common/Logger';
 
 import axios from 'axios';
+import URL from '../../constant/Endpoint';
 import styled from 'styled-components';
 import DateRangeSelector from '../common/DateRangeSelector';
 const dummySMSData = {
@@ -20,13 +21,13 @@ const dummySMSData = {
   options: {
     chart: {
       type: 'bar',
-      height: 440, 
+      height: 440,
     },
     colors: ['#008FFB', '#FF4560'],
     plotOptions: {
       bar: {
-        horizontal: false, 
-        endingShape: 'rounded'
+        horizontal: false,
+        endingShape: 'rounded',
       },
     },
     stroke: {
@@ -57,12 +58,12 @@ const dummySMSData = {
 };
 
 function SmsUsageChart(props: any) {
-  const [options, setOptions] = useState({})
-  const [series, setSeries] = useState([])
-  
-  const [startDateVal, setStartDateVal] = useState(1641634738549)
-  const [endDateVal, setEndDateVal] = useState(1641901876549)
-  
+  const [options, setOptions] = useState(dummySMSData.options);
+  const [series, setSeries] = useState(dummySMSData.series);
+
+  const [startDateVal, setStartDateVal] = useState(1641634738549);
+  const [endDateVal, setEndDateVal] = useState(1641901876549);
+
   const fetchData = () => {
     let curDate = new Date();
     // @ts-ignore
@@ -71,7 +72,7 @@ function SmsUsageChart(props: any) {
     Log('SMS fetch');
     axios
       .post(
-        'https://digital-phenotyping.herokuapp.com/sms/',
+        URL.BASE_URL + '/sms/',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -101,23 +102,21 @@ function SmsUsageChart(props: any) {
         ];
 
         res.series = newSeries;
-        if(data.length === 0){
-          setOptions({})
-          setSeries([])
-        }else{
-          setOptions(pre => ({
+        if (data.length === 0) {
+          setOptions(dummySMSData.options);
+          setSeries(dummySMSData.series);
+        } else {
+          setOptions((pre) => ({
             ...pre,
-            xaxis:{
+            xaxis: {
               //@ts-ignore
               ...pre.xaxis,
-              categories: data[2]
-            }
-          }))
+              categories: data[2],
+            },
+          }));
           //@ts-ignore
-          setSeries([ ...newSeries])
+          setSeries([...newSeries]);
         }
-        
-        
       });
   };
   useEffect(() => {
@@ -130,14 +129,14 @@ function SmsUsageChart(props: any) {
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
       <Chart
-      options={options}
-      series={series}
-      type='bar'
-      width='600'
-      height='400'
-    />
+        //@ts-ignore
+        options={options}
+        series={series}
+        type='bar'
+        width='600'
+        height='400'
+      />
     </Container>
-    
   );
 }
 

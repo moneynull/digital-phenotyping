@@ -3,7 +3,8 @@ import Chart from 'react-apexcharts';
 import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
 import { Log } from '../common/Logger';
-import axios from 'axios'; 
+import axios from 'axios';
+import URL from '../../constant/Endpoint';
 import DateRangeSelector from '../common/DateRangeSelector';
 // dummy data for app time usage
 const dummyChartData = {
@@ -20,31 +21,30 @@ const dummyChartData = {
         fontWeight: 'bold',
         color: `${COLORS.text_2}`,
       },
-    }, 
-    chart: { 
+    },
+    chart: {
       width: 380,
       type: 'pie',
-    }, 
-    labels: [] as any[], 
+    },
+    labels: [] as any[],
   },
   series: [] as any[],
-}; 
+};
 
 function AppUsageChart(props: any) {
-  const [options, setOptions] = useState({})
-  const [series, setSeries] = useState([])
-  
-  const [startDateVal, setStartDateVal] = useState(1641634738549)
-  const [endDateVal, setEndDateVal] = useState(1641901876549)
-  
-  const fetchData = () => { 
+  const [options, setOptions] = useState({});
+  const [series, setSeries] = useState([]);
+  const [startDateVal, setStartDateVal] = useState(1641634738549);
+  const [endDateVal, setEndDateVal] = useState(1641901876549);
+
+  const fetchData = () => {
     // @ts-ignore
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-    console.log(startDateVal)
-    console.log(endDateVal)
+    console.log(startDateVal);
+    console.log(endDateVal);
     axios
       .post(
-        'https://digital-phenotyping.herokuapp.com/appForeground/',
+        URL.BASE_URL + '/appForeground/',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -67,16 +67,16 @@ function AppUsageChart(props: any) {
             newSeries.push(Math.round(response.data[1][i] * 100) / 100);
           }
         }
-        
+
         res.options.labels = categories;
         res.series = newSeries;
-        setOptions(pre => ({
+        setOptions((pre) => ({
           ...pre,
           //@ts-ignore
-          labels: categories
-        }))
+          labels: categories,
+        }));
         //@ts-ignore
-        setSeries([ ...newSeries]) 
+        setSeries([...newSeries]);
       });
   };
   useEffect(() => {
@@ -84,20 +84,17 @@ function AppUsageChart(props: any) {
     fetchData();
     //setBarState(dummyChartData);
   }, [startDateVal]);
- 
+
   return (
     <Container>
       <DateWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
-
-      <Chart
-        options={options}
-        series={series}
-        type='pie'
-        width='600'
-        height='400'
-      />
+      {series.length === 0 ? (
+        <div>No data available.</div>
+      ) : (
+        <Chart options={options} series={series} type='pie' width='600' height='400' />
+      )}
     </Container>
   );
 }
@@ -111,4 +108,4 @@ const DateWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-`; 
+`;

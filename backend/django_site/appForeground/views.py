@@ -2,6 +2,8 @@ import time
 from http.client import BAD_REQUEST
 import json
 from django.http import Http404
+from google_play_scraper.exceptions import NotFoundError
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from appForeground.models import ApplicationsForeground, TbClient
@@ -105,19 +107,33 @@ class AppForeground(APIView):
 
 
 class AppCategory(APIView):
+    permission_classes = [AllowAny]
     @staticmethod
     def get(request):
+        # dic not null->update null
+        exists_result = ApplicationsForeground.objects.filter(category__isnull=False)
+        exists_dic = dict(list(exists_result.values_list("package_name", "category").distinct()))
+        empty_result = ApplicationsForeground.objects.filter(category__isnull=True)
+        for empty in empty_result:
+            if empty.package_name in exists_dic.keys():
+                empty.category = exists_dic[empty.package_name]
 
-        genre_result = ApplicationsForeground.objects.filter(application_category__isnull=True)
-        for r in genre_result:
+        ApplicationsForeground.objects.bulk_update(empty_result, fields=['category'])
+
+        # scrape google->update null
+        update_result = ApplicationsForeground.objects.filter(category__isnull=True)
+        update_dic = dict(list(update_result.values_list("package_name", "category").distinct()))
+
+        for r in update_result.values("package_name", "category").distinct():
             try:
-                google_info = google_app(r.package_name)  # https://pypi.org/project/google-play-scraper/
-                if google_info['genre']:
-                    # update application_category cell for this record
-                    r.application_category = google_info['genre']
-                    print(r.application_category)
-                    #r.save()
-            except:
-                pass
-        ApplicationsForeground.objects.bulk_update(genre_result, fields=['application_category'])
+                google_info = google_app(r['package_name'])
+                update_dic[r['package_name']] = google_info['genre']
+            except NotFoundError:
+                r['category'] = "None"
+
+        for update in update_result:
+            if update.package_name in update_dic.keys():
+                update.category = update_dic[update.package_name]
+
+        ApplicationsForeground.objects.bulk_update(update_result, fields=['category'])
         return Response(200)

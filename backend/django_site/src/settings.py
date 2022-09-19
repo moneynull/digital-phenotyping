@@ -37,6 +37,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['https://digital-phenotyping.herokuapp.com']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,7 +58,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'locationServer',
     'screenServer',
-    'userServer'
+    'userServer',
+    'twitterDataServer'
 ]
 
 MIDDLEWARE = [
@@ -127,14 +130,14 @@ import pymysql
 
 pymysql.install_as_MySQLdb()
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'swen90013',
-         'USER': env('DATABASE_USER'),
-         'PASSWORD': env('DATABASE_PASSWORD'),
-         'HOST': env('DATABASE_HOST'),
-         'PORT': '3306',
-     }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'swen90013',
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'),
+        'PORT': '3306',
+    }
 }
 
 # Password validation

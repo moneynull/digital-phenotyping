@@ -13,22 +13,22 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import COLORS from '../../constant/Colors';
 import axios from 'axios';
+import URL from '../../constant/Endpoint';
 import { Log } from '../../components/common/Logger';
-import { LargeNumberLike } from 'crypto';
 
 interface iResData {
-  age: number
-  aware_device_id:  string
-  client_title: string
-  date_of_birth: string
-  facebook_id: string 
-  first_name: string
-  last_name: string 
-  last_update: string 
-  status: string 
-  text_notes: string 
-  twitter_id: string 
-  uid: LargeNumberLike
+  age: number;
+  aware_device_id: string;
+  client_title: string;
+  date_of_birth: string;
+  facebook_id: string;
+  first_name: string;
+  last_name: string;
+  last_update: string;
+  status: string;
+  text_notes: string;
+  twitter_id: string;
+  uid: number;
 }
 
 const muiCache = createCache({
@@ -36,54 +36,57 @@ const muiCache = createCache({
   prepend: true,
 });
 
-
 export default function Homepage() {
   let navigate = useNavigate();
   const [clientData, setClientData] = useState<any[]>([]);
+  const [rawData, setRawData] = useState<any[]>([]);
 
-  
   let userInfo = sessionStorage.getItem('userInfo');
 
   useEffect(() => {
     if (!userInfo) {
       navigate('/');
-      return
+      return;
     }
-    fetchClientList()
+    fetchClientList();
   }, []);
 
-  const fetchClientList = () =>{
-    let clinicianId = JSON.parse(userInfo!).user_info.id
-    let token = JSON.parse(userInfo!).access
-    let clientsList: any[] = []
+  const fetchClientList = () => {
+    let clinicianId = JSON.parse(userInfo!).user_info.id;
+    let token = JSON.parse(userInfo!).access;
+    let clientsList: any[] = [];
     axios
-      .post('https://digital-phenotyping.herokuapp.com/userServer/ClientInfoList', {
-        id: clinicianId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      .post(
+        URL.BASE_URL + '/userServer/ClientInfoList',
+        {
+          id: clinicianId,
         },
-      })
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         Log('Fetched Clients data..', response.data);
-        let rawData = response.data
-        rawData.forEach((item: iResData) =>{
-          let temp: any[] = []
-          temp.push(item.first_name + ' ' + item.last_name)
-          temp.push(item.client_title)
-          temp.push(item.age)
-          temp.push(item.status)
-          temp.push(item.last_update.substring(0,10))
-          temp.push(item.uid)
-          clientsList.push(temp)
-        })
-        setClientData(clientsList)
+        let tempRawData = response.data;
+        setRawData(tempRawData);
+        tempRawData.forEach((item: iResData) => {
+          let temp: any[] = [];
+          temp.push(item.first_name + ' ' + item.last_name);
+          temp.push(item.client_title);
+          temp.push(item.age);
+          temp.push(item.status);
+          temp.push(item.last_update.substring(0, 10));
+          temp.push(item.uid);
+          clientsList.push(temp);
+        });
+        setClientData(clientsList);
       })
       .catch((err) => {
         Log(err);
       });
-  }
+  };
 
   const columns = [
     {
@@ -126,8 +129,10 @@ export default function Homepage() {
         customBodyRenderLite: (dataIndex: any, rowIndex: any) => {
           return (
             <ViewBtn
-              variant="contained"
-              onClick={() => navigate('/infodetailspage', { state: { clientInfo: clientData[dataIndex] } })}
+              variant='contained'
+              onClick={() =>
+                navigate('/infodetailspage', { state: { clientInfo: rawData[dataIndex] } })
+              }
             >
               View
             </ViewBtn>
@@ -141,7 +146,7 @@ export default function Homepage() {
   };
   const HeaderElements = () => {
     return (
-      <Button  onClick={addClient} variant='contained' color='info'>
+      <Button onClick={addClient} variant='contained' color='info'>
         Add Client
       </Button>
     );
@@ -157,9 +162,13 @@ export default function Homepage() {
         <NameAvatar />
       </Header>
       <SubInfoContainer>
-        <InfoSumCard title={'Total Clients'} />
-        <InfoSumCard title={'Unique Visitors'} />
-        <InfoSumCard title={'Social Media Apps'} />
+        <InfoSumCard
+          title={'Total Clients'}
+          type='totalClients'
+          content={`${clientData.length} clients`}
+        />
+        <InfoSumCard title={'AWARE Sensors'} type='AWARESensors' />
+        <InfoSumCard title={'Social Media Apps'} type='socialApps' />
       </SubInfoContainer>
       <CacheProvider value={muiCache}>
         <TableContainer>
@@ -191,7 +200,7 @@ const TableHeader = styled.div`
 `;
 const Header = styled.div`
   width: 80vw;
-  
+
   height: 100px;
   display: flex;
   flex-direction: row;

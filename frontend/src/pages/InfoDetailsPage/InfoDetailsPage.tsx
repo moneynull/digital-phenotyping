@@ -25,30 +25,50 @@ import KeywordCloud from '../../components/InfoDetailsChart/KeywordCloud';
 import LocationNumberBarChart from '../../components/InfoDetailsChart/LocationNumberBarChart';
 import LocationMap from '../../components/InfoDetailsChart/LocationMap';
 import ScreenUsageHeatMap from '../../components/InfoDetailsChart/ScreenUsageHeatMap';
+import UpdateInfo from '../../components/InfoDetailsChart/UpdateInfo';
+import TwitterHashtagChart from '../../components/InfoDetailsChart/TwitterHashtagChart';
+import TwitterHashtagBarchart from '../../components/InfoDetailsChart/TwitterHashtagBarchart';
+
+interface iResData {
+  age: number;
+  aware_device_id: string;
+  client_title: string;
+  date_of_birth: string;
+  facebook_id: string;
+  first_name: string;
+  last_name: string;
+  last_update: string;
+  status: string;
+  text_notes: string;
+  twitter_id: string;
+  uid: number;
+}
 
 function InfoDetailsPage() {
   let navigate = useNavigate();
   let location = useLocation();
   const [patientId, setPatientId] = useState(1);
-  const [clientName, setClientName] = useState('')
+  const [clientName, setClientName] = useState('');
   const [curSelected, setCurSelected] = useState('Application');
-  const [loadingPage, setLoadingpage] = useState(true)
+  const [loadingPage, setLoadingpage] = useState(true);
 
   let token = sessionStorage.getItem('userInfo');
-  let stateFromPrePage: {clientInfo: any[]} = location.state as {clientInfo: any[]}
+  let stateFromPrePage: { clientInfo: iResData } = location.state as { clientInfo: iResData };
   useEffect(() => {
     if (!token || stateFromPrePage.clientInfo === null) {
       navigate('/');
-      return
+      return;
     }
-    setPatientId(stateFromPrePage.clientInfo[5])
-    setLoadingpage(false)
-    setClientName(stateFromPrePage.clientInfo[0])
-    
+    setPatientId(stateFromPrePage.clientInfo.uid);
+    setLoadingpage(false);
   }, []);
   const selected = (name: string) => {
     Log(name);
-    setCurSelected(name);
+    if (name === curSelected) {
+      setCurSelected('ClientInfo');
+    } else {
+      setCurSelected(name);
+    }
   };
 
   // chart to show when clicking application button
@@ -58,7 +78,7 @@ function InfoDetailsPage() {
         <AppUsageChart uid={patientId} />
       </CardContainer>
       <CardContainer>
-        <CategoryChart uid={patientId}/>
+        <CategoryChart uid={patientId} />
       </CardContainer>
     </ChartContainer>
   );
@@ -78,51 +98,62 @@ function InfoDetailsPage() {
   // chart to show when clicking locations button
   const locChart = (
     <>
-    <ChartContainer>
-      <CardContainer>
-        <LocationNumberHeatMapChart uid={patientId} />
-      </CardContainer>
-      <CardContainer>
-        <LocationNumberBarChart uid={patientId} />
-      </CardContainer>
-    </ChartContainer>
-    <ChartContainer>
-      <CardContainer>
-        <LocationMap uid={patientId} />
-      </CardContainer>
-    </ChartContainer>
+      <ChartContainer>
+        <CardContainer>
+          <LocationNumberHeatMapChart uid={patientId} />
+        </CardContainer>
+        <CardContainer>
+          <LocationNumberBarChart uid={patientId} />
+        </CardContainer>
+      </ChartContainer>
+      <ChartContainer>
+        <CardContainer>
+          <LocationMap uid={patientId} />
+        </CardContainer>
+      </ChartContainer>
     </>
   );
 
   // chart to show when clicking screen button
   const screenChart = (
     <>
+      <ChartContainer>
+        <CardContainer>
+          <UnlockDurationChart uid={patientId} />
+        </CardContainer>
+        <CardContainer>
+          <UnlockTimesChart uid={patientId} />
+        </CardContainer>
+      </ChartContainer>
+      <ChartContainer>
+        <CardContainer>
+          <ScreenUsageHeatMap uid={patientId} />
+        </CardContainer>
+      </ChartContainer>
+    </>
+  );
+
+  const tagCloud = (
+    <>
     <ChartContainer>
       <CardContainer>
-        <UnlockDurationChart uid={patientId} />
+        <KeywordCloud uid={patientId} />
       </CardContainer>
       <CardContainer>
-        <UnlockTimesChart uid={patientId} />
+        <TwitterHashtagChart uid={patientId} />
       </CardContainer>
     </ChartContainer>
     <ChartContainer>
       <CardContainer>
-        <ScreenUsageHeatMap uid={patientId} />
+        <TwitterHashtagBarchart uid={patientId} />
       </CardContainer>
     </ChartContainer>
     </>
   );
 
-  const tagCloud = (
-    <CardContainer>
-      <KeywordCloud uid={patientId} />
-    </CardContainer>
-  );
-
   const defaultGreeting = (
     <CardContainer>
-      <Reminder>Client Name: {clientName}</Reminder>
-      <Reminder>Select an AWARE category to see more details.</Reminder>
+      <UpdateInfo clientInfo={stateFromPrePage.clientInfo} />
     </CardContainer>
   );
 
@@ -148,64 +179,67 @@ function InfoDetailsPage() {
 
   return (
     <MainContainer>
-      {loadingPage ? <></> : 
-      <>
-      <Header onClick={navBack}>
-        <Link style={{ textDecoration: 'none' }} to='/homepage'>
-          <NavTitle title='Client Details' showArrowBack={true} />
-        </Link>
-        <SearchBar />
-        <Spacer />
-        <NameAvatar />
-      </Header>
-      <SubContainer>
-        {/* AWARE Icon on the right */}
-        <AwareAppsContainer>
-          <SectionTitle title={'AWARE Information'} />
-          <Grid
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-            container
-            rowSpacing={3}
-            direction='row'
-            justifyContent='flex-start'
-            alignItems='baseline'
-          >
-            <Grid onClick={() => selected('Applications')} item xs={2}>
-              <IconText curSelected={curSelected} name='Applications'>
-                <PhonelinkIcon sx={{ fontSize: 80 }} />
-                <AppName>Applications</AppName>
-              </IconText>
-            </Grid>
-            <Grid item onClick={() => selected('Communication')} xs={2}>
-              <IconText curSelected={curSelected} name='Communication'>
-                <ChatRoundedIcon sx={{ fontSize: 80 }} />
-                <AppName>Communication</AppName>
-              </IconText>
-            </Grid>
-            <Grid item onClick={() => selected('Locations')} xs={2}>
-              <IconText curSelected={curSelected} name='Locations'>
-                <LocationOnRoundedIcon sx={{ fontSize: 80 }} />
-                <AppName>Locations</AppName>
-              </IconText>
-            </Grid>
-            <Grid item onClick={() => selected('Screen')} xs={2}>
-              <IconText curSelected={curSelected} name='Screen'>
-                <AccessTimeFilledRoundedIcon sx={{ fontSize: 80 }} />
-                <AppName>Screen</AppName>
-              </IconText>
-            </Grid>
-            <Grid item onClick={() => selected('Twitter')} xs={2}>
-              <IconText curSelected={curSelected} name='Twitter'>
-                <TwitterIcon sx={{ fontSize: 80 }} />
-                <AppName>Twitter</AppName>
-              </IconText>
-            </Grid>
-          </Grid>
-        </AwareAppsContainer>
+      {loadingPage ? (
+        <></>
+      ) : (
+        <>
+          <Header onClick={navBack}>
+            <Link style={{ textDecoration: 'none' }} to='/homepage'>
+              <NavTitle title='Client Details' showArrowBack={true} />
+            </Link>
+            <SearchBar />
+            <Spacer />
+            <NameAvatar />
+          </Header>
+          <SubContainer>
+            {/* AWARE Icon on the right */}
+            <AwareAppsContainer>
+              <SectionTitle title={'AWARE Information'} />
+              <Grid
+                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                container
+                rowSpacing={3}
+                direction='row'
+                justifyContent='flex-start'
+                alignItems='baseline'
+              >
+                <Grid onClick={() => selected('Applications')} item xs={2}>
+                  <IconText curSelected={curSelected} name='Applications'>
+                    <PhonelinkIcon sx={{ fontSize: 80 }} />
+                    <AppName>Applications</AppName>
+                  </IconText>
+                </Grid>
+                <Grid item onClick={() => selected('Communication')} xs={2}>
+                  <IconText curSelected={curSelected} name='Communication'>
+                    <ChatRoundedIcon sx={{ fontSize: 80 }} />
+                    <AppName>Communication</AppName>
+                  </IconText>
+                </Grid>
+                <Grid item onClick={() => selected('Locations')} xs={2}>
+                  <IconText curSelected={curSelected} name='Locations'>
+                    <LocationOnRoundedIcon sx={{ fontSize: 80 }} />
+                    <AppName>Locations</AppName>
+                  </IconText>
+                </Grid>
+                <Grid item onClick={() => selected('Screen')} xs={2}>
+                  <IconText curSelected={curSelected} name='Screen'>
+                    <AccessTimeFilledRoundedIcon sx={{ fontSize: 80 }} />
+                    <AppName>Screen</AppName>
+                  </IconText>
+                </Grid>
+                <Grid item onClick={() => selected('Twitter')} xs={2}>
+                  <IconText curSelected={curSelected} name='Twitter'>
+                    <TwitterIcon sx={{ fontSize: 80 }} />
+                    <AppName>Twitter</AppName>
+                  </IconText>
+                </Grid>
+              </Grid>
+            </AwareAppsContainer>
 
-        {chartToShow}
-      </SubContainer>
-      </>}
+            {chartToShow}
+          </SubContainer>
+        </>
+      )}
     </MainContainer>
   );
 }

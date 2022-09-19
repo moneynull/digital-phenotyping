@@ -15,7 +15,7 @@ class ApplicationsForeground(models.Model):
     package_name = models.TextField(blank=True, null=True)
     application_name = models.TextField(blank=True, null=True)
     is_system_app = models.IntegerField(blank=True, null=True)
-    application_category = models.TextField(blank=True, null=True)
+    category = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
