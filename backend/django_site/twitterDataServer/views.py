@@ -27,6 +27,14 @@ from django_apscheduler.jobstores import DjangoJobStore, register_events, regist
 import time
 
 # Create your views here.
+
+def set_res(success_tag, return_data):
+    res = {
+        'success': success_tag,
+        'data': return_data
+    }
+    return res
+
 def extract_twitter_keywords(request):
     if request.method != 'POST':
         return HttpResponseBadRequest
@@ -35,17 +43,15 @@ def extract_twitter_keywords(request):
     twitter_id = models.TbClient.objects.filter(uid=uid).values('twitter_id_int')
 
     if len(twitter_id) == 0:
-        return HttpResponse(json.dumps("twitter id of this user not exists!", cls=DjangoJSONEncoder),
-                            content_type='application/json')
+        res = set_res(False, "twitter id of this user not exists!")
+        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
 
     records = models.TwitterWordCloud.objects\
         .filter(twitter_id=twitter_id[0]['twitter_id_int']).values_list('word', 'occurrence')
 
-    res = {
-        'success': True,
-        'data': dict(list(records))
-    }
+    res = set_res(True, dict(list(records)))
+
     return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
 def extract_twitter_hashtags(request):
@@ -56,7 +62,8 @@ def extract_twitter_hashtags(request):
     twitter_id = models.TbClient.objects.filter(uid=uid).values('twitter_id_int')
 
     if len(twitter_id) == 0:
-        return HttpResponse(json.dumps("twitter id of this user not exists!", cls=DjangoJSONEncoder),
+        res = set_res(False, "twitter id of this user not exists!")
+        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder),
                             content_type='application/json')
 
 
@@ -67,11 +74,35 @@ def extract_twitter_hashtags(request):
 
     sorted_return_data = dict(sorted(unsorted_return_data.items(), key=lambda item: item[1], reverse=True))
 
-    res = {
-        'success': True,
-        'data': sorted_return_data
-    }
+    res = set_res(True, sorted_return_data)
+
     return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+
+
+def extract_twitter_topics(request):
+
+    if request.method != 'POST':
+        return HttpResponseBadRequest
+    req = json.loads(request.body.decode().replace("'", "\""))
+    uid = req.get('uid')
+    twitter_id = models.TbClient.objects.filter(uid=uid).values('twitter_id_int')
+
+    if len(twitter_id) == 0:
+        res = set_res(False, "twitter id of this user not exists!")
+        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder),
+                            content_type='application/json')
+
+    records = models.TwitterTopics.objects\
+        .filter(twitter_id_int=twitter_id[0]['twitter_id_int']).values_list('topic', 'occurrence')
+
+    unsorted_return_data = dict(list(records))
+
+    sorted_return_data = dict(sorted(unsorted_return_data.items(), key=lambda item: item[1], reverse=True))
+
+    res = set_res(True, sorted_return_data)
+
+    return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+
 
 def store_hashtag(id, hashtag_dict):
     
@@ -127,6 +158,34 @@ def store_word_cloud(id, word_cloud_dict):
     except:
         raise Http404
 
+
+def store_context_annotations(id, annotations_dict):
+    
+    try:
+        if models.TwitterTopics.objects.filter(twitter_id_int=id).exists():
+            for topic, occurrence in annotations_dict.items():
+                if models.TwitterTopics.objects.filter(twitter_id_int=id,topic=topic).exists():
+                    record = models.TwitterTopics.objects.get(twitter_id_int=id,topic=topic)
+                    record.occurrence = record.occurrence + occurrence
+                    record.save()
+                else:
+                    models.TwitterTopics.objects.create(
+                        twitter_id_int=id,
+                        topic=topic,
+                        occurrence=occurrence
+                    )
+        else:
+            for topic,occurrence in annotations_dict.items():
+                models.TwitterTopics.objects.create(
+                    twitter_id_int=id,
+                    topic=topic,
+                    occurrence=occurrence
+                )
+                
+    except:
+        raise Http404
+
+
 def process_twitter_data(request):
     if request.method != 'POST':
         return HttpResponseBadRequest
@@ -136,10 +195,7 @@ def process_twitter_data(request):
     twitter_id_int_result = models.TbClient.objects.filter(uid=uid).values("twitter_id_int")
 
     if len(twitter_id_int_result) == 0:
-        res = {
-            'success': False,
-            'data': 'User does not exists'
-        }
+        res = set_res(False, 'User does not exists')
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
     else:
         twitter_id_int = twitter_id_int_result[0]["twitter_id_int"]
@@ -153,14 +209,26 @@ def process_twitter_data(request):
     # auth = tweepy.OAuthHandler(tw_cbd_credentials.consumer_key, tw_cbd_credentials.consumer_secret)
     # api = tweepy.API(auth)
     hashtag_dict = {}
+    context_annotations_dict = {}
     all_tweets = []
 
     for tweet in tweepy.Paginator(client.get_users_tweets,\
-        id=twitter_id_int, tweet_fields=['entities']).flatten(limit=100):
+        id=twitter_id_int, tweet_fields=['entities','context_annotations']).flatten(limit=100):
         all_tweets.append(tweet.text)
         for tag, values in tweet.data.items():
-            if tag == 'entities':
+            if tag == 'context_annotations':
+                for item in values:
+                    for key, value in item.items():
+                        if key == 'entity':
+                            topic = value['name']
+                            if topic not in context_annotations_dict:
+                                context_annotations_dict[topic] = 1
+                            else:
+                                context_annotations_dict[topic] += 1
+                    
+            elif tag == 'entities':
                 for key, value in values.items():
+                    print(key)
                     if key == 'hashtags':
                         for hashtag in value:
                             hashtag_lower = hashtag['tag'].lower()
@@ -191,13 +259,11 @@ def process_twitter_data(request):
 
     store_hashtag(twitter_id_int, hashtag_dict)
     store_word_cloud(twitter_id_int, dict_counts_rsw_nc)
+    store_context_annotations(twitter_id_int, context_annotations_dict)
 
-    result_list = [hashtag_dict, dict_counts_rsw_nc]
+    result_list = [hashtag_dict, dict_counts_rsw_nc, context_annotations_dict]
 
-    res = {
-        'success': True,
-        'data': result_list
-    }
+    res = set_res(True, result_list)
 
     return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
