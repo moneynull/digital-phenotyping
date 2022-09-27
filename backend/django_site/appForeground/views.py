@@ -1,6 +1,8 @@
 import time
 from http.client import BAD_REQUEST
 import json
+
+from django.db.models import Count
 from django.http import Http404
 from google_play_scraper.exceptions import NotFoundError
 from rest_framework.permissions import AllowAny
@@ -38,10 +40,10 @@ class AppForeground(APIView):
         # date_to = 1641675274282
 
         # find corresponding device id
-        if request.method == 'POST':
-            uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
-            date_from = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
-            date_to = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        date_from = req.get('startDate')
+        date_to = req.get('endDate')
 
         device_id = TbClient.objects.filter(uid=uid).values("aware_device_id")
 
@@ -107,7 +109,32 @@ class AppForeground(APIView):
 
 
 class AppCategory(APIView):
+    @staticmethod
+    def post(request):
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        start_date = req.get('startDate')
+        end_date = req.get('endDate')
+
+        device_id = TbClient.objects.filter(uid=uid).values("aware_device_id")
+
+        category_result = ApplicationsForeground.objects.all(). \
+            filter(device_id__in=device_id, timestamp__gte=start_date, timestamp__lte=end_date) \
+            .values_list("category").annotate(ccount=Count(1))
+
+        c_dict = dict(list(category_result))
+
+        res_dic = {
+            "category": c_dict.keys(),
+            "count": c_dict.values()
+        }
+
+        return Response(res_dic)
+
+
+class ScrapeAppCategory(APIView):
     permission_classes = [AllowAny]
+
     @staticmethod
     def get(request):
         # dic not null->update null

@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     # 'django_google_maps',
     'appForeground',
     'corsheaders',
-    'dataServer',
+    'callServer',
     'sms',
     'rest_framework',
     'rest_framework_simplejwt',

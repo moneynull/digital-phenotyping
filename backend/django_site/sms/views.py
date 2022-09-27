@@ -1,3 +1,5 @@
+from django.db.models import Count
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from sms import models
@@ -27,21 +29,10 @@ class QuerySMS(APIView):
             return Response(uid)
 
         device_result = models.TbClient.objects.filter(uid=uid).values("aware_device_id")
-        # print(device_result)
-        # print(len(device_result))
+
         if len(device_result) == 0:
             return Response(device_result)
         device_id = device_result[0]["aware_device_id"]
-
-        # today_timestamp = "1642056676314"
-        # today = datetime.datetime.fromtimestamp(int(today_timestamp)/1000)
-
-        # today = datetime.datetime.now()
-
-        # zero_today = today - datetime.timedelta(hours=today.hour, minutes=today.minute, seconds=today.second,microseconds=today.microsecond)
-
-        # start_date = zero_today - datetime.timedelta(days=5)
-        # end_date = zero_today
 
         # date and timestamp
         start_date = datetime.datetime.fromtimestamp(int(start_date_timestamp) / 1000)
@@ -110,3 +101,23 @@ class QuerySMS(APIView):
             result_array[message_type_list[n] - 1][j] = result_array[message_type_list[n] - 1][j] + 1
 
         return Response(result_array)
+
+
+class smsTrace(APIView):
+    permission_classes = [AllowAny]
+    @staticmethod
+    def post(request):
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        start_date = req.get('startDate')
+        end_date = req.get('endDate')
+
+        device_id = models.TbClient.objects.filter(uid=uid).values("aware_device_id")
+
+        trace_result = models.Messages.objects.all()\
+            .filter(device_id__in=device_id, timestamp__gte=start_date, timestamp__lte=end_date)\
+            .values_list("trace").annotate(tcount=Count(1)).order_by("-tcount")
+
+        trace_dict=dict(list(trace_result))
+
+        return Response(trace_dict)
