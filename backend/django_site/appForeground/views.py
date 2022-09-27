@@ -1,6 +1,8 @@
 import time
 from http.client import BAD_REQUEST
 import json
+
+from django.db.models import Count
 from django.http import Http404
 from google_play_scraper.exceptions import NotFoundError
 from rest_framework.permissions import AllowAny
@@ -38,10 +40,10 @@ class AppForeground(APIView):
         # date_to = 1641675274282
 
         # find corresponding device id
-        if request.method == 'POST':
-            uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
-            date_from = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
-            date_to = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        date_from = req.get('startDate')
+        date_to = req.get('endDate')
 
         device_id = TbClient.objects.filter(uid=uid).values("aware_device_id")
 
@@ -109,35 +111,25 @@ class AppForeground(APIView):
 class AppCategory(APIView):
     @staticmethod
     def post(request):
-        uid = json.loads(request.body.decode().replace("'", "\"")).get('uid')
-        start_date = json.loads(request.body.decode().replace("'", "\"")).get('startDate')
-        end_date = json.loads(request.body.decode().replace("'", "\"")).get('endDate')
+        req = json.loads(request.body.decode().replace("'", "\""))
+        uid = req.get('uid')
+        start_date = req.get('startDate')
+        end_date = req.get('endDate')
 
         device_id = TbClient.objects.filter(uid=uid).values("aware_device_id")
 
-        category_result = ApplicationsForeground.objects.all().exclude(timestamp__lte=start_date).exclude(
-            timestamp__gte=end_date).filter(device_id__in=device_id).values("category")
+        category_result = ApplicationsForeground.objects.all(). \
+            filter(device_id__in=device_id, timestamp__gte=start_date, timestamp__lte=end_date) \
+            .values_list("category").annotate(ccount=Count(1))
 
-        # extract and construct category set
-        category_name = []
-        for r in category_result:
-            if r['category'] is None:
-                r['category'] = "Unknown"
-            category_name.append(r['category'])
-        category_set = set(category_name)
+        c_dict = dict(list(category_result))
 
-        # init and construct category dict
-        category_count = []
-        for i in range(0, len(category_set)):
-            category_count.append(0)
+        res_dic = {
+            "category": c_dict.keys(),
+            "count": c_dict.values()
+        }
 
-        category_dic = dict(zip(category_set, category_count))
-
-        # count category
-        for r in category_result:
-            category_dic[r['category']] = category_dic[r['category']] + 1
-
-        return Response([category_dic.keys(), category_dic.values()])
+        return Response(res_dic)
 
 
 class ScrapeAppCategory(APIView):

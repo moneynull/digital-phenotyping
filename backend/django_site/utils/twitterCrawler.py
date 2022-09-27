@@ -2,7 +2,7 @@ import itertools
 import collections
 
 from django.http import Http404
-from dataServer import models
+from callServer import models
 
 from utils import tw_cbd_credentials
 import tweepy as tw

@@ -24,7 +24,7 @@ from userServer.views import MyTokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dataServer/', include("dataServer.urls")),
+    path('callServer/', include("callServer.urls")),
     path('sms/', include("sms.urls")),
     path('appForeground/', include('appForeground.urls')),
     path('locationServer/', include('locationServer.urls')),
