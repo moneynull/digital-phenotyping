@@ -118,6 +118,9 @@ class smsTrace(APIView):
             .filter(device_id__in=device_id, timestamp__gte=start_date, timestamp__lte=end_date)\
             .values_list("trace").annotate(tcount=Count(1)).order_by("-tcount")
 
-        trace_dict=dict(list(trace_result))
+        trace_dict = {
+            "trace": dict(list(trace_result)).keys(),
+            "count": dict(list(trace_result)).values()
+        }
 
         return Response(trace_dict)
