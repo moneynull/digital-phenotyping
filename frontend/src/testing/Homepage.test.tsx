@@ -10,8 +10,8 @@ test('logout button test', async () => {
     </MemoryRouter>
   );
 
-  expect(screen.findByRole('button', { name: 'Log Out' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Log Out' }));
-  expect(screen.findByText('Loginpage'));
-  expect(screen.findByRole('button', { name: 'Login' }));
+  expect(screen.findByTestId('SupportAgentIcon'));
+  fireEvent.click(screen.getByTestId('SupportAgentIcon'));
+
+  expect(screen.findByRole('login'));
 });

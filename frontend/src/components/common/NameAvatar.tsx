@@ -25,8 +25,8 @@ function NameAvatar() {
     let userInfo = sessionStorage.getItem('userInfo');
     if (userInfo !== null) {
       userInfo = JSON.parse(userInfo);
-    }else{
-      return
+    } else {
+      return;
     }
     //@ts-ignore
     let name = userInfo!.user_info.first_name + ' ' + userInfo!.user_info.last_name;
@@ -39,6 +39,7 @@ function NameAvatar() {
         <SupportAgentIcon sx={{ fontSize: 50 }} />
       </Avatar>
       <Menu
+        role='avatar'
         id='basic-menu'
         anchorEl={anchorEl}
         open={open}
@@ -47,7 +48,7 @@ function NameAvatar() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={logout}>
+        <MenuItem role='logout' onClick={logout}>
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
@@ -73,7 +74,7 @@ const Name = styled.div`
   font-weight: 700;
   font-family: 'Open Sans', sans-serif;
   color: ${COLORS.text};
-  @media screen and (max-width: 1300px){
+  @media screen and (max-width: 1300px) {
     font-size: 23px;
   }
 `;

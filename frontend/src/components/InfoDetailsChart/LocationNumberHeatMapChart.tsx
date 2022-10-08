@@ -1,5 +1,5 @@
 import axios from 'axios';
-import URL from '../../constant/Endpoint';
+import { BASE_URL } from '../../constant/Endpoint';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
@@ -67,7 +67,7 @@ function LocationNumberHeatMapChart(props: any) {
 
     axios
       .post(
-        URL.BASE_URL + '/locationServer/NumbersOfLocation',
+        BASE_URL + '/locationServer/NumbersOfLocation',
         {
           uid: props.uid,
           startDate: startDateVal,

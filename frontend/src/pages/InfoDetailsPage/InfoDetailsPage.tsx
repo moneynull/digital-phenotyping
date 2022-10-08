@@ -26,8 +26,10 @@ import LocationNumberBarChart from '../../components/InfoDetailsChart/LocationNu
 import LocationMap from '../../components/InfoDetailsChart/LocationMap';
 import ScreenUsageHeatMap from '../../components/InfoDetailsChart/ScreenUsageHeatMap';
 import UpdateInfo from '../../components/InfoDetailsChart/UpdateInfo';
-import TwitterHashtagChart from '../../components/InfoDetailsChart/TwitterHashtagChart';
 import TwitterHashtagBarchart from '../../components/InfoDetailsChart/TwitterHashtagBarchart';
+import TwitterTopicChart from '../../components/InfoDetailsChart/TwitterTopicChart';
+import CallsTraceChart from '../../components/InfoDetailsChart/CallsTraceChart';
+import SmsTraceChart from '../../components/InfoDetailsChart/SmsTraceChart';
 
 interface iResData {
   age: number;
@@ -85,14 +87,24 @@ function InfoDetailsPage() {
 
   // chart to show when clicking communication button
   const comChart = (
-    <ChartContainer>
-      <CardContainer>
-        <SmsUsageChart uid={patientId} />
-      </CardContainer>
-      <CardContainer>
-        <CallsUsageChart uid={patientId} />
-      </CardContainer>
-    </ChartContainer>
+    <>
+      <ChartContainer>
+        <CardContainer>
+          <SmsUsageChart uid={patientId} />
+        </CardContainer>
+        <CardContainer>
+          <CallsUsageChart uid={patientId} />
+        </CardContainer>
+      </ChartContainer>
+      <ChartContainer>
+        <CardContainer>
+          <SmsTraceChart uid={patientId} />
+        </CardContainer>
+        <CardContainer>
+          <CallsTraceChart uid={patientId} />
+        </CardContainer>
+      </ChartContainer>
+    </>
   );
 
   // chart to show when clicking locations button
@@ -135,19 +147,19 @@ function InfoDetailsPage() {
 
   const tagCloud = (
     <>
-    <ChartContainer>
-      <CardContainer>
-        <KeywordCloud uid={patientId} />
-      </CardContainer>
-      <CardContainer>
-        <TwitterHashtagChart uid={patientId} />
-      </CardContainer>
-    </ChartContainer>
-    <ChartContainer>
-      <CardContainer>
-        <TwitterHashtagBarchart uid={patientId} />
-      </CardContainer>
-    </ChartContainer>
+      <ChartContainer>
+        <CardContainer>
+          <KeywordCloud uid={patientId} />
+        </CardContainer>
+        <CardContainer>
+          <TwitterHashtagBarchart uid={patientId} />
+        </CardContainer>
+      </ChartContainer>
+      <ChartContainer>
+        <CardContainer>
+          <TwitterTopicChart uid={patientId} />
+        </CardContainer>
+      </ChartContainer>
     </>
   );
 

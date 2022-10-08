@@ -4,7 +4,7 @@ import COLORS from '../../constant/Colors';
 import { Log } from '../common/Logger';
 
 import axios from 'axios';
-import URL from '../../constant/Endpoint';
+import { BASE_URL } from '../../constant/Endpoint';
 import styled from 'styled-components';
 import DateRangeSelector from '../common/DateRangeSelector';
 const dummySMSData = {
@@ -60,7 +60,7 @@ const dummySMSData = {
 function SmsUsageChart(props: any) {
   const [options, setOptions] = useState(dummySMSData.options);
   const [series, setSeries] = useState(dummySMSData.series);
-
+  const [hasData, setHasData] = useState(false);
   const [startDateVal, setStartDateVal] = useState(1641634738549);
   const [endDateVal, setEndDateVal] = useState(1641901876549);
 
@@ -72,7 +72,7 @@ function SmsUsageChart(props: any) {
     Log('SMS fetch');
     axios
       .post(
-        URL.BASE_URL + '/sms/',
+        BASE_URL + '/sms/',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -105,6 +105,7 @@ function SmsUsageChart(props: any) {
         if (data.length === 0) {
           setOptions(dummySMSData.options);
           setSeries(dummySMSData.series);
+          setHasData(false);
         } else {
           setOptions((pre) => ({
             ...pre,
@@ -116,6 +117,7 @@ function SmsUsageChart(props: any) {
           }));
           //@ts-ignore
           setSeries([...newSeries]);
+          setHasData(true);
         }
       });
   };
@@ -128,14 +130,20 @@ function SmsUsageChart(props: any) {
       <DateWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
       </DateWrapper>
-      <Chart
-        //@ts-ignore
-        options={options}
-        series={series}
-        type='bar'
-        width='600'
-        height='400'
-      />
+      {hasData ? (
+        <Chart
+          //@ts-ignore
+          options={options}
+          series={series}
+          type='bar'
+          width='600'
+          height='400'
+        />
+      ) : (
+        <div>
+          SMS Usage <br></br>No data available.
+        </div>
+      )}
     </Container>
   );
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import URL from '../../constant/Endpoint';
+import { BASE_URL } from '../../constant/Endpoint';
 import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
@@ -61,7 +61,7 @@ function CallsUsageChart(props: any) {
 
     axios
       .post(
-        URL.BASE_URL + '/dataServer/calls',
+        BASE_URL + '/callServer/calls',
         {
           uid: props.uid,
           startDate: startDateVal,

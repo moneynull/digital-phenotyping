@@ -9,7 +9,7 @@ import Background from '../../assets/loginBackground.png';
 import COLORS from '../../constant/Colors';
 import { Log } from '../../components/common/Logger';
 import axios from 'axios';
-import URL from '../../constant/Endpoint';
+import { BASE_URL } from '../../constant/Endpoint';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { LoadingButton } from '@mui/lab';
@@ -60,7 +60,7 @@ export default function Loginpage() {
     }
     setShowLoginLoading(true);
     axios
-      .post(URL.BASE_URL + '/login/', {
+      .post(BASE_URL + '/login/', {
         username: account,
         password: password,
       })
@@ -69,6 +69,7 @@ export default function Loginpage() {
         if (response.data.access !== undefined) {
           setShowLoginLoading(false);
           sessionStorage.setItem('userInfo', JSON.stringify(response.data));
+          setPassword('');
           navigate('/homepage');
         }
       })
@@ -88,7 +89,7 @@ export default function Loginpage() {
           <EmailIcon sx={{ fontSize: 33 }} />
           <Wrapper>
             <Title>Email</Title>
-            <TextInput onChange={changeAccount} value={account} />
+            <TextInput role='account' onChange={changeAccount} value={account} />
           </Wrapper>
         </TextInputContainer>
         <TextInputContainer>
@@ -96,6 +97,7 @@ export default function Loginpage() {
           <Wrapper>
             <Title>Password</Title>
             <TextInput
+              role='password'
               onKeyDown={handleSubmit}
               onChange={changePassword}
               value={password}
@@ -109,7 +111,13 @@ export default function Loginpage() {
           )}
         </TextInputContainer>
         <LoginButtonContainer>
-          <LoginBtn color='info' loading={showLoginLoading} variant='contained' onClick={login}>
+          <LoginBtn
+            role='login'
+            color='info'
+            loading={showLoginLoading}
+            variant='contained'
+            onClick={login}
+          >
             Login
           </LoginBtn>
         </LoginButtonContainer>

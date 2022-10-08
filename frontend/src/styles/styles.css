@@ -1,0 +1,87 @@
+:root {
+  --primary: #5e5ef5;
+  --white: white;
+  --black: black;
+  --light-background: #eff3f9;
+  --text: #3e3e3e;
+  --text-2: #263238;
+  --text-light-grey: #585858;
+  --shadow: #83838343;
+  --light-grey: #979797;
+  --text-field: #b8b8fa88;
+  --login-btn: #6258dc;
+  --red: red;
+  --light-purple: #7a7cff;
+  --twitter-blue: #2490e8;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: scroll;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+.App {
+  text-align: center;
+}
+body {
+  background-color: #eff3f9;
+}
+a:link {
+  text-decoration: none;
+}
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+/*
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+*/
+
+.App-header {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.data-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.datepicker-title {
+  font-size: 15px;
+  padding-right: 30px;
+  color: var(--text);
+}

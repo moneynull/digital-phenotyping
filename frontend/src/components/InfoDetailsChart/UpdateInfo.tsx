@@ -11,7 +11,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import axios from 'axios';
-import URL from '../../constant/Endpoint';
+import { BASE_URL } from '../../constant/Endpoint';
 import { Log } from '../../components/common/Logger';
 import {
   Snackbar,
@@ -97,7 +97,7 @@ function UpdateInfo(props: any) {
   const deleteClient = () => {
     axios
       .post(
-        URL.BASE_URL + '/userServer/DeleteClient',
+        BASE_URL + '/userServer/DeleteClient',
         {
           uid: props.clientInfo.uid,
         },
@@ -143,7 +143,7 @@ function UpdateInfo(props: any) {
 
     axios
       .post(
-        URL.BASE_URL + '/userServer/UpdateClientProfile',
+        BASE_URL + '/userServer/UpdateClientProfile',
         {
           uid: props.clientInfo.uid,
           clinicianId: clinicianInfo.user_info.id,

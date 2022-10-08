@@ -1,5 +1,5 @@
 import axios from 'axios';
-import URL from '../../constant/Endpoint';
+import { BASE_URL } from '../../constant/Endpoint';
 import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
@@ -13,6 +13,9 @@ const locationNumberData = {
     chart: {
       height: 350,
       type: 'bar',
+      animations: {
+        enabled: false,
+      },
     },
     colors: ['#008FFB', '#00E396'],
 
@@ -65,7 +68,7 @@ function LocationNumberBarChart(props: any) {
 
     axios
       .post(
-        URL.BASE_URL + '/locationServer/NumbersOfLocation',
+        BASE_URL + '/locationServer/NumbersOfLocation',
         {
           uid: props.uid,
           startDate: startDateVal,
@@ -98,6 +101,7 @@ function LocationNumberBarChart(props: any) {
         } else {
           setOptions((pre) => ({
             ...pre,
+            ...locationNumberData.options,
             xaxis: {
               //@ts-ignore
               ...pre.xaxis,

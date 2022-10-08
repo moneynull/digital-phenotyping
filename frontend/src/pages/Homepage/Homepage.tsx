@@ -13,7 +13,7 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import COLORS from '../../constant/Colors';
 import axios from 'axios';
-import URL from '../../constant/Endpoint';
+import { BASE_URL } from '../../constant/Endpoint';
 import { Log } from '../../components/common/Logger';
 
 interface iResData {
@@ -57,7 +57,7 @@ export default function Homepage() {
     let clientsList: any[] = [];
     axios
       .post(
-        URL.BASE_URL + '/userServer/ClientInfoList',
+        BASE_URL + '/userServer/ClientInfoList',
         {
           id: clinicianId,
         },

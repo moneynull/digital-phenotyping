@@ -1,5 +1,5 @@
 import axios from 'axios';
-import URL from '../../constant/Endpoint';
+import { BASE_URL } from '../../constant/Endpoint';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styled from 'styled-components';
@@ -88,7 +88,7 @@ function UnlockTimesChart(props: any) {
 
     axios
       .post(
-        URL.BASE_URL + '/screenServer/ScreenUnlocked',
+        BASE_URL + '/screenServer/ScreenUnlocked',
         {
           uid: props.uid,
           startDate: startDateVal,

@@ -1,15 +1,12 @@
-import { useEffect, useState } from 'react';
-import Chart from 'react-apexcharts';
-import styled from 'styled-components';
-import COLORS from '../../constant/Colors';
-import { Log } from '../common/Logger';
 import axios from 'axios';
 import { BASE_URL } from '../../constant/Endpoint';
+import { useEffect, useState } from 'react';
+import Chart from 'react-apexcharts';
+import COLORS from '../../constant/Colors';
+import DateRangeSelector from '../common/DateRangeSelector';
 
-// dummy data for app time usage
-const colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#00D9E9'];
-
-const dummyHashtagChart = {
+// dummy data for Calls trace
+const dummyCallsTrace = {
   options: {
     series: [{ data: [] as any[] }],
     chart: {
@@ -39,7 +36,7 @@ const dummyHashtagChart = {
       },
     },
     title: {
-      text: 'Twitter hashtags & Occurancy frequencies',
+      text: 'SMS Trace',
       align: 'center',
       margin: 10,
       offsetX: 0,
@@ -51,24 +48,27 @@ const dummyHashtagChart = {
         color: `${COLORS.text_2}`,
       },
     },
-    fill: {
-      colors: colors,
-    },
   },
 };
-function TwitterHashtagBarchart(props: any) {
+
+function SmsTraceChart(props: any) {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([] as any[]);
   const [hasData, setHasData] = useState(false);
+  const [startDateVal, setStartDateVal] = useState(1641634738549);
+  const [endDateVal, setEndDateVal] = useState(1641901876549);
 
   const fetchData = () => {
     // @ts-ignore
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
     axios
       .post(
-        BASE_URL + '/twitterDataServer/twitterHashtag',
+        BASE_URL + '/sms/smsTrace',
         {
           uid: props.uid,
+          startDate: startDateVal,
+          endDate: endDateVal,
         },
         {
           headers: {
@@ -77,62 +77,53 @@ function TwitterHashtagBarchart(props: any) {
         }
       )
       .then((response) => {
-        Log('Fetched hashtag barchart data..', response.data);
-        let chart = dummyHashtagChart;
-        let resData = response.data.data;
-        if (Object.keys(response.data.data).length === 0) {
+        console.log('Fetched sms trace data..', response.data);
+        let res = dummyCallsTrace;
+        let count = response.data.count;
+        let trace = response.data.trace;
+        if (count.length === 0) {
           setHasData(false);
         } else {
-          let categories = [] as any[];
-          let newSeries = [];
-          for (const [key, val] of Object.entries<any>(resData)) {
-            categories.push(key);
-            newSeries.push(val);
-          }
-          chart.options.series = [{ data: newSeries }];
-          chart.options.xaxis.categories = categories;
-
           setOptions((pre) => ({
             ...pre,
-            ...dummyHashtagChart.options,
+            ...dummyCallsTrace.options,
             xaxis: {
               //@ts-ignore
               ...pre.xaxis,
-              categories: categories,
+              categories: trace,
             },
           }));
           //@ts-ignore
-          setSeries([...[{ data: newSeries }]]);
+          setSeries([...[{ data: count }]]);
           setHasData(true);
         }
       });
   };
   useEffect(() => {
-    Log('treemap chart...');
     fetchData();
-    //setBarState(dummyChartData);
-  }, []);
+  }, [startDateVal]);
 
   return (
-    <Container>
+    <div className='container'>
+      <div className='data-wrapper'>
+        <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
+      </div>
       {hasData ? (
-        <Chart options={options} series={series} type='bar' width='600' height='400' />
+        <Chart
+          //@ts-ignore
+          options={options}
+          series={series}
+          type='bar'
+          width='650'
+          height='400'
+        />
       ) : (
         <div>
-          Twitter Hashtag <br></br>No data available.
+          SMS Trace <br></br>No data available.
         </div>
       )}
-    </Container>
+    </div>
   );
 }
 
-export default TwitterHashtagBarchart;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const DateWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
+export default SmsTraceChart;

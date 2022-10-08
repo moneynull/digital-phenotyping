@@ -1,5 +1,5 @@
 import axios from 'axios';
-import URL from '../../constant/Endpoint';
+import { BASE_URL } from '../../constant/Endpoint';
 import { useEffect, useState } from 'react';
 import ReactWordcloud from 'react-wordcloud';
 
@@ -25,7 +25,7 @@ function KeywordCloud(props: any) {
     console.log('UID', props.uid);
     axios
       .post(
-        URL.BASE_URL + '/twitterDataServer/twitterWordCloud',
+        BASE_URL + '/twitterDataServer/twitterWordCloud',
         {
           uid: props.uid,
         },
@@ -52,7 +52,17 @@ function KeywordCloud(props: any) {
         setKeywords(resArr);
       });
   };
-  return <ReactWordcloud options={options} words={keywords} />;
+  return (
+    <>
+      {keywords.length === 0 ? (
+        <div>
+          Twitter keyword <br></br>No data available.
+        </div>
+      ) : (
+        <ReactWordcloud options={options} words={keywords} />
+      )}
+    </>
+  );
 }
 
 export default KeywordCloud;

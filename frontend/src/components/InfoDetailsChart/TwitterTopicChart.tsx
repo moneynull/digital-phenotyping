@@ -6,9 +6,6 @@ import { Log } from '../common/Logger';
 import axios from 'axios';
 import { BASE_URL } from '../../constant/Endpoint';
 
-// dummy data for app time usage
-const colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#00D9E9'];
-
 const dummyHashtagChart = {
   options: {
     series: [{ data: [] as any[] }],
@@ -51,14 +48,11 @@ const dummyHashtagChart = {
         color: `${COLORS.text_2}`,
       },
     },
-    fill: {
-      colors: colors,
-    },
   },
 };
-function TwitterHashtagBarchart(props: any) {
+function TwitterTopicChart(props: any) {
   const [options, setOptions] = useState({});
-  const [series, setSeries] = useState([] as any[]);
+  const [series, setSeries] = useState([]);
   const [hasData, setHasData] = useState(false);
 
   const fetchData = () => {
@@ -66,7 +60,7 @@ function TwitterHashtagBarchart(props: any) {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     axios
       .post(
-        BASE_URL + '/twitterDataServer/twitterHashtag',
+        BASE_URL + '/twitterDataServer/twitterTopics',
         {
           uid: props.uid,
         },
@@ -77,9 +71,10 @@ function TwitterHashtagBarchart(props: any) {
         }
       )
       .then((response) => {
-        Log('Fetched hashtag barchart data..', response.data);
+        Log('Fetched twitter topic data..', response.data);
         let chart = dummyHashtagChart;
         let resData = response.data.data;
+
         if (Object.keys(response.data.data).length === 0) {
           setHasData(false);
         } else {
@@ -110,23 +105,22 @@ function TwitterHashtagBarchart(props: any) {
   useEffect(() => {
     Log('treemap chart...');
     fetchData();
-    //setBarState(dummyChartData);
   }, []);
 
   return (
     <Container>
       {hasData ? (
-        <Chart options={options} series={series} type='bar' width='600' height='400' />
+        <Chart options={options} series={series} type='bar' width='600' height='900' />
       ) : (
         <div>
-          Twitter Hashtag <br></br>No data available.
+          Twitter Topics <br></br>No data available.
         </div>
       )}
     </Container>
   );
 }
 
-export default TwitterHashtagBarchart;
+export default TwitterTopicChart;
 const Container = styled.div`
   display: flex;
   flex-direction: column;

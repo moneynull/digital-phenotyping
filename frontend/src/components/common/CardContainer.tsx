@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
 
-export default function CardContainer(props: any) {
+
+export default function CardContainer(props: ComponentProps) {
   return <Container>{props.children}</Container>;
 }
 const Container = styled.div`
