@@ -30,10 +30,11 @@ except Exception as e:
 def twitter_data():
 
     twitter_id_int_result = models.TbClient.objects.values("twitter_id_int")
+    env = environ.Env()
 
     now = datetime.datetime.now()
 
-    start_date = now - datetime.timedelta(hours = int(tw_cbd_credentials.twitter_schedule))
+    start_date = now - datetime.timedelta(hours = int(env('TWITTER_SCHEDULE')))
 
     for i in twitter_id_int_result:
         client = tweepy.Client(bearer_token=tw_cbd_credentials.bearer_token)

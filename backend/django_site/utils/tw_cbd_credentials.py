@@ -13,5 +13,3 @@ consumer_secret = env('consumer_secret')
 access_token = env('access_token')
 access_token_secret = env('access_token_secret')
 bearer_token = env('bearer_token')
-
-twitter_schedule = env('TWITTER_SCHEDULE')
