@@ -1,6 +1,8 @@
 
 import environ
 
+import datetime
+
 # use this to run crontasks under the background
 from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
@@ -29,6 +31,10 @@ def twitter_data():
 
     twitter_id_int_result = models.TbClient.objects.values("twitter_id_int")
 
+    now = datetime.datetime.now()
+
+    start_date = now - datetime.timedelta(hours = int(tw_cbd_credentials.twitter_schedule))
+
     for i in twitter_id_int_result:
         client = tweepy.Client(bearer_token=tw_cbd_credentials.bearer_token)
 
@@ -37,7 +43,8 @@ def twitter_data():
         all_tweets = []
 
         for tweet in tweepy.Paginator(client.get_users_tweets, \
-                                      id=i, tweet_fields=['entities','context_annotations']).flatten(limit=100):
+            id=i, start_time=start_date, tweet_fields=['entities','context_annotations'])\
+                .flatten(limit=1000):
             all_tweets.append(tweet.text)
             for tag, values in tweet.data.items():
                 if tag == 'context_annotations':

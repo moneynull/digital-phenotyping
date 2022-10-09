@@ -109,25 +109,14 @@ def store_hashtag(id, hashtag_dict):
     try:
 
         if models.TwitterHashtag.objects.filter(twitter_id_int=id).exists():
-            for hashtag, occurrence in hashtag_dict.items():
-                if models.TwitterHashtag.objects.filter(twitter_id_int=id,hashtag=hashtag).exists():
-                    record = models.TwitterHashtag.objects.get(twitter_id_int=id,hashtag=hashtag)
-                    record.occurrence = record.occurrence + occurrence
-                    record.save()
-                else:
-                    models.TwitterHashtag.objects.create(
-                        twitter_id_int=id,
-                        hashtag=hashtag,
-                        occurrence=occurrence
-                    )
+            models.TwitterHashtag.objects.filter(twitter_id_int=id).delete()
 
-        else:
-            for hashtag,occurrence in hashtag_dict.items():
-                models.TwitterHashtag.objects.create(
-                    twitter_id_int=id,
-                    hashtag=hashtag,
-                    occurrence=occurrence
-                )
+        for hashtag,occurrence in hashtag_dict.items():
+            models.TwitterHashtag.objects.create(
+                twitter_id_int=id,
+                hashtag=hashtag,
+                occurrence=occurrence
+            )
                 
     except:
         raise Http404
@@ -136,24 +125,14 @@ def store_word_cloud(id, word_cloud_dict):
     
     try:
         if models.TwitterWordCloud.objects.filter(twitter_id=id).exists():
-            for word, occurrence in word_cloud_dict.items():
-                if models.TwitterWordCloud.objects.filter(twitter_id=id,word=word).exists():
-                    record = models.TwitterWordCloud.objects.get(twitter_id=id,word=word)
-                    record.occurrence = record.occurrence + occurrence
-                    record.save()
-                else:
-                    models.TwitterWordCloud.objects.create(
-                        twitter_id=id,
-                        word=word,
-                        occurrence=occurrence
-                    )
-        else:
-            for word,occurrence in word_cloud_dict.items():
-                models.TwitterWordCloud.objects.create(
-                    twitter_id=id,
-                    word=word,
-                    occurrence=occurrence
-                )
+            models.TwitterWordCloud.objects.filter(twitter_id=id).delete()
+            
+        for word,occurrence in word_cloud_dict.items():
+            models.TwitterWordCloud.objects.create(
+                twitter_id=id,
+                word=word,
+                occurrence=occurrence
+            )
                 
     except:
         raise Http404
@@ -163,24 +142,14 @@ def store_context_annotations(id, annotations_dict):
     
     try:
         if models.TwitterTopics.objects.filter(twitter_id_int=id).exists():
-            for topic, occurrence in annotations_dict.items():
-                if models.TwitterTopics.objects.filter(twitter_id_int=id,topic=topic).exists():
-                    record = models.TwitterTopics.objects.get(twitter_id_int=id,topic=topic)
-                    record.occurrence = record.occurrence + occurrence
-                    record.save()
-                else:
-                    models.TwitterTopics.objects.create(
-                        twitter_id_int=id,
-                        topic=topic,
-                        occurrence=occurrence
-                    )
-        else:
-            for topic,occurrence in annotations_dict.items():
-                models.TwitterTopics.objects.create(
-                    twitter_id_int=id,
-                    topic=topic,
-                    occurrence=occurrence
-                )
+            models.TwitterTopics.objects.filter(twitter_id_int=id).delete()
+
+        for topic,occurrence in annotations_dict.items():
+            models.TwitterTopics.objects.create(
+                twitter_id_int=id,
+                topic=topic,
+                occurrence=occurrence
+            )
                 
     except:
         raise Http404
@@ -201,6 +170,11 @@ def process_twitter_data(request):
         twitter_id_int = twitter_id_int_result[0]["twitter_id_int"]
     
     client = tweepy.Client(bearer_token=tw_cbd_credentials.bearer_token)
+
+    now = datetime.datetime.now()
+
+    start_date = now - datetime.timedelta(hours = int(tw_cbd_credentials.twitter_schedule))
+
     # twitter_id = client.get_user(username=uid).data.id
 
     # tweets = client.get_users_tweets(id=uid)
@@ -208,12 +182,13 @@ def process_twitter_data(request):
 
     # auth = tweepy.OAuthHandler(tw_cbd_credentials.consumer_key, tw_cbd_credentials.consumer_secret)
     # api = tweepy.API(auth)
+
     hashtag_dict = {}
     context_annotations_dict = {}
     all_tweets = []
 
     for tweet in tweepy.Paginator(client.get_users_tweets,\
-        id=twitter_id_int, tweet_fields=['entities','context_annotations']).flatten(limit=100):
+        id=twitter_id_int, start_time=start_date, tweet_fields=['entities','context_annotations']).flatten(limit=1000):
         all_tweets.append(tweet.text)
         for tag, values in tweet.data.items():
             if tag == 'context_annotations':
@@ -228,7 +203,6 @@ def process_twitter_data(request):
                     
             elif tag == 'entities':
                 for key, value in values.items():
-                    print(key)
                     if key == 'hashtags':
                         for hashtag in value:
                             hashtag_lower = hashtag['tag'].lower()
