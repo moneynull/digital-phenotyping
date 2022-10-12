@@ -109,6 +109,7 @@ class AppForeground(APIView):
 
 
 class AppCategory(APIView):
+    permission_classes = [AllowAny]
     @staticmethod
     def post(request):
         req = json.loads(request.body.decode().replace("'", "\""))
