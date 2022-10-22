@@ -1,14 +1,16 @@
 import axios from 'axios';
-import { BASE_URL } from '../../constant/Endpoint';
 import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import { BASE_URL } from '../../constant/Endpoint';
 import COLORS from '../../constant/Colors';
 import DateRangeSelector from '../common/DateRangeSelector';
+import ChartContainer from '../common/ChartContainer';
+import ChartDataWrapper from '../common/ChartDataWrapper';
 
 // dummy data for Calls trace
 const dummyCallsTrace = {
   options: {
-    series: [{ data: [] as any[] }],
+    series: [{ data: [] as number[] }],
     chart: {
       type: 'bar',
       height: 350,
@@ -24,7 +26,7 @@ const dummyCallsTrace = {
       enabled: true,
     },
     xaxis: {
-      categories: [] as any[],
+      categories: [] as string[],
       title: {
         text: 'Hours of usage',
         style: {
@@ -51,9 +53,9 @@ const dummyCallsTrace = {
   },
 };
 
-function CallsTraceChart(props: any) {
+function CallsTraceChart(props: ChartProps) {
   const [options, setOptions] = useState({});
-  const [series, setSeries] = useState([] as any[]);
+  const [series, setSeries] = useState([] as number[]);
   const [hasData, setHasData] = useState(false);
   const [startDateVal, setStartDateVal] = useState(1641634738549);
   const [endDateVal, setEndDateVal] = useState(1641901876549);
@@ -104,10 +106,10 @@ function CallsTraceChart(props: any) {
   }, [startDateVal]);
 
   return (
-    <div className='container'>
-      <div className='data-wrapper'>
+    <ChartContainer>
+      <ChartDataWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
-      </div>
+      </ChartDataWrapper>
       {hasData ? (
         <Chart
           //@ts-ignore
@@ -122,7 +124,7 @@ function CallsTraceChart(props: any) {
           Calls Trace <br></br>No data available.
         </div>
       )}
-    </div>
+    </ChartContainer>
   );
 }
 

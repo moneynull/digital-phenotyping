@@ -1,14 +1,15 @@
 import axios from 'axios';
-import { BASE_URL } from '../../constant/Endpoint';
 import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import styled from 'styled-components';
+import { BASE_URL } from '../../constant/Endpoint';
 import COLORS from '../../constant/Colors';
 import DateRangeSelector from '../common/DateRangeSelector';
 import { Log } from '../common/Logger';
+import ChartContainer from '../common/ChartContainer';
+import ChartDataWrapper from '../common/ChartDataWrapper';
 
 const locationNumberData = {
-  series: [] as any[],
+  series: [] as object[],
   options: {
     chart: {
       height: 350,
@@ -41,7 +42,7 @@ const locationNumberData = {
       },
     },
     xaxis: {
-      categories: [] as any[],
+      categories: [] as string[],
     },
     plotOptions: {
       bar: {
@@ -54,7 +55,7 @@ const locationNumberData = {
   },
 };
 
-function LocationNumberBarChart(props: any) {
+function LocationNumberBarChart(props: ChartProps) {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
 
@@ -84,11 +85,11 @@ function LocationNumberBarChart(props: any) {
         Log('Fetched Location Number data..', response.data);
         let data = response.data;
         let res = locationNumberData;
-        let categories: any[] = [];
+        let categories: string[] = [];
         let newSeries = [
           {
             name: 'times visited',
-            data: [] as any[],
+            data: [] as number[],
           },
         ];
         for (let i = 0; i < data.length; i++) {
@@ -118,26 +119,17 @@ function LocationNumberBarChart(props: any) {
   }, [startDateVal]);
 
   return (
-    <Container>
-      <DateWrapper>
+    <ChartContainer>
+      <ChartDataWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
-      </DateWrapper>
+      </ChartDataWrapper>
       {series.length === 0 ? (
         <div>No data available.</div>
       ) : (
         <Chart options={options} series={series} type='heatmap' width='650' height='400' />
       )}
-    </Container>
+    </ChartContainer>
   );
 }
 
 export default LocationNumberBarChart;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const DateWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;

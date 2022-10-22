@@ -1,16 +1,14 @@
 import axios from 'axios';
-import { BASE_URL } from '../../constant/Endpoint';
 import { SetStateAction, useEffect, useState } from 'react';
-import Chart from 'react-apexcharts';
-import styled from 'styled-components';
-import COLORS from '../../constant/Colors';
+import { GoogleMap, InfoWindow, Marker, LoadScript } from '@react-google-maps/api';
+import CircularProgress from '@mui/material/CircularProgress';
+import { BASE_URL } from '../../constant/Endpoint';
 import DateRangeSelector from '../common/DateRangeSelector';
 import { Log } from '../common/Logger';
-import { GoogleMap, InfoWindow, Marker, LoadScript } from '@react-google-maps/api';
-import { useLoadScript } from '@react-google-maps/api';
-import CircularProgress from '@mui/material/CircularProgress';
+import ChartContainer from '../common/ChartContainer';
+import ChartDataWrapper from '../common/ChartDataWrapper';
 
-function LocationMap(props: any) {
+function LocationMap(props: ChartProps) {
   const [markerList, setMarkerList] = useState([]);
   const [apiKey, setApiKey] = useState('');
 
@@ -45,10 +43,7 @@ function LocationMap(props: any) {
           setMarkerList([...response.data.data]);
         }
 
-        setApiKey('AIzaSyAy_8c4pi_r2SIILx_XsG__YQPiNXA7THM')
-        //TODO: replace key
-        
-        //setApiKey('AIzaSyBX1z5nvjcjzyxSMT-QCVS3ERu6Y3iNSb0');
+        setApiKey(response.data.key);
       });
   };
   const [activeMarker, setActiveMarker] = useState(null);
@@ -65,11 +60,11 @@ function LocationMap(props: any) {
   }, [startDateVal]);
 
   return (
-    <Container>
-      <DateWrapper>
+    <ChartContainer>
+      <ChartDataWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
-      </DateWrapper>
-      <Title>Places visited</Title>
+      </ChartDataWrapper>
+      <div className='info-card-title'>Places visited</div>
       {apiKey !== '' ? (
         <LoadScript googleMapsApiKey={apiKey}>
           <GoogleMap
@@ -98,24 +93,8 @@ function LocationMap(props: any) {
       ) : (
         <CircularProgress />
       )}
-    </Container>
+    </ChartContainer>
   );
 }
 
 export default LocationMap;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const DateWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-const Title = styled.div`
-  font-size: 20px;
-  color: ${COLORS.text};
-`;

@@ -1,15 +1,16 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
 import { BASE_URL } from '../../constant/Endpoint';
+import ChartContainer from '../common/ChartContainer';
+import ChartDataWrapper from '../common/ChartDataWrapper';
 import DateRangeSelector from '../common/DateRangeSelector';
 import { Log } from '../common/Logger';
 
 const dummyCategoryData = {
   options: {
-    series: [{ data: [] as any[] }],
+    series: [{ data: [] as number[] }],
     chart: {
       type: 'bar',
       height: 350,
@@ -25,7 +26,7 @@ const dummyCategoryData = {
       enabled: true,
     },
     xaxis: {
-      categories: [] as any[],
+      categories: [] as string[],
       title: {
         text: 'times',
         style: {
@@ -52,7 +53,7 @@ const dummyCategoryData = {
   },
 };
 
-function CategoryChart(props: any) {
+function CategoryChart(props: ChartProps) {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
   const [hasData, setHasData] = useState(false);
@@ -85,13 +86,13 @@ function CategoryChart(props: any) {
         if (resData.category.length === 0) {
           setHasData(false);
         } else {
-          let categories = [] as any[];
+          let categories = [] as string[];
           let newSeries = [];
           let idx = resData.category.indexOf(null);
           if (idx !== -1) {
             resData.category[idx] = 'Unknown';
           }
-          for (const [key, val] of Object.entries<any>(resData)) {
+          for (const [key, val] of Object.entries<number>(resData)) {
             categories.push(key);
             newSeries.push(val);
           }
@@ -118,10 +119,10 @@ function CategoryChart(props: any) {
     fetchData();
   }, [startDateVal]);
   return (
-    <Container>
-      <DateWrapper>
+    <ChartContainer>
+      <ChartDataWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
-      </DateWrapper>
+      </ChartDataWrapper>
       {hasData ? (
         <Chart options={options} series={series} type='bar' width='650' height='400' />
       ) : (
@@ -129,18 +130,8 @@ function CategoryChart(props: any) {
           App Categories <br></br>No data available.
         </div>
       )}
-    </Container>
+    </ChartContainer>
   );
 }
 
 export default CategoryChart;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const DateWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;

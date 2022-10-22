@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { DateRangePicker } from 'rsuite';
 import subDays from 'date-fns/subDays';
 import startOfWeek from 'date-fns/startOfWeek';
@@ -8,6 +7,7 @@ import startOfMonth from 'date-fns/startOfMonth';
 import endOfMonth from 'date-fns/endOfMonth';
 import addMonths from 'date-fns/addMonths';
 import 'rsuite/dist/rsuite.css';
+import ChartDataWrapper from './ChartDataWrapper';
 
 const predefinedRanges = [
   {
@@ -86,8 +86,8 @@ const predefinedRanges = [
   },
 ];
 
-export default function DateRangeSelector(props: any) {
-  const confirmDate = (val: any[]) => {
+export default function DateRangeSelector(props: DateRangeSelectorProps) {
+  const confirmDate = (val: Date[]) => {
     if (val === null) {
       props.setStartDate(1641634738549);
       props.setEndDate(1641901876549);
@@ -101,8 +101,8 @@ export default function DateRangeSelector(props: any) {
     }
   };
   return (
-    <div className='data-wrapper'>
-      <div className='datepicker-title'>Date Range</div>
+    <ChartDataWrapper>
+      <div className='chart-datepicker-title'>Date Range</div>
       <DateRangePicker
         //@ts-ignore
         ranges={predefinedRanges}
@@ -112,6 +112,6 @@ export default function DateRangeSelector(props: any) {
         placeholder='Select date'
         style={{ width: 300 }}
       />
-    </div>
+    </ChartDataWrapper>
   );
 }

@@ -1,0 +1,168 @@
+/*
+  This css file is used for all components.
+*/
+
+:root {
+  --primary: #5e5ef5;
+  --white: white;
+  --black: black;
+  --light-background: #eff3f9;
+  --text: #3e3e3e;
+  --text-2: #263238;
+  --text-light-grey: #585858;
+  --shadow: #83838343;
+  --light-grey: #979797;
+  --text-field: #b8b8fa88;
+  --login-btn: #6258dc;
+  --red: red;
+  --light-purple: #7a7cff;
+  --twitter-blue: #2490e8;
+}
+.card-container {
+  background-color: var(--white);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 2px 15px 1px var(--shadow);
+  width: 700px;
+  padding: 30px;
+  margin: 20px;
+}
+.info-card-container {
+  background-color: var(--white);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  box-shadow: 2px 2px 15px 1px var(--shadow);
+  width: 230px;
+  height: 120px;
+  padding: 13px;
+}
+.info-card-title {
+  color: var(--text);
+  font-size: 21px;
+}
+.info-card-text {
+  color: var(--text);
+  font-size: 15px;
+}
+.sensors-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.chip-wrapper {
+  margin: 3px;
+}
+.twitter-icon {
+  color: var(--twitter-blue);
+}
+.name-avatar-container {
+  display: flex;
+  width: 300px;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.name-avatar-text {
+  min-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 30px;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+  color: var(--text);
+}
+.name-avatar-img {
+  height: 60px;
+  margin-left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  color: var(--primary);
+  box-shadow: 1px 1px 4px 2px var(--shadow);
+  border-radius: 30px;
+  background-color: var(--white);
+}
+.name-avatar-img:hover {
+  cursor: pointer;
+}
+.nav-title-container {
+  align-items: center;
+  display: flex;
+  color: var(--text);
+  flex-direction: row;
+}
+.nav-title-text {
+  font-size: 30px;
+  white-space: nowrap;
+  font-weight: bold;
+}
+.search-bar-container {
+  width: 300px;
+  min-width: 260px;
+  height: 38px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10px;
+  padding-left: 10px;
+  border-radius: 10px;
+  background-color: var(--white);
+  box-shadow: 2px 2px 15px 1px var(--shadow);
+}
+.search-input {
+  border: 0px;
+  height: 30px;
+  color: var(--text);
+  width: 80%;
+  font-size: 15px;
+  font-family: 'Open Sans', sans-serif;
+}
+.search-input:focus {
+  outline: none;
+  border: 0px;
+}
+.search-icon {
+  color: var(--light-grey);
+}
+.section-title {
+  font-weight: bold;
+  font-size: 20px;
+  width: 300px;
+  margin: 15px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+}
+.chart-data-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.chart-datepicker-title {
+  font-size: 15px;
+  padding-right: 30px;
+  color: var(--text);
+}
+.update-info-btn-container {
+  width: 220px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+@media screen and (max-width: 1300px) {
+  .name-avatar-text,
+  .nav-title-text {
+    font-size: 23px;
+  }
+}

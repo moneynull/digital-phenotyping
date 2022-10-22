@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { BASE_URL } from '../../constant/Endpoint';
 import { useEffect, useState } from 'react';
-import ReactWordcloud from 'react-wordcloud';
+import ReactWordcloud, { Word } from 'react-wordcloud';
+import { BASE_URL } from '../../constant/Endpoint';
 
 const angles: [number, number] = [-10, 10];
 const fontSizes: [number, number] = [20, 80];
@@ -13,8 +13,8 @@ const options = {
   fontSizes: fontSizes,
 };
 
-function KeywordCloud(props: any) {
-  const [keywords, setKeywords] = useState([] as any[]);
+function KeywordCloud(props: ChartProps) {
+  const [keywords, setKeywords] = useState([] as Word[]);
   useEffect(() => {
     fetchData();
   }, []);
@@ -40,7 +40,7 @@ function KeywordCloud(props: any) {
         let resData = response.data.data;
         console.log('Fetched keyword data.data..', resData);
         let resArr = [];
-        for (const [key, val] of Object.entries<any>(resData)) {
+        for (const [key, val] of Object.entries<number>(resData)) {
           if (val > 3) {
             resArr.push({
               text: key,

@@ -1051,6 +1051,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.18.9":
+  version "7.19.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.19.4.tgz#a42f814502ee467d55b38dd1c256f53a7b885c78"
+  integrity sha512-EXpLCrk55f+cYqmHsSR+yD/0gAIMxxA9QK9lnQWzhMCvt+YmoBN7Zx94s++Kv0+unHk39vxNO8t+CMA2WSS3wA==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.16.7", "@babel/template@^7.3.3":
   version "7.16.7"
   resolved "https://registry.npmjs.org/@babel/template/-/template-7.16.7.tgz"
@@ -1624,7 +1631,7 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@juggle/resize-observer@^3.3.1":
+"@juggle/resize-observer@^3.3.1", "@juggle/resize-observer@^3.4.0":
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
   integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
@@ -2308,7 +2315,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/chai@^4.2.18":
+"@types/chai@^4.3.3":
   version "4.3.3"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.3.tgz#3c90752792660c4b562ad73b3fbd68bf3bc7ae07"
   integrity sha512-hC7OMnszpxhZPduX+m+nrx+uFoLkWOMiR4oa/AZF3MuSETYTZmFfJAHqZEM8MVlvfG7BEUcgvtwoCTxBp6hm3g==
@@ -2472,10 +2479,10 @@
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/lodash@^4.14.134":
-  version "4.14.184"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.184.tgz#23f96cd2a21a28e106dc24d825d4aa966de7a9fe"
-  integrity sha512-RoZphVtHbxPZizt4IcILciSWiC6dcn+eZ8oX9IWEYfDMcocdd42f7NPI6fQj+6zI8y4E0L7gu2pcZKLGTRaV9Q==
+"@types/lodash@^4.14.184":
+  version "4.14.186"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.186.tgz#862e5514dd7bd66ada6c70ee5fce844b06c8ee97"
+  integrity sha512-eHcVlLXP0c2FlMPm56ITode2AgLMSa6aJ05JTTbYbI+7EMkCEE5qk2E41d5g2lCVTqRe0GnnRFurmlCsDODrPw==
 
 "@types/mime@^1":
   version "1.3.2"
@@ -4360,7 +4367,7 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-date-fns@^2.13.0, date-fns@^2.29.2:
+date-fns@^2.29.2:
   version "2.29.2"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.2.tgz#0d4b3d0f3dff0f920820a070920f0d9662c51931"
   integrity sha512-0VNbwmWJDS/G3ySwFSJA3ayhbURMTJLtwM2DTxf9CWondCnh6DTNlO9JgRSq6ibf4eD0lfMJNBxUdEAHHix+bA==
@@ -4608,10 +4615,10 @@ dom-helpers@^5.0.1, dom-helpers@^5.1.3, dom-helpers@^5.2.0, dom-helpers@^5.2.1:
     "@babel/runtime" "^7.8.7"
     csstype "^3.0.2"
 
-dom-lib@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/dom-lib/-/dom-lib-3.1.2.tgz#b9667a4c3435e522f818704c821418614625b929"
-  integrity sha512-FKw/w51guhTwiSnyCQKTxEwglnZG7Q1qJO62asKwedcqCCHwrwQP8DnMPBTXL9y3JTePFDaPS95GLha/Q9nd/w==
+dom-lib@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/dom-lib/-/dom-lib-3.1.3.tgz#c6c74238bf6352e68cd570509cf985ac2ec4ed80"
+  integrity sha512-66NzehAJZM5HrH/2FW6C0tgaMIywDF5I9n7PWgvdSciohlYQbCFcSf5XA6hhIqQdFbfrnZDD8NGLo9pDRzO5hQ==
   dependencies:
     "@babel/runtime" "^7.16.0"
 
@@ -9187,38 +9194,38 @@ rollup@^2.43.1:
   optionalDependencies:
     fsevents "~2.3.2"
 
-rsuite-table@^5.7.0:
-  version "5.7.0"
-  resolved "https://registry.yarnpkg.com/rsuite-table/-/rsuite-table-5.7.0.tgz#a7490b8e02a70116519a08dcd3e3f749ae031c7a"
-  integrity sha512-SfWOikM0m2cII4iInnSv05gCymSRQgegV9DpV8CBxP9u+dE/nd3fUvG+JMmyEEhBI2jJlf0IyLZq/b6jSZD4wQ==
+rsuite-table@^5.7.2:
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/rsuite-table/-/rsuite-table-5.7.2.tgz#784d34235fb9e070691af9a7a08adcca1fdc2c74"
+  integrity sha512-JwfxAR8lXVXM9PRQGJMbayciMcVFpHWExAhfY53h6JYKC7LfPeBx/Z6k4P7PO0grFkVGBdFW3ZgHxhCD1ur/eA==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@juggle/resize-observer" "^3.3.1"
     "@rsuite/icons" "^1.0.0"
     classnames "^2.3.1"
-    dom-lib "^3.1.2"
+    dom-lib "^3.1.3"
     lodash "^4.17.21"
     react-is "^17.0.2"
 
-rsuite@^5.17.0:
-  version "5.17.0"
-  resolved "https://registry.yarnpkg.com/rsuite/-/rsuite-5.17.0.tgz#274c2ad6ef4a28bbb40baa39540168015353c094"
-  integrity sha512-SwLK7O0B2A5UneQ3mOOVQNk6zV3aEQIxKWodTloyNY+gwY98rOKqfqSr66BxHYiQecclgHg3/v1MmObqJcwEeQ==
+rsuite@^5.19.1:
+  version "5.19.1"
+  resolved "https://registry.yarnpkg.com/rsuite/-/rsuite-5.19.1.tgz#2ad9eee7a433124c01f85a88bf85a4d01dcd503a"
+  integrity sha512-+h5c2yZq2jlHvYzY4/WUbk0De8DFpeoSJRUmmcbAygq65BJJNK+Of8ZsSBfBag7sE1/TLnBkseUK+cVSdZHuhA==
   dependencies:
-    "@babel/runtime" "^7.8.4"
-    "@juggle/resize-observer" "^3.3.1"
+    "@babel/runtime" "^7.18.9"
+    "@juggle/resize-observer" "^3.4.0"
     "@rsuite/icons" "^1.0.2"
-    "@types/chai" "^4.2.18"
-    "@types/lodash" "^4.14.134"
-    "@types/prop-types" "^15.7.4"
+    "@types/chai" "^4.3.3"
+    "@types/lodash" "^4.14.184"
+    "@types/prop-types" "^15.7.5"
     "@types/react-virtualized" "^9.21.11"
     classnames "^2.3.1"
-    date-fns "^2.13.0"
-    dom-lib "^3.1.2"
+    date-fns "^2.29.2"
+    dom-lib "^3.1.3"
     lodash "^4.17.11"
-    prop-types "^15.7.2"
+    prop-types "^15.8.1"
     react-virtualized "^9.22.3"
-    rsuite-table "^5.7.0"
+    rsuite-table "^5.7.2"
     schema-typed "^2.0.3"
 
 run-async@^2.4.0:

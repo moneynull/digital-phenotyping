@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import styled from 'styled-components';
 import axios from 'axios';
 import COLORS from '../../constant/Colors';
 import { Log } from '../common/Logger';
 import { BASE_URL } from '../../constant/Endpoint';
 import DateRangeSelector from '../common/DateRangeSelector';
+import ChartContainer from '../common/ChartContainer';
+import ChartDataWrapper from '../common/ChartDataWrapper';
 // dummy data for app time usage
 const dummyChartData = {
   options: {
@@ -26,12 +27,12 @@ const dummyChartData = {
       width: 380,
       type: 'pie',
     },
-    labels: [] as any[],
+    labels: [] as string[],
   },
-  series: [] as any[],
+  series: [] as number[],
 };
 
-function AppUsageChart(props: any) {
+function AppUsageChart(props: ChartProps) {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
   const [startDateVal, setStartDateVal] = useState(1641634738549);
@@ -59,7 +60,7 @@ function AppUsageChart(props: any) {
       .then((response) => {
         Log('Fetched data..', response.data);
         let res = dummyChartData;
-        let categories = [] as any[];
+        let categories = [] as string[];
         let newSeries = [];
         for (let i = 0; i < response.data[0].length; i++) {
           if (response.data[1][i] >= 1) {
@@ -86,26 +87,17 @@ function AppUsageChart(props: any) {
   }, [startDateVal]);
 
   return (
-    <Container>
-      <DateWrapper>
+    <ChartContainer>
+      <ChartDataWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
-      </DateWrapper>
+      </ChartDataWrapper>
       {series.length === 0 ? (
         <div>No data available.</div>
       ) : (
         <Chart options={options} series={series} type='pie' width='600' height='400' />
       )}
-    </Container>
+    </ChartContainer>
   );
 }
 
 export default AppUsageChart;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const DateWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;

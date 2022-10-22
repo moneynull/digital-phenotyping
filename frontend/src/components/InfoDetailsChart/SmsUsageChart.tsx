@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import axios from 'axios';
 import COLORS from '../../constant/Colors';
 import { Log } from '../common/Logger';
-
-import axios from 'axios';
 import { BASE_URL } from '../../constant/Endpoint';
-import styled from 'styled-components';
 import DateRangeSelector from '../common/DateRangeSelector';
+import ChartContainer from '../common/ChartContainer';
+import ChartDataWrapper from '../common/ChartDataWrapper';
 const dummySMSData = {
   series: [
     {
@@ -57,7 +57,7 @@ const dummySMSData = {
   },
 };
 
-function SmsUsageChart(props: any) {
+function SmsUsageChart(props: ChartProps) {
   const [options, setOptions] = useState(dummySMSData.options);
   const [series, setSeries] = useState(dummySMSData.series);
   const [hasData, setHasData] = useState(false);
@@ -126,10 +126,10 @@ function SmsUsageChart(props: any) {
   }, [startDateVal]);
 
   return (
-    <Container>
-      <DateWrapper>
+    <ChartContainer>
+      <ChartDataWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
-      </DateWrapper>
+      </ChartDataWrapper>
       {hasData ? (
         <Chart
           //@ts-ignore
@@ -144,17 +144,8 @@ function SmsUsageChart(props: any) {
           SMS Usage <br></br>No data available.
         </div>
       )}
-    </Container>
+    </ChartContainer>
   );
 }
 
 export default SmsUsageChart;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const DateWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;

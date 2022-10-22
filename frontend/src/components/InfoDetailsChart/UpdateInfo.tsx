@@ -1,29 +1,17 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import NavTitle from '../../components/common/NavTitle';
-import SearchBar from '../../components/common/SearchBar';
-import NameAvatar from '../../components/common/NameAvatar';
-import COLORS from '../../constant/Colors';
-import TextField from '@mui/material/TextField';
+import { useNavigate } from 'react-router-dom';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import axios from 'axios';
+import { Snackbar, Alert, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { BASE_URL } from '../../constant/Endpoint';
 import { Log } from '../../components/common/Logger';
-import {
-  Snackbar,
-  Alert,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+import ChartContainer from '../common/ChartContainer';
 
-function UpdateInfo(props: any) {
+function UpdateInfo(props: UpdateInfoProps) {
   let navigate = useNavigate();
   const [initialTwitter, setInitialTwitter] = useState(props.clientInfo.twitter_id);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -200,7 +188,7 @@ function UpdateInfo(props: any) {
     setShowConfirmModal(false);
   };
   return (
-    <Container>
+    <ChartContainer>
       <TextField
         required
         value={clientTitle}
@@ -236,7 +224,7 @@ function UpdateInfo(props: any) {
             setDateOfBirth(newValue);
           }}
           inputFormat='yyyy-MM-dd'
-          renderInput={(params: any) => (
+          renderInput={(params: TextFieldProps) => (
             <TextField required margin='dense' variant='standard' {...params} />
           )}
         />
@@ -275,14 +263,14 @@ function UpdateInfo(props: any) {
         label='Text Notes'
         variant='standard'
       />
-      <BtnContainer>
+      <div className='update-info-btn-container'>
         <Button onClick={() => handleClickOpen('Delete')} variant='contained' color='error'>
           Delete
         </Button>
         <Button onClick={() => handleClickOpen('Update')} variant='contained' color='info'>
           Update
         </Button>
-      </BtnContainer>
+      </div>
 
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -314,41 +302,8 @@ function UpdateInfo(props: any) {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </ChartContainer>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const CardContainer = styled.div`
-  background-color: ${COLORS.white};
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 2px 2px 15px 1px ${COLORS.shadow};
-  width: 500px;
-  padding: 30px;
-  margin: 20px;
-`;
-const Header = styled.div`
-  width: 80vw;
-  height: 100px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-const Spacer = styled.div`
-  height: 20px;
-  width: 30%;
-`;
-const BtnContainer = styled.div`
-  width: 220px;
-  margin: 20px auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
 
 export default UpdateInfo;

@@ -1,4 +1,6 @@
 import './styles/styles.css';
+import './styles/componentsStyles.css';
+
 import { Link, Navigate } from 'react-router-dom';
 
 function App() {
