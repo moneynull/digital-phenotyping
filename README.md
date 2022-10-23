@@ -10,10 +10,10 @@ Open **frontend** and **backend** folder to see more detailed instructions.
 
 ## Deploying for production
 In production, the entire application can be deployed on a single EC2 instance in the following way:
-    Django: Gunicorn & NGINX
-    React: Served with NGINX
-    MySQL: Running in the background on the EC2 server
-    Certbot: Used to automatically obtain https certificates 
+- Django: Gunicorn & NGINX
+- React: Served with NGINX
+- MySQL: Running in the background on the EC2 server
+- Certbot: Used to automatically obtain https certificates 
 
 1. Clone the repository to the home directory (`~` on linux machines)
 
