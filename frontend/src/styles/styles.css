@@ -1,3 +1,7 @@
+/*
+  This css file is used for all pages.
+*/
+
 :root {
   --primary: #5e5ef5;
   --white: white;
@@ -70,18 +74,162 @@ a:link {
     transform: rotate(360deg);
   }
 }
-
-.container {
+.row-flex-container {
+  display: flex;
+  flex-direction: row;
+}
+.page-container {
+  font-size: 32px;
+  padding-left: 5vw;
   display: flex;
   flex-direction: column;
 }
-.data-wrapper {
+.aware-apps-container {
+  display: flex;
+  margin-left: 100px;
+  margin-bottom: 50px;
+  width: 100%;
+  flex-direction: column;
+}
+.info-page-app-name {
+  margin: 10px;
+  font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+.page-header {
+  width: 80vw;
+  height: 100px;
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-.datepicker-title {
-  font-size: 15px;
-  padding-right: 30px;
-  color: var(--text);
+.page-spacer {
+  height: 20px;
+  width: 30%;
+}
+.add-client-container {
+  background-color: var(--white);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 2px 15px 1px var(--shadow);
+  width: 500px;
+  padding: 30px;
+  margin: 20px;
+}
+.add-client-button {
+  width: 120px;
+  margin: 20px auto;
+}
+.homepage-main-container {
+  color: black;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 50px;
+}
+.bolder-text {
+  font-weight: bolder;
+}
+.space-between-header {
+  justify-content: space-between;
+}
+.logo-img {
+  height: 60px;
+}
+.homepage-spacer {
+  height: 20px;
+  width: 18px;
+}
+.homepage-sub-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 1000px;
+  margin-bottom: 40px;
+}
+.table-container {
+  width: 1000px;
+}
+.view-button {
+  columns: var(--white);
+  background-color: var(--light-purple);
+}
+.view-button:hover {
+  background-color: var(--primary);
+}
+.login-main-container {
+  color: black;
+  font-size: 32px;
+  background-image: url('../assets/loginBackground.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+.login-sub-container {
+  background-color: var(--white);
+  border-radius: 20px;
+  position: absolute;
+  height: 330px;
+  width: 400px;
+  right: 4vw;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-shadow: 2px 2px 15px 1px var(--shadow);
+}
+.login-welcome {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.login-textinput-container {
+  margin-top: 30px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 10px;
+  height: 60px;
+  background-color: var(--text-field);
+}
+.login-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: 12px;
+}
+.login-title {
+  color: var(--text-light-grey);
+  font-size: 18px;
+}
+.login-textinput {
+  border: 0px;
+  height: 22px;
+  font-size: 20px;
+  border-bottom: 1px solid var(--text-light-grey);
+  background-color: transparent;
+}
+.login-textinput:focus {
+  outline: none;
+  border-bottom: 1px solid var(--primary);
+}
+.login-button-container {
+  margin: 20px auto;
+  width: 100px;
+}
+.login-button {
+  color: var(--white);
+  background-color: var(--login-btn);
+}
+.visibility-btn:hover {
+  cursor: pointer;
 }

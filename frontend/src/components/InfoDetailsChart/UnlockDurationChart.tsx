@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { BASE_URL } from '../../constant/Endpoint';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
 import DateRangeSelector from '../common/DateRangeSelector';
 import { Log } from '../common/Logger';
+import ChartContainer from '../common/ChartContainer';
+import ChartDataWrapper from '../common/ChartDataWrapper';
 
 // TODO!!!!   apply backend api
 // auto generated fake data for a year
@@ -86,7 +87,7 @@ const durationData = {
   },
 };
 
-function UnlockDurationChart(props: any) {
+function UnlockDurationChart(props: ChartProps) {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
 
@@ -116,11 +117,11 @@ function UnlockDurationChart(props: any) {
         Log('Fetched ScreenUnlocked data..', response.data);
         let res = durationData;
         let data = response.data;
-        let categories: any[] = [];
+        let categories: string[] = [];
         let newSeries = [
           {
             name: 'unlock screen time',
-            data: [] as any[],
+            data: [] as number[],
           },
         ];
         for (let i = 0; i < data[0].length; i++) {
@@ -150,23 +151,14 @@ function UnlockDurationChart(props: any) {
   }, [startDateVal]);
 
   return (
-    <Container>
-      <DateWrapper>
+    <ChartContainer>
+      <ChartDataWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
-      </DateWrapper>
+      </ChartDataWrapper>
 
       <Chart options={options} series={series} type='line' width='650' height='400' />
-    </Container>
+    </ChartContainer>
   );
 }
 
 export default UnlockDurationChart;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const DateWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;

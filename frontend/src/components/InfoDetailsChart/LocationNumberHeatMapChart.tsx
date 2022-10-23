@@ -1,16 +1,17 @@
 import axios from 'axios';
-import { BASE_URL } from '../../constant/Endpoint';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import styled from 'styled-components';
 import COLORS from '../../constant/Colors';
+import { BASE_URL } from '../../constant/Endpoint';
 import DateRangeSelector from '../common/DateRangeSelector';
 import { Log } from '../common/Logger';
+import ChartContainer from '../common/ChartContainer';
+import ChartDataWrapper from '../common/ChartDataWrapper';
 
 const loacationNumberSeries = [];
 
 const locationNumberData = {
-  series: [] as any[],
+  series: [] as object[],
   options: {
     chart: {
       height: 350,
@@ -35,7 +36,7 @@ const locationNumberData = {
     colors: ['#F3B415', '#F27036', '#008FFB', '#6A6E94'],
     xaxis: {
       type: 'category',
-      categories: [] as any[],
+      categories: [] as string[],
     },
     title: {
       text: 'locations visited & frequency',
@@ -53,7 +54,7 @@ const locationNumberData = {
   },
 };
 
-function LocationNumberHeatMapChart(props: any) {
+function LocationNumberHeatMapChart(props: ChartProps) {
   const [options, setOptions] = useState({});
   const [series, setSeries] = useState([]);
 
@@ -130,23 +131,14 @@ function LocationNumberHeatMapChart(props: any) {
   }, [startDateVal]);
 
   return (
-    <Container>
-      <DateWrapper>
+    <ChartContainer>
+      <ChartDataWrapper>
         <DateRangeSelector setStartDate={setStartDateVal} setEndDate={setEndDateVal} />
-      </DateWrapper>
+      </ChartDataWrapper>
 
       <Chart options={options} series={series} type='heatmap' width='650' height='400' />
-    </Container>
+    </ChartContainer>
   );
 }
 
 export default LocationNumberHeatMapChart;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const DateWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;

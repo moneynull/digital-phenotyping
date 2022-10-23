@@ -1,8 +1,19 @@
 # Backend
 This directory contains all the backend related source files for the project.
 
+## Folder Description
+### DataBase folder 
+This folder contains all the necessary SQL dump file of the project, please follow the readme file within the folder to setup database.
+### django_site folder 
+This folder contains all the backend source code. To extend the system, please follow the readme file within the folder.
+
 ## Frameworks
 - [Django](https://docs.djangoproject.com/en/4.0/)
+
+### To import and setup
+1. Using 'pip install django' to setup virtual enviornment
+2. Using 'python -m pip install django-cors-headers' to import cors-headers request
+3. And import pymysql through the code 'import pymysql' 
 
 ## Getting Started
 I recommend using a [virtual environment](https://docs.python.org/3/library/venv.html) to install the project's dependencies.

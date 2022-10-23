@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert } from '@mui/material';
-import TextField from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -13,7 +12,7 @@ import { Log } from '../../components/common/Logger';
 import NavTitle from '../../components/common/NavTitle';
 import SearchBar from '../../components/common/SearchBar';
 import NameAvatar from '../../components/common/NameAvatar';
-import COLORS from '../../constant/Colors';
+
 function InfoDetailsPage() {
   let navigate = useNavigate();
   let location = useLocation();
@@ -136,16 +135,16 @@ function InfoDetailsPage() {
   const navBack = () => {};
 
   return (
-    <MainContainer>
-      <Header onClick={navBack}>
+    <div className='page-container'>
+      <div className='page-header' onClick={navBack}>
         <Link style={{ textDecoration: 'none' }} to='/homepage'>
           <NavTitle title='Add a Client' showArrowBack={true} />
         </Link>
         <SearchBar />
-        <Spacer />
+        <div className='page-spacer' />
         <NameAvatar />
-      </Header>
-      <CardContainer>
+      </div>
+      <div className='add-client-container'>
         <TextField
           required
           value={clientTitle}
@@ -181,7 +180,7 @@ function InfoDetailsPage() {
               setDateOfBirth(newValue);
             }}
             inputFormat='yyyy-MM-dd'
-            renderInput={(params: any) => (
+            renderInput={(params: TextFieldProps) => (
               <TextField required margin='dense' variant='standard' {...params} />
             )}
           />
@@ -220,12 +219,12 @@ function InfoDetailsPage() {
           label='Text Notes'
           variant='standard'
         />
-        <BtnContainer>
+        <div className='add-client-button'>
           <Button fullWidth onClick={addClient} variant='contained' color='info'>
             Add
           </Button>
-        </BtnContainer>
-      </CardContainer>
+        </div>
+      </div>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={showSuccessBar}
@@ -242,40 +241,7 @@ function InfoDetailsPage() {
       >
         <Alert severity='error'>{errMsg}</Alert>
       </Snackbar>
-    </MainContainer>
+    </div>
   );
 }
-
-const MainContainer = styled.div`
-  font-size: 32px;
-  padding-left: 5vw;
-  display: flex;
-  flex-direction: column;
-`;
-const CardContainer = styled.div`
-  background-color: ${COLORS.white};
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 2px 2px 15px 1px ${COLORS.shadow};
-  width: 500px;
-  padding: 30px;
-  margin: 20px;
-`;
-const Header = styled.div`
-  width: 80vw;
-  height: 100px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-const Spacer = styled.div`
-  height: 20px;
-  width: 30%;
-`;
-const BtnContainer = styled.div`
-  width: 120px;
-  margin: 20px auto;
-`;
-
 export default InfoDetailsPage;
