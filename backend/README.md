@@ -1,6 +1,12 @@
 # Backend
 This directory contains all the backend related source files for the project.
 
+## Folder Description
+### DataBase folder 
+This folder contains all the necessary SQL dump file of the project, please follow the readme file within the folder to setup database.
+### django_site folder 
+This folder contains all the backend source code. To extend the system, please follow the readme file within the folder.
+
 ## Frameworks
 - [Django](https://docs.djangoproject.com/en/4.0/)
 
