@@ -104,7 +104,7 @@ Table overview:
     </tbody>
   </table>
 
-![image](/backend/DataBase/DB_structure.png)
+![image](/backend/DataBase/image.png)
 
 ## There are two files in this fold:
 
