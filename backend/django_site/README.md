@@ -1,11 +1,11 @@
 # Django Project
 This directory contains the Django project. It's been generated using `django-admin startproject ____`. All django-related source code will live in this folder.
-The detail of [project architecture diagarm](https://confluence.cis.unimelb.edu.au:8443/display/SWEN900132022PZ/Class+Diagram) is in our confluence space.
 
 ## Documentation
 The Django documentation and the steps used to generate the project can be found [here](https://docs.djangoproject.com/en/4.0/intro/tutorial01/).
 
 ## System Structure
+![image](/backend/django_site/project_structure.png)
 
 ### 1. src folder
 The src folder contains all the settings file and application routing urls.<br>
@@ -15,7 +15,7 @@ All the envrionment configuration virables could be registered in `.env` file. A
 os.environ.get('KEY','ELSE')
 ```
 THe 'KEY' is what defined in `.env` file. IF no 'KEY' found, it will return 'ELSE' you defined.<br>
-The real `.env` file will be depolyed on server and not show in the code. But you still need to upload a `.env` file under `/django-site` directory when developing.
+The real `.env` file should be used in your personal device or deployed on server only. Please don't upload `.env` on github because it is unsecurity.
 
 ### 2. utils folder
 The utils folder invovled some common function.<br>
