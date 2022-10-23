@@ -10,6 +10,11 @@ This folder contains all the backend source code. To extend the system, please f
 ## Frameworks
 - [Django](https://docs.djangoproject.com/en/4.0/)
 
+### To import and setup
+1. Using 'pip install django' to setup virtual enviornment
+2. Using 'python -m pip install django-cors-headers' to import cors-headers request
+3. And import pymysql through the code 'import pymysql' 
+
 ## Getting Started
 I recommend using a [virtual environment](https://docs.python.org/3/library/venv.html) to install the project's dependencies.
 
