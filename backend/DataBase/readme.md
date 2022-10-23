@@ -104,6 +104,8 @@ Table overview:
     </tbody>
   </table>
 
+![image](/DB_structure.png)
+
 ## There are two files in this fold:
 
 ### 1. swen90013_db_init.sql
