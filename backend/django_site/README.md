@@ -5,6 +5,7 @@ This directory contains the Django project. It's been generated using `django-ad
 The Django documentation and the steps used to generate the project can be found [here](https://docs.djangoproject.com/en/4.0/intro/tutorial01/).
 
 ## System Structure
+![image](/backend/django_site/project_structure.png)
 
 ### 1. src folder
 The src folder contains all the settings file and application routing urls.<br>
