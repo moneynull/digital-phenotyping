@@ -21,19 +21,19 @@ env = environ.Env()
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), "default", misfire_grace_time=300)
 
-@register_job(scheduler, "interval", minutes=int(env('CATEGORY_SCHEDULE')))
+@register_job(scheduler, "interval", hours=int(env('CATEGORY_SCHEDULE')))
 def app_category():
     appCategory()
 
-@register_job(scheduler, "interval", minutes=int(env('TWITTER_TWEET_SCHEDULE')))
+@register_job(scheduler, "interval", hours=int(env('TWITTER_TWEET_SCHEDULE')))
 def retrieve_2weeks_tweets():
     retrieve_2weeks_tweets()
 
-@register_job(scheduler, "interval", minutes=int(env('LOCATION_SCHEDULE')))
+@register_job(scheduler, "interval", hours=int(env('LOCATION_SCHEDULE')))
 def initial_process_location():
     PreProcessLocation.initialProcessLocation()
 
-@register_job(scheduler, "interval", minutes=int(env('TWITTER_SCHEDULE')))
+@register_job(scheduler, "interval", hours=int(env('TWITTER_SCHEDULE')))
 def twitter_data():
     twitter_data()
 

@@ -54,6 +54,6 @@ coverage run manage.py test --parallel auto -v 2 --keepdb
 coverage report -m
 ```
 
-## Change Note
+## Change Note Ver 0.0.1
 The cron tasks cannot run smoothly in only one django job store.
-Hence, they are aggregated in `scheduler.py` under utils folders.
+Hence, they are aggregated as functions in `scheduler.py` under utils folders.
