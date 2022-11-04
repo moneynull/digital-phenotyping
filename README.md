@@ -65,7 +65,7 @@ The python backend is deployed using Gunicorn (a python WSGI web server) with NG
 
     consumer_secret
 
-    # CRON Job interval scheduling. There are four scheduled tasks. These will run automatically on system startup. Pease try to make sure that the 4 values are different
+    # CRON Job interval scheduling. There are four scheduled tasks. These will run automatically on system startup. Please try to make sure that the 4 values are different
 
     CATEGORY_SCHEDULE=23
     
