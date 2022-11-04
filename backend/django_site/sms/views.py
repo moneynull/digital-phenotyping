@@ -6,14 +6,6 @@ from sms import models
 import datetime
 import time
 import json
-import googlemaps
-import pandas as pd
-# import os
-import utils.twitterCrawler as tc
-from utils import tw_cbd_credentials
-from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse, HttpResponseBadRequest
-import tweepy
 
 
 class QuerySMS(APIView):

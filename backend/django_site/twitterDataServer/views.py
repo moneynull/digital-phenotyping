@@ -3,7 +3,7 @@ from rest_framework.response import Response
 import json
 import datetime
 import time
-import utils.twitterCrawler as tc
+import utils.scheduler
 from utils import tw_cbd_credentials
 
 from django.core.serializers.json import DjangoJSONEncoder
