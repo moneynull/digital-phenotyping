@@ -53,3 +53,7 @@ Run the following command to view the coverage result of the backend tests
 coverage run manage.py test --parallel auto -v 2 --keepdb
 coverage report -m
 ```
+
+## Change Note Ver 0.0.1
+The cron tasks cannot run smoothly in only one django job store.
+Hence, they are aggregated as functions in `scheduler.py` under utils folders.

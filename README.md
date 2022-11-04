@@ -65,13 +65,15 @@ The python backend is deployed using Gunicorn (a python WSGI web server) with NG
 
     consumer_secret
 
-    # CRON Job interval scheduling. There are three schedules tasks. These will run automatically on system startup.
+    # CRON Job interval scheduling. There are four scheduled tasks. These will run automatically on system startup. Please try to make sure that the 4 values are different
 
-    CATEGORY_SCHEDULE
-
-    LOCATION_SCHEDULE
-
-    TWITTER_SCHEDULE
+    CATEGORY_SCHEDULE=23
+    
+    LOCATION_SCHEDULE=24
+    
+    TWITTER_SCHEDULE=71
+    
+    TWITTER_TWEET_SCHEDULE=72
 ```
 
 5. Following the previous step, everything is ready for deployment. Now the next step is to setup gunicorn . First, ensure that gunicorn  has been installed in the virtual environment. With the virtual environment active, type the following command. You should see gunicorn  in the list of installed packages.
